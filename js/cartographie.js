@@ -828,14 +828,26 @@ function creerGroupeAccordeon(categorie, couleur, icone, count, parentId) {
   $titre.append($puce, $icon, $texte);
   $entete.append($titre, $actif, $count, $chev);
 
-  var $contenu = $('<div>').addClass('filtre-groupe__contenu').hide();
+  var $contenu = $('<div>').addClass('filtre-groupe__contenu').attr('id', id + '-contenu').hide();
   $groupe.append($entete, $contenu);
+
+  // RGAA 7.1 : en-tête d'accordéon utilisable au clavier et restitué comme un bouton
+  $icon.attr('aria-hidden', 'true');
+  $chev.attr('aria-hidden', 'true');
+  $entete.attr({ role: 'button', tabindex: '0', 'aria-expanded': 'false', 'aria-controls': id + '-contenu' });
 
   $entete.on('click', function() {
     var $g = $(this).closest('.filtre-groupe');
     $g.toggleClass('is-open');
     $g.find('> .filtre-groupe__contenu').slideToggle(200);
     $chev.toggleClass('ph-caret-down ph-caret-up');
+    $entete.attr('aria-expanded', $g.hasClass('is-open') ? 'true' : 'false');
+  });
+  $entete.on('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+      $entete.trigger('click');
+    }
   });
 
   return $groupe;

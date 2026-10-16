@@ -549,7 +549,9 @@
   function setInert(on) {
     Array.prototype.forEach.call(document.body.children, function (el) {
       if (el.id === 'tdb-cmp-overlay' || el.tagName === 'SCRIPT') return;
-      if (on) { el.setAttribute('inert', ''); el.setAttribute('data-tdb-cmp-inert', ''); }
+      // Ne marque que les éléments qui n'étaient pas déjà inertes (ex. bandeau compact masqué),
+      // pour ne pas leur retirer `inert` à la fermeture
+      if (on) { if (!el.hasAttribute('inert')) { el.setAttribute('inert', ''); el.setAttribute('data-tdb-cmp-inert', ''); } }
       else if (el.hasAttribute('data-tdb-cmp-inert')) { el.removeAttribute('inert'); el.removeAttribute('data-tdb-cmp-inert'); }
     });
   }

@@ -64,6 +64,8 @@
     el.id = 'tdb-elu2-mini-hero';
     el.className = 'tdb-elu2-mini-hero';
     el.setAttribute('aria-hidden', 'true');
+    // RGAA 7.1 / 12.8 : masqué = hors tabulation aussi (il contient le bouton « Comparer »)
+    el.inert = true;
     el.innerHTML = '<div class="tdb-elu2-mini-hero__inner">'
       + '<div class="tdb-elu2-mini-hero__left">'
       + '<span class="tdb-elu2-mini-hero__name" id="tdb-elu2-mini-hero-name">Grand Est</span>'
@@ -110,6 +112,7 @@
       miniHeroVisible = heroGone;
       miniHeroEl.classList.toggle('is-visible', heroGone);
       miniHeroEl.setAttribute('aria-hidden', heroGone ? 'false' : 'true');
+      miniHeroEl.inert = !heroGone;
     }
   }
 
@@ -453,7 +456,8 @@
     var html = '<div class="tdb-elu2-card tdb-elu2-prelevements">';
     html += '<div class="tdb-elu2-prelevements__title"><i class="ph ph-chart-bar"></i> Historique des pr\u00e9l\u00e8vements' + renderInfobulle('PREL_USAGE_PAR_CAT') + '</div>';
     html += '<div class="tdb-elu2-prelevements__body">';
-    html += '  <div class="tdb-elu2-prelevements__chart">';
+    // RGAA 7.3 / 12.13 : zone à défilement horizontal (écrans étroits) atteignable au clavier
+    html += '  <div class="tdb-elu2-prelevements__chart" tabindex="0" role="region" aria-label="Graphique des prélèvements (zone défilante)">';
     html += '    <canvas id="chart-v2-prelevements" data-chart-v2="prelevements"></canvas>';
     html += '    <div class="tdb-elu2-prelevements__scroll-hint"><i class="ph ph-arrow-right"></i> Glisser pour voir toutes les années</div>';
     html += '  </div>';
@@ -2779,7 +2783,8 @@
     var html = '<div class="tdb-elu2-card tdb-elu2-prelevements">';
     html += '<div class="tdb-elu2-prelevements__title"><i class="ph ph-chart-bar"></i> ' + escHtml(tu.tuile) + renderTuileInfobulle(tu) + '</div>';
     html += '<div class="tdb-elu2-prelevements__body">';
-    html += '  <div class="tdb-elu2-prelevements__chart">';
+    // RGAA 7.3 / 12.13 : zone à défilement horizontal (écrans étroits) atteignable au clavier
+    html += '  <div class="tdb-elu2-prelevements__chart" tabindex="0" role="region" aria-label="Graphique des prélèvements (zone défilante)">';
     html += '    <canvas id="' + chartId + '" data-chart-v2="' + chartId + '"></canvas>';
     html += '  </div>';
     if (volInd) {

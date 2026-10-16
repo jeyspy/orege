@@ -339,6 +339,8 @@ select.ge-input {
   opacity: 0; cursor: pointer;
   width: 100%; height: 100%;
 }
+/* RGAA 10.7 : le champ fichier (invisible) porte le focus, la zone l'affiche */
+.ge-upload-zone:focus-within { outline: 3px solid #2a347d; outline-offset: 2px; }
 
 /* Visual elements inside the upload zone */
 .ge-upload-zone__icon  { font-size: 30px; color: #c8cdd8; margin-bottom: 10px; }

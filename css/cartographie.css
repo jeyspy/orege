@@ -801,6 +801,7 @@
   border-bottom: 1px solid transparent;
 }
 .filtre-groupe__entete:hover { background: #F8FAFC; }
+.filtre-groupe__entete:focus-visible { outline: 3px solid #2a347d; outline-offset: -3px; }
 .filtre-groupe.is-open > .filtre-groupe__entete { background: #EFF6FF; border-bottom-color: var(--color-border-light); }
 
 .filtre-groupe__titre {

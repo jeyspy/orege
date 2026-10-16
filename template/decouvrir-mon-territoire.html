@@ -52,7 +52,7 @@
      EN-TÊTE PRINCIPAL (injecté par nav.js)
 ================================================================ -->
 <header class="orege-header" id="site-header">
-  <a href="../index.html" class="orege-header__logo">
+  <a href="../index.html" class="orege-header__logo" aria-label="Observatoire de l'Eau Grand Est – accueil">
     <img src="../images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true">
     <span class="orege-header__logo-text">Observatoire de l'Eau <span>Grand Est</span></span>
   </a>
@@ -153,7 +153,7 @@
            style="color:#8fa0b8;font-size:12px;"></i>
         <span class="sr-only">Territoires les plus consultés – modifiables dans le fichier de configuration</span>
       </div>
-      <div class="tdbv2-phares-grid" id="phares-grid" role="list" aria-label="Territoires phares">
+      <div class="tdbv2-phares-grid" id="phares-grid" role="group" aria-label="Territoires phares">
         <!-- Rempli par JS -->
       </div>
     </section>
@@ -334,7 +334,7 @@ function renderPhares() {
       $card.append(
         $('<img>').addClass('tdbv2-phare-card__img')
           .attr('src', photo)
-          .attr('alt', t.nom)
+          .attr('alt', '') // RGAA 1.2 : décorative, le nom du territoire est déjà dans le lien
           .attr('loading', 'lazy')
       );
     } else {
