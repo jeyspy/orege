@@ -685,3 +685,107 @@ a.enjeu-card { display: flex; flex-direction: column; text-decoration: none; col
   .hero__title        { font-size: 22px; line-height: 28px; }
   .hero__search-btn   { padding: 8px 10px; font-size: 11px; }
 }
+
+/* ============================================================
+   PORTAIL RÉGIONAL DE L'EAU (lien vers eau.grandest.fr)
+   Sous « L'Observatoire de l'Eau en bref »
+   ============================================================ */
+.portail-eau {
+  background: #fff;
+  padding: 64px 32px;
+}
+.portail-eau__card {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+  border-top: 4px solid #7fddf0;
+  box-shadow: 0 12px 40px rgba(26,31,58,.14);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.5fr) auto;
+  gap: 32px;
+  align-items: center;
+  padding: 28px 32px;
+}
+.portail-eau__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  color: #2a347d;
+}
+.portail-eau__logo { height: 24px; width: auto; }
+.portail-eau__title {
+  font-family: 'Satoshi', system-ui, sans-serif;
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+  color: #1a1f3a;
+  margin: 0 0 8px;
+}
+.portail-eau__text {
+  font-size: 14px;
+  line-height: 21px;
+  color: #3D4A5C;
+  margin: 0;
+}
+.portail-eau__teasers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 20px;
+}
+.portail-eau__teaser { display: flex; align-items: flex-start; gap: 10px; }
+.portail-eau__teaser-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--teaser);
+  color: #1a1f3a;
+  font-size: 19px;
+}
+.portail-eau__teaser-body { display: flex; flex-direction: column; font-size: 12.5px; line-height: 17px; color: #3D4A5C; }
+.portail-eau__teaser-body strong { font-size: 14px; line-height: 19px; color: #1a1f3a; }
+.portail-eau__cta-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.portail-eau__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #2a347d;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 14px 22px;
+  border-radius: 2px;
+  transition: background .2s, transform .2s, box-shadow .2s;
+}
+.portail-eau__cta:hover,
+.portail-eau__cta:focus-visible { background: #1a2660; color: #fff; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(42,52,125,.3); }
+.portail-eau__cta:focus-visible { outline: 3px solid #7fddf0; outline-offset: 2px; }
+.portail-eau__url { font-size: 12px; color: #5A6779; }
+
+@media (max-width: 1100px) {
+  .portail-eau__card { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); }
+  .portail-eau__cta-wrap { grid-column: 1 / -1; flex-direction: row; justify-content: flex-start; }
+}
+@media (max-width: 768px) {
+  .portail-eau { padding: 40px 16px; }
+  .portail-eau__card { grid-template-columns: 1fr; gap: 20px; padding: 22px 20px; }
+  .portail-eau__teasers { grid-template-columns: 1fr; gap: 12px; }
+  .portail-eau__cta-wrap { flex-direction: column; align-items: stretch; }
+  .portail-eau__cta { justify-content: center; }
+  .portail-eau__url { text-align: center; }
+}
