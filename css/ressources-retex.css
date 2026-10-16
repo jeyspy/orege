@@ -1,0 +1,148 @@
+/**
+ * ressources-retex.css — Styles specific to the "Retours d'expérience" listing page
+ * (ressources-retex.html)
+ *
+ * Defines the retex card grid and individual card layout.
+ * JS companion: js/ressources-retex.js (filter, search, load-more logic)
+ */
+
+/* Card grid: 3 columns on desktop, 2 on tablet, 1 on mobile */
+.retex-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 56px 24px;
+}
+@media (max-width: 1024px) { .retex-grid { grid-template-columns: repeat(2, 1fr); gap: 44px 20px; } }
+@media (max-width: 600px)  { .retex-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+/* Retex card */
+.retex-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+}
+.retex-card:hover .retex-card__img img { transform: scale(1.04); }
+.retex-card:hover .retex-card__title   { color: #2a347d; }
+
+.retex-card__img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+  flex-shrink: 0;
+}
+.retex-card__img img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform .4s ease;
+}
+.retex-card__img-fallback {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 52px;
+}
+.retex-card__badge {
+  position: absolute; top: 0; left: 0;
+  background: #fbd020; color: #2a347d;
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .7px;
+  padding: 4px 10px; z-index: 2;
+}
+.retex-card__body {
+  padding: 14px 0 0;
+  display: flex; flex-direction: column; flex: 1;
+}
+.retex-card__meta {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .8px;
+  color: #4a5a78; margin-bottom: 10px;
+}
+.retex-card__meta::before {
+  content: '';
+  display: inline-block;
+  width: 20px; height: 2px;
+  background: #2a347d; flex-shrink: 0;
+}
+.retex-card__meta-sep {
+  width: 3px; height: 3px; border-radius: 50%;
+  background: #c0cce0; flex-shrink: 0;
+}
+.retex-card__title {
+  font-size: 17px; font-weight: 800;
+  color: #1a2233; line-height: 1.25; margin: 0 0 10px;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  transition: color .15s;
+}
+.retex-card__desc {
+  font-size: 13.5px; color: #3a4a6b;
+  line-height: 1.6; margin: 0 0 14px;
+  flex: 1;
+}
+.retex-card__link {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .6px;
+  color: #2a347d; text-decoration: none;
+  margin-top: auto;
+}
+.retex-card__link i { font-size: 10px; transition: transform .15s; }
+.retex-card:hover .retex-card__link i { transform: translateX(3px); }
+
+/* Ligne filtres + bouton déposer */
+.retex-filters-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+/* Filtres */
+.cat-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 0; }
+.cat-btn {
+  padding: 7px 18px; border-radius: 0;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+  border: 2px solid #2a347d; background: #fff; color: #2a347d;
+  transition: all .15s; text-transform: uppercase; letter-spacing: .6px;
+}
+.cat-btn.is-active { background: #2a347d; color: #fff; border-color: #2a347d; }
+.cat-btn:hover:not(.is-active) { background: #2a347d; color: #fff; }
+
+/* Recherche */
+.retex-search { position: relative; margin-bottom: 20px; }
+.retex-search__input {
+  width: 100%; padding: 12px 44px 12px 16px;
+  border: 2px solid #2a347d; border-radius: 0;
+  font-size: 14px; font-family: inherit; outline: none;
+  color: #1d1d1b; background: #fff;
+}
+.retex-search__input:focus { border-color: #7fddf0; }
+.retex-search__icon {
+  position: absolute; right: 14px; top: 50%;
+  transform: translateY(-50%); color: #2a347d;
+  pointer-events: none; font-size: 14px;
+}
+.retex-no-results {
+  text-align: center; padding: 56px 20px;
+  color: #4a5a78; display: none; grid-column: 1 / -1;
+}
+.retex-no-results i { font-size: 36px; display: block; margin-bottom: 12px; }
+
+/* Charger plus */
+.load-more-wrap { text-align: center; margin: 48px 0 8px; }
+.load-more-btn {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 13px 36px; border: 2px solid #2a347d;
+  background: #fff; color: #2a347d;
+  font-size: 11px; font-weight: 700; font-family: inherit;
+  text-transform: uppercase; letter-spacing: .6px;
+  cursor: pointer; transition: all .18s;
+}
+.load-more-btn:hover { background: #7fddf0; border-color: #7fddf0; }
+.load-more-btn:disabled { opacity: .4; cursor: default; }
+.load-more-count { font-size: 12px; color: #4a5a78; margin-top: 8px; }

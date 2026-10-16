@@ -1,0 +1,11 @@
+/**
+ * je-suis-habitant.css — Styles specific to the "Je suis citoyen / habitant" page
+ * (je-suis-habitant.html)
+ *
+ * Only overrides that differ from the shared profil-page.css base styles.
+ * Currently adjusts the hero image vertical focal point to frame the
+ * citizen photo at the appropriate crop position.
+ */
+
+/* Push the hero image focal point lower for this profile's photo */
+.profil-hero-img img { object-position: center 80%; }

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>Observatoire de l'Eau Grand Est – La donnée eau au service du territoire</title>
+  <meta name="description" content="Plateforme régionale de la donnée eau : indicateurs, cartographie, tableaux de bord territoriaux pour les élus, techniciens et citoyens du Grand Est.">
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="preload" href="images/hero-riviere.jpg" as="image">
+  <link rel="stylesheet" href="css/fonts.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/a11y.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body class="nav-loading">
+
+<!-- Skip-to-content link for keyboard / screen-reader users (RGAA 12.1) -->
+<a href="#main-content" class="sr-only focusable">Aller au contenu principal</a>
+
+<!-- ============================================================
+     HEADER
+     The <header> element only contains the logo.
+     The navigation bar (<nav>), mega-menus and footer are all
+     injected by js/nav.js on $(document).ready.
+     The `nav-loading` class on <body> hides the page until the
+     nav HTML has been injected (anti-FOUC — see css/nav.css).
+============================================================ -->
+<header class="orege-header" role="banner">
+  <a href="index.html" class="orege-header__logo" aria-label="Observatoire de l'Eau Grand Est – Accueil">
+    <img src="images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true" width="44" height="44" loading="eager">
+    <span class="orege-header__logo-text">Observatoire de l'Eau<br><span>Grand Est</span></span>
+  </a>
+</header>
+
+<!-- ============================================================
+     HERO SECTION
+     Full-width banner with:
+       - Marketing tagline and CTA button
+       - Territory search widget (autocomplete powered by index.js)
+       - KPI counters (animated in index.js using IntersectionObserver)
+     The hero background image is preloaded in <head> for LCP performance.
+============================================================ -->
+<main id="main-content">
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__inner">
+    <div class="hero__content">
+      <div class="hero__badge" aria-label="Plateforme régionale">
+        <i class="ph ph-drop" aria-hidden="true"></i>
+        Plateforme régionale · Grand Est
+      </div>
+      <h1 id="hero-title" class="hero__title">
+        La donnée eau<br>au service du <span>Grand Est</span>
+      </h1>
+      <p class="hero__subtitle">
+        Centralisez, explorez et comprenez les indicateurs de l'eau en Grand Est — ressources, qualité, milieux aquatiques et gouvernance — pour élus, techniciens et citoyens.
+      </p>
+
+      <a href="observatoire.html" class="hero__cta-primary" style="display:inline-flex;align-items:center;gap:10px;margin-top:28px;">
+        <i class="ph ph-binoculars" aria-hidden="true"></i> Découvrir l'observatoire
+      </a>
+
+    </div>
+    <aside class="hero__kpis-wrap" aria-label="Chiffres clefs de la plateforme">
+      <div class="hero__kpis">
+        <div class="hero__kpi">
+          <span class="hero__kpi-num" id="kpi-ind">94</span>
+          <span class="hero__kpi-label">indicateurs<br>observatoire</span>
+        </div>
+        <div class="hero__kpi">
+          <span class="hero__kpi-num">10</span>
+          <span class="hero__kpi-label">départements<br>couverts</span>
+        </div>
+        <div class="hero__kpi">
+          <span class="hero__kpi-num">5 500+</span>
+          <span class="hero__kpi-label">communes<br>référencées</span>
+        </div>
+        <div class="hero__kpi">
+          <span class="hero__kpi-num">2026</span>
+          <span class="hero__kpi-label">données<br>disponibles</span>
+        </div>
+      </div>
+      <div class="hero__kpis-ctas">
+        <a href="template/cartographie.html" class="hero__cta-secondary">
+          <i class="ph ph-map" aria-hidden="true"></i> Explorer la cartographie
+        </a>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================================================
+     TARGET AUDIENCE / "JE SUIS" SECTION
+     Three profile cards (elected official, specialist, citizen)
+     that link to the corresponding profile pages.
+============================================================ -->
+<section class="cibles-section" aria-labelledby="titre-cibles">
+  <div class="section-header">
+    <div class="section-eyebrow">Une plateforme pensée pour vous</div>
+    <h2 id="titre-cibles" class="section-title">À qui s'adresse l'observatoire ?</h2>
+    <p class="section-sub">Trois profils, trois entrées pour accéder aux données qui vous concernent.</p>
+  </div>
+  <div class="cibles-grid">
+
+    <!-- Élus -->
+    <article class="cible-card cible-card--elu">
+      <div class="cible-card__header">
+        <div class="cible-card__icon"><i class="ph ph-bank" aria-hidden="true"></i></div>
+        <h3 class="cible-card__title">Élu / Décideur</h3>
+        <p class="cible-card__desc">Pilotez votre territoire avec des indicateurs clairs sur la gouvernance, l'aménagement et les ressources en eau.</p>
+      </div>
+      <div class="cible-card__body">
+        <ul class="cible-card__features">
+          <li><i class="ph ph-check-circle" aria-hidden="true"></i> Tableaux de bord territoriaux simplifiés</li>
+          <li><i class="ph ph-check-circle" aria-hidden="true"></i> Gouvernance et actions menées</li>
+          <li><i class="ph ph-check-circle" aria-hidden="true"></i> Aménagement du territoire et zonage</li>
+          <li><i class="ph ph-check-circle" aria-hidden="true"></i> Ressources et usages, vulnérabilité</li>
+        </ul>
+        <a href="je-suis-elu.html" class="cible-card__cta">
+          <i class="ph ph-arrow-right" aria-hidden="true"></i> Je suis élu
+        </a>
+      </div>
+    </article>
+
+    <!-- Spécialistes -->
+    <article class="cible-card cible-card--tech">
+      <div class="cible-card__header">
+        <div class="cible-card__icon"><i class="ph ph-microscope" aria-hidden="true"></i></div>
+        <h3 class="cible-card__title">Technicien / Spécialiste</h3>
+        <p class="cible-card__desc">Accédez aux indicateurs techniques approfondis : qualité DCE, étiages, prélèvements, milieux aquatiques.</p>
+      </div>
+      <div class="cible-card__body">
+        <ul class="cible-card__features">
+          <li><i class="ph ph-check-circle" aria-hidden="true"></i> Indicateurs techniques observatoire</li>
+          <li><i class="ph ph-check-circle" aria-hidden="true"></i> Qualité des eaux (DCE, chimie)</li>
+          <li><i class="ph ph-check-circle" aria-hidden="true"></i> Connaissance des milieux aquatiques</li>
+          <li><i class="ph ph-check-circle" aria-hidden="true"></i> Gestion quantitative et étiages</li>
+        </ul>
+        <a href="je-suis-specialiste.html" class="cible-card__cta">
+          <i class="ph ph-arrow-right" aria-hidden="true"></i> Je suis spécialiste
+        </a>
+      </div>
+    </article>
+
+    <!-- Habitants -->
+    <article class="cible-card cible-card--hab">
+      <div class="cible-card__header">
+        <div class="cible-card__icon"><i class="ph ph-house" aria-hidden="true"></i></div>
+        <h3 class="cible-card__title">Citoyen / Habitant</h3>
+        <p class="cible-card__desc">Informez-vous sur la qualité de l'eau, les milieux naturels et les enjeux climatiques de votre région.</p>
+      </div>
+      <div class="cible-card__body">
+        <ul class="cible-card__features">
+          <li><i class="ph ph-check-circle" aria-hidden="true"></i> Comprendre les enjeux de l'eau</li>
+          <li><i class="ph ph-check-circle" aria-hidden="true"></i> Qualité de l'eau distribuée</li>
+          <li><i class="ph ph-check-circle" aria-hidden="true"></i> Risques inondations et sécheresses</li>
+          <li><i class="ph ph-check-circle" aria-hidden="true"></i> Fiches de synthèse par territoire</li>
+        </ul>
+        <a href="je-suis-habitant.html" class="cible-card__cta">
+          <i class="ph ph-arrow-right" aria-hidden="true"></i> Je suis habitant
+        </a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     KEY FIGURES STRIP
+     Horizontal band of 5 regional water statistics.
+     Static data — update these values annually from official sources.
+============================================================ -->
+<section class="chiffres-section" aria-labelledby="titre-chiffres">
+  <div class="chiffres-inner">
+    <div class="chiffre-item">
+      <span class="chiffre-num" aria-label="57 680 kilomètres carrés">57 680</span>
+      <div class="chiffre-label">km² de superficie<br>régionale couverte</div>
+    </div>
+    <div class="chiffre-item">
+      <span class="chiffre-num">5 800</span>
+      <div class="chiffre-label">km de cours d'eau<br>suivis et cartographiés</div>
+    </div>
+    <div class="chiffre-item">
+      <span class="chiffre-num">97,3%</span>
+      <div class="chiffre-label">conformité bactério.<br>eau distribuée (2023)
+        <div><span class="chiffre-saison"><i class="ph ph-sun" aria-hidden="true"></i> Données 2023</span></div>
+      </div>
+    </div>
+    <div class="chiffre-item">
+      <span class="chiffre-num">42%</span>
+      <div class="chiffre-label">masses d'eau en bon<br>état écologique
+        <div><span class="chiffre-saison"><i class="ph ph-leaf" aria-hidden="true"></i> DCE 2023</span></div>
+      </div>
+    </div>
+    <div class="chiffre-item">
+      <span class="chiffre-num">22</span>
+      <div class="chiffre-label">SAGE actifs<br>en Grand Est</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     THEMATIC ISSUES SECTION
+     Six thematic cards linking to the "Comprendre les enjeux" page sections.
+     Each card has a colour-coded left border matching its theme category colour
+     defined in css/style.css (--color-cat-*).
+============================================================ -->
+<section class="enjeux-section" aria-labelledby="titre-enjeux">
+  <div class="section-header">
+    <div class="section-eyebrow">Comprendre</div>
+    <h2 id="titre-enjeux" class="section-title">Les grandes thématiques de l'eau en Grand Est</h2>
+    <p class="section-sub">Six thématiques structurantes pour comprendre les défis de la ressource en eau à l'échelle régionale.</p>
+  </div>
+  <div class="enjeux-grid">
+
+    <a href="enjeux.html#qualite" class="enjeu-card enjeu--qualite" aria-label="Qualité de l'eau – En savoir plus">
+      <div class="enjeu-card__icon"><i class="ph ph-flask" aria-hidden="true"></i></div>
+      <h3 class="enjeu-card__title">Qualité de l'eau</h3>
+      <p class="enjeu-card__desc">État écologique et chimique des masses d'eau, conformité de l'eau potable, pollutions diffuses agricoles et industrielles.</p>
+      <span class="enjeu-card__link"><i class="ph ph-arrow-right" aria-hidden="true"></i> En savoir plus</span>
+    </a>
+
+    <a href="enjeux.html#milieux" class="enjeu-card enjeu--milieux" aria-label="Connaissance des milieux aquatiques – En savoir plus">
+      <div class="enjeu-card__icon"><i class="ph ph-fish" aria-hidden="true"></i></div>
+      <h3 class="enjeu-card__title">Connaissance des milieux aquatiques</h3>
+      <p class="enjeu-card__desc">Biodiversité aquatique, zones humides, continuité écologique et suivi des habitats naturels liés à l'eau.</p>
+      <span class="enjeu-card__link"><i class="ph ph-arrow-right" aria-hidden="true"></i> En savoir plus</span>
+    </a>
+
+    <a href="enjeux.html#quantitatif" class="enjeu-card enjeu--quantitat" aria-label="Gestion quantitative – En savoir plus">
+      <div class="enjeu-card__icon"><i class="ph ph-gauge" aria-hidden="true"></i></div>
+      <h3 class="enjeu-card__title">Gestion quantitative</h3>
+      <p class="enjeu-card__desc">Prélèvements, étiages, nappes phréatiques : équilibre entre disponibilité de la ressource et besoins des usagers.</p>
+      <span class="enjeu-card__link"><i class="ph ph-arrow-right" aria-hidden="true"></i> En savoir plus</span>
+    </a>
+
+    <a href="enjeux.html#usages" class="enjeu-card enjeu--usages" aria-label="Usages de l'eau – En savoir plus">
+      <div class="enjeu-card__icon"><i class="ph ph-drop" aria-hidden="true"></i></div>
+      <h3 class="enjeu-card__title">Usages de l'eau</h3>
+      <p class="enjeu-card__desc">Eau potable, agriculture irriguée, industrie, hydroélectricité : diversité des usages et leur impact sur la ressource.</p>
+      <span class="enjeu-card__link"><i class="ph ph-arrow-right" aria-hidden="true"></i> En savoir plus</span>
+    </a>
+
+    <a href="enjeux.html#climat" class="enjeu-card enjeu--climat" aria-label="Vulnérabilité & Changement climatique – En savoir plus">
+      <div class="enjeu-card__icon"><i class="ph ph-cloud-lightning" aria-hidden="true"></i></div>
+      <h3 class="enjeu-card__title">Vulnérabilité &amp; Changement climatique</h3>
+      <p class="enjeu-card__desc">Sécheresses, inondations, élévation des températures : adaptation des territoires aux effets du changement climatique.</p>
+      <span class="enjeu-card__link"><i class="ph ph-arrow-right" aria-hidden="true"></i> En savoir plus</span>
+    </a>
+
+    <a href="enjeux.html#gouvernance" class="enjeu-card enjeu--gouvern" aria-label="Gouvernance & Actions menées – En savoir plus">
+      <div class="enjeu-card__icon"><i class="ph ph-gavel" aria-hidden="true"></i></div>
+      <h3 class="enjeu-card__title">Gouvernance &amp; Actions menées</h3>
+      <p class="enjeu-card__desc">SAGE, SDAGE, Contrats de rivière, politiques de l'eau et actions collectives portées par les acteurs du territoire.</p>
+      <span class="enjeu-card__link"><i class="ph ph-arrow-right" aria-hidden="true"></i> En savoir plus</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     LATEST NEWS SECTION
+     Static news cards. Replace with dynamic CMS data when available.
+     Card images use onerror fallback for broken CDN URLs.
+     See also: nav.js ACTU_UNE / ACTU_LISTE for the mega-menu news panel.
+============================================================ -->
+<section class="actu-section" aria-labelledby="titre-actus">
+  <div class="section-header">
+    <div class="section-eyebrow">Actualités</div>
+    <h2 id="titre-actus" class="section-title">Les dernières publications</h2>
+  </div>
+  <div class="actu-grid">
+
+    <a href="article.html" class="actu-card">
+      <div class="actu-card__img">
+        <span class="actu-card__badge">Climat</span>
+        <img src="https://sspark.genspark.ai/cfimages?u1=asdnvMq1ObDpkYobNurc3IjPYnwUA45yge9rGkxbD%2BEHwdnUFpL%2Fo9ZqxcDwzWwMdUKp72KGdiw0UeKlOwwjG62M5K%2F7InbHJLfae0l7gdokau3rtBbOfBGeF0mjEb6C9D6nDspANA%3D%3D&u2=FBy%2Bg5wVC%2B4Gp1a1&width=800"
+             alt="Sol fissuré par la sécheresse"
+             onerror="this.parentElement.innerHTML='<span class=\'actu-card__badge\'>Climat</span><div class=\'actu-card__img-fallback\' style=\'background:linear-gradient(135deg,#fa640a,#2a347d)\'><i class=\'fa fa-cloud-sun-rain\' style=\'color:#fff\'></i></div>'">
+      </div>
+      <div class="actu-card__body">
+        <div class="actu-card__date">15 Février 2025</div>
+        <h3 class="actu-card__title">Bilan de la sécheresse 2024 en Grand Est : des nappes sous tension continue</h3>
+      </div>
+    </a>
+
+    <a href="article.html" class="actu-card">
+      <div class="actu-card__img">
+        <span class="actu-card__badge">Gouvernance</span>
+        <img src="https://sspark.genspark.ai/cfimages?u1=xCEWLbF2K2e16reKbmlQq%2FHoo6mJaeyjnjQs5mbuFrtRIfLNuXgFrSvPuBDZug81PjnLUGkdMXnV6dxznCnLIfMfseN5o101exM1KPyog90owRqLP%2Bghm8jN1HqxvOOClnRN%2BH9UlgBCqEba%2BvDZJw9MC9cjQdbDWevOiJRb2aAh3ENU5kv%2FFPlmgcCgjv%2FCX%2Ft%2BTIM6i1bwJXHIBnQgrzHNN0NpVy2dYiK7eBnE5FxtoKZA8%2B4sb1ea8a0YR1TqBm9oajvjdxtoXEmDdWa8U90l%2F%2BVZAyNOKR8sXvVk5c7Xxmatrl75I6huJRphjD4A0eUDQ%2FcflYOhdA%3D%3D&u2=CMQOqbznhROT4YC%2F&width=600"
+             alt="Rivière en vallée verdoyante"
+             onerror="this.parentElement.innerHTML='<span class=\'actu-card__badge\'>Gouvernance</span><div class=\'actu-card__img-fallback\' style=\'background:linear-gradient(135deg,#b9e100,#2a347d)\'><i class=\'fa fa-gavel\' style=\'color:#fff\'></i></div>'">
+      </div>
+      <div class="actu-card__body">
+        <div class="actu-card__date">3 Février 2025</div>
+        <h3 class="actu-card__title">Révision du SDAGE 2028-2033 : quels enjeux pour la région ?</h3>
+      </div>
+    </a>
+
+    <a href="article.html" class="actu-card">
+      <div class="actu-card__img">
+        <span class="actu-card__badge">Milieux aquatiques</span>
+        <img src="https://sspark.genspark.ai/cfimages?u1=IkRNtX2At%2BgAUInt%2BJlqa6MoQY1K1UGemZAUihgrXlXxHwIU4xHD7UuxPN5zundtFW9bIK3LNxLhcpyE1oih0RSMWwRBcCMDaOSjbOY0RIHyTADOlw%3D%3D&u2=IDW0vv3q1yeb2WSW&width=600"
+             alt="Cours d'eau avec végétation aquatique"
+             onerror="this.parentElement.innerHTML='<span class=\'actu-card__badge\'>Milieux</span><div class=\'actu-card__img-fallback\' style=\'background:linear-gradient(135deg,#b9e100,#2a347d)\'><i class=\'fa fa-fish\' style=\'color:#fff\'></i></div>'">
+      </div>
+      <div class="actu-card__body">
+        <div class="actu-card__date">20 Janvier 2025</div>
+        <h3 class="actu-card__title">Retour du saumon atlantique dans la Moselle : un signal positif</h3>
+      </div>
+    </a>
+
+  </div>
+  <div style="text-align:center;margin-top:40px;">
+    <a href="actualites.html" style="display:inline-flex;align-items:center;gap:8px;background:#2a347d;color:#fff;font-weight:700;font-size:12px;padding:12px 28px;text-decoration:none;text-transform:uppercase;letter-spacing:.6px;border:2px solid #2a347d;transition:background .15s;" onmouseover="this.style.background='#7fddf0';this.style.color='#2a347d';this.style.borderColor='#7fddf0'" onmouseout="this.style.background='#2a347d';this.style.color='#fff';this.style.borderColor='#2a347d'">
+      <i class="ph ph-arrow-right" aria-hidden="true"></i> Toutes les actualités
+    </a>
+  </div>
+</section>
+
+<!-- ============================================================
+     ABOUT THE OBSERVATORY (brief section)
+     Short promotional block with three feature highlights
+     and a link to observatoire.html.
+============================================================ -->
+<section class="bref-section" aria-labelledby="titre-bref">
+  <div class="bref-inner">
+    <div class="bref-content">
+      <div class="section-eyebrow">L'Observatoire</div>
+      <h2 id="titre-bref" class="section-title" style="text-align:left;">L'Observatoire de l'Eau en bref</h2>
+      <p>L'Observatoire de l'Eau Grand Est est une plateforme régionale mutualisée, portée par Antea Group et la Région Grand Est, visant à centraliser et diffuser les données sur la ressource en eau à l'échelle du territoire.</p>
+      <p>Initiée pour répondre aux besoins des acteurs locaux — collectivités, gestionnaires de l'eau, services de l'État — la plateforme agrège des données issues du SANDRE, des agences de l'eau Rhin-Meuse et Seine-Normandie, et de multiples producteurs locaux.</p>
+      <p>Son ambition : rendre la donnée eau accessible, lisible et exploitable par tous, du citoyen à l'expert.</p>
+      <a href="observatoire.html" class="btn-primary" style="margin-top:8px;">
+        <i class="ph ph-arrow-right" aria-hidden="true"></i> En savoir plus sur l'observatoire
+      </a>
+    </div>
+    <div class="bref-stats" aria-label="Statistiques de la plateforme">
+      <div class="bref-stat">
+        <span class="bref-stat__num">94</span>
+        <div class="bref-stat__label">indicateurs observatoire intégrés</div>
+      </div>
+      <div class="bref-stat">
+        <span class="bref-stat__num">340+</span>
+        <div class="bref-stat__label">territoires référencés (communes, EPCI, PNR…)</div>
+      </div>
+      <div class="bref-stat">
+        <span class="bref-stat__num">6</span>
+        <div class="bref-stat__label">grandes thématiques couvertes</div>
+      </div>
+      <div class="bref-stat">
+        <span class="bref-stat__num">2015–2026</span>
+        <div class="bref-stat__label">historique de données disponible</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================
+     PARTNER LOGO BANNER
+     Static logos of institutional partners.
+     Order: Grand Est Region, Préfecture, EU, Water Agencies.
+     Each logo links to the partner's institutional website.
+============================================================ -->
+<section class="partenaires-bandeau" aria-label="Partenaires">
+  <div class="partenaires-bandeau__inner">
+    <p class="partenaires-bandeau__label">Une plateforme à<br>l'initiative de</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://www.grandest.fr" target="_blank" rel="noopener noreferrer">
+        <img src="images/partners/logo-grandest.png" alt="La Région Grand Est" width="120" height="48" loading="lazy">
+      </a></li>
+      <li><a href="https://www.prefectures-regions.gouv.fr/grand-est" target="_blank" rel="noopener noreferrer">
+        <img src="images/partners/logo-prefet-grand-est.png" alt="Préfet de la Région Grand Est" width="120" height="48" loading="lazy">
+      </a></li>
+    </ul>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <p class="partenaires-bandeau__label">Et co-financé<br>par</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://european-union.europa.eu/index_fr" target="_blank" rel="noopener noreferrer">
+        <img src="images/partners/logo-union-europeenne.png" alt="Union Européenne" width="120" height="48" loading="lazy">
+      </a></li>
+      <li><a href="https://www.lesagencesdeleau.fr" target="_blank" rel="noopener noreferrer">
+        <img src="images/partners/logo-agences-eau.png" alt="Les Agences de l'Eau" width="120" height="48" loading="lazy">
+      </a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER PLACEHOLDER
+     The site footer HTML is injected here by js/nav.js.
+     Do not add content directly inside this div.
+============================================================ -->
+<div class="orege-footer-placeholder"></div>
+
+<!-- ================================================================
+     SCRIPTS — load order matters:
+       1. jQuery          — required by nav.js (mega-menu, search overlay)
+       2. Bootstrap JS    — required for any Bootstrap interactive components
+       3. nav.js          — injects header navigation + footer HTML
+       4. data-indicateurs.js     — global INDICATEURS object (charts/maps)
+       5. data-tdb-territoires.js — global TERRITOIRES object (search widget)
+       6. a11y.js         — accessibility patches (last: runs after all DOM)
+       7. index.js        — home page specific: KPI counter + territory search
+     ================================================================ -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/data-indicateurs.js"></script>
+<script src="js/data-tdb-territoires.js"></script>
+<script src="js/a11y.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>

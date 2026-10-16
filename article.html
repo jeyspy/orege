@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>Bilan de la sécheresse 2024 – Observatoire de l'Eau Grand Est</title>
+  <meta name="description" content="Les niveaux des nappes phréatiques ont atteint des seuils d'alerte dans plusieurs secteurs du Grand Est durant l'été 2024.">
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="css/fonts.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/a11y.css">
+  <style>
+    /* ══════════════════════════════════════════════════
+       ARTICLE DÉTAIL — Style Grand Est simplifié
+       • Hero gris : titre à gauche, image à droite
+       • Corps : sommaire sticky gauche + texte droite
+       • Suggestions en bas
+    ══════════════════════════════════════════════════ */
+
+    /* ══════════════════════════════════════════════════
+       HERO ARTICLE — Charte Grand Est
+       · Le hero ENTIER (gris + image) est un seul bloc
+         dont le bas est coupé par UNE SEULE diagonale
+       · clip-path sur .article-hero lui-même
+       · Badge date jaune en bas-gauche de l’image
+    ══════════════════════════════════════════════════ */
+    .article-hero {
+      background: #fff;
+      padding: 0;
+      position: relative;
+      clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+      margin-bottom: -48px;
+      padding-bottom: 0;
+    }
+    /* Pseudo-élément : fond gris sur la MOITIÉ GAUCHE uniquement
+       (zone texte), l’image à droite reste sur fond blanc/transparent */
+    .article-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      /* Largeur = colonne gauche = 56% */
+      width: 56%;
+      background: #efefef;
+      z-index: 0;
+    }
+    /* Grille full-width : colonne gauche contrainte + image jusqu'au bord */
+    .article-hero__inner {
+      display: grid;
+      grid-template-columns: 56% 44%;
+      gap: 0;
+      min-height: 570px;
+      align-items: stretch;
+      position: relative;
+      z-index: 1;
+    }
+    .article-hero__content {
+      padding: 48px 56px 56px max(32px, calc((100vw - 1200px) / 2 + 32px));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: transparent;
+    }
+    /* Fil d'ariane : minuscules grises uppercase */
+    .article-hero__breadcrumb {
+      font-size: 9px;
+      font-weight: 700;
+      color: #8090a8;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      line-height: 1.4;
+    }
+    .article-hero__breadcrumb a {
+      color: #8090a8;
+      text-decoration: none;
+    }
+    .article-hero__breadcrumb a:hover { color: #2a347d; }
+    .article-hero__breadcrumb i { font-size: 7px; color: #c0c8d8; }
+    /* Titre : très grand, noir, Cabinet Grotesk uppercase */
+    .article-hero__title {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 38px;
+      font-weight: 800;
+      color: #1a1f3a;
+      line-height: 1.12;
+      margin: 0 0 20px;
+      text-transform: uppercase;
+      letter-spacing: -.3px;
+    }
+    /* Chapeau / accroche : italique, avec guillemet « en tête */
+    .article-hero__chapeau {
+      font-size: 12.5px;
+      font-style: italic;
+      color: #3a3f5a;
+      line-height: 1.65;
+      margin: 0;
+      max-width: 480px;
+    }
+    .article-hero__chapeau::before {
+      content: '\00AB\00A0';
+      font-size: 14px;
+      font-weight: 700;
+      color: #2a347d;
+      font-style: normal;
+    }
+    .article-hero__chapeau::after {
+      content: '\00A0\00BB';
+      font-size: 14px;
+      font-weight: 700;
+      color: #2a347d;
+      font-style: normal;
+    }
+
+    /* Colonne droite : image pleine hauteur, sans clip-path propre
+       — c’est le clip-path du .article-hero parent qui gère la diagonale */
+    .article-hero__img {
+      position: relative;
+      overflow: visible;
+    }
+    .article-hero__img img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 115%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+    .article-hero__img-fallback {
+      width: 100%; height: 100%;
+      min-height: 340px;
+      background: linear-gradient(135deg, #2a347d 0%, #1a2660 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 96px;
+      color: rgba(255,255,255,.12);
+    }
+    /* Badge date : supprimé */
+
+    /* ── 2. CORPS : sommaire sticky + texte ── */
+    .article-body-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 32px 80px;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 56px;
+      align-items: flex-start;
+    }
+
+    /* ── Correction overflow pour sticky ──
+       overflow-x: hidden sur <html> (style.css) tue position:sticky.
+       On recrée un contexte de scroll propre sur le wrapper. */
+    html, body {
+      overflow-x: clip; /* clip ne crée PAS de nouveau scroll-container, sticky OK */
+    }
+
+    /* Sommaire sticky — suit le scroll */
+    .article-toc {
+      position: sticky;
+      top: 120px;
+      align-self: flex-start;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .article-toc::-webkit-scrollbar { display: none; }
+    .article-toc__title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #2a347d;
+      border-left: 3px solid #fbd020;
+      padding-left: 10px;
+      margin-bottom: 16px;
+    }
+    .article-toc__list {
+      list-style: none;
+      margin: 0; padding: 0;
+    }
+    .article-toc__list li {
+      border-left: 2px solid #e4e8f0;
+      padding: 0;
+      transition: border-color .15s;
+    }
+    .article-toc__list li.is-active {
+      border-left-color: #2a347d;
+    }
+    .article-toc__list a {
+      display: block;
+      padding: 7px 0 7px 12px;
+      font-size: 12.5px;
+      color: #5a6a88;
+      text-decoration: none;
+      line-height: 1.4;
+      transition: color .15s;
+    }
+    .article-toc__list li.is-active a { color: #2a347d; font-weight: 700; }
+    .article-toc__list a:hover { color: #2a347d; }
+
+    /* Séparateur toc */
+    .article-toc__sep {
+      border: none;
+      border-top: 1px solid #e4e8f0;
+      margin: 20px 0;
+    }
+
+    /* Partage dans le sommaire */
+    .article-toc__share {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .article-toc__share-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: #8090a8;
+      margin-bottom: 2px;
+    }
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border: 2px solid #2a347d;
+      background: #fff;
+      color: #2a347d;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      cursor: pointer;
+      border-radius: 0;
+      transition: all .15s;
+      font-family: inherit;
+      text-decoration: none;
+      width: 100%;
+      justify-content: center;
+    }
+    .share-btn:hover { background: #2a347d; color: #fff; }
+
+    /* ── Texte article ── */
+    .article-text p {
+      font-size: 15.5px;
+      color: #2d3748;
+      line-height: 1.85;
+      margin-bottom: 22px;
+    }
+    .article-text h2 {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: #1a2233;
+      margin: 44px 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f2f3f5;
+    }
+    .article-text ul {
+      padding-left: 0;
+      margin-bottom: 22px;
+      list-style: none;
+    }
+    .article-text ul li {
+      font-size: 15px;
+      color: #4a5568;
+      line-height: 1.75;
+      margin-bottom: 10px;
+      padding-left: 20px;
+      position: relative;
+    }
+    .article-text ul li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 11px;
+      width: 10px; height: 2px;
+      background: #fbd020;
+    }
+    .article-text blockquote {
+      border-left: 4px solid #fbd020;
+      background: #f8f9fa;
+      padding: 20px 24px;
+      margin: 32px 0;
+      font-style: italic;
+      font-size: 16px;
+      color: #2a347d;
+    }
+
+    /* Tags */
+    .article-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid #e4e8f0;
+      align-items: center;
+    }
+    .article-tags__label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      color: #8090a8;
+    }
+    .article-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 12px;
+      background: rgba(42,52,125,.07);
+      color: #2a347d;
+      text-decoration: none;
+      border: 1px solid rgba(42,52,125,.15);
+      transition: background .15s;
+    }
+    .article-tag:hover { background: #7fddf0; border-color: #7fddf0; color: #2a347d; }
+
+    /* ── 3. ARTICLES SUGGÉRÉS en bas — même charte que page Actualités ── */
+    .article-suggestions {
+      background: #f2f3f5;
+      padding: 56px 0;
+      margin-top: 0;
+    }
+    .article-suggestions__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+    .article-suggestions__title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #2a347d;
+      border-left: 4px solid #fbd020;
+      padding-left: 12px;
+      margin-bottom: 32px;
+    }
+    /* Grille 3 colonnes */
+    .article-suggestions__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px 28px;
+    }
+    /* ── Carte suggestion : style IDENTIQUE aux cartes Actualités ── */
+    .sugg-card {
+      display: block !important;
+      text-decoration: none !important;
+      color: inherit !important;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      overflow: visible !important;
+    }
+    .sugg-card * { box-sizing: border-box; }
+    .sugg-card:hover .sugg-card__img img { transform: scale(1.04); }
+    .sugg-card:hover .sugg-card__title { color: #2a347d; }
+    /* Zone image avec angle en bas (clip-path identique) */
+    .sugg-card__img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      position: relative;
+      clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+      background: #e0e6f0;
+    }
+    .sugg-card__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .4s ease;
+    }
+    .sugg-card__img-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+    }
+    /* Badge catégorie — coin haut-gauche sur l'image */
+    .sugg-card__badge {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: #fbd020;
+      color: #2a347d;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      padding: 4px 10px;
+      z-index: 2;
+      border-radius: 0;
+    }
+    /* Corps : pas de padding horizontal, pas de fond */
+    .sugg-card__body {
+      padding: 14px 0 0 0;
+      background: transparent;
+    }
+    /* Date avec tiret bleu */
+    .sugg-card__date {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: #8090a8;
+      margin-bottom: 10px;
+    }
+    .sugg-card__date::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: #2a347d;
+      flex-shrink: 0;
+    }
+    /* Titre Cabinet Grotesk 19px bold */
+    .sugg-card__title {
+      font-size: 19px;
+      font-weight: 800;
+      color: #1a2233;
+      line-height: 1.25;
+      margin: 0;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      transition: color .15s;
+    }
+
+    /* Bouton retour listing */
+    .article-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: #2a347d;
+      text-decoration: none;
+      border-bottom: 2px solid #fbd020;
+      padding-bottom: 2px;
+      margin-top: 32px;
+      transition: border-color .15s;
+    }
+    .article-back:hover { border-color: #2a347d; color: #2a347d; }
+
+    /* ── Responsive ── */
+    @media (max-width: 1200px) {
+      .article-hero__content { padding: 40px 48px 48px 32px; }
+      .article-hero__title { font-size: 30px; }
+      .article-hero__inner { min-height: 460px; }
+    }
+    @media (max-width: 900px) {
+      .article-hero__inner { grid-template-columns: 55% 45%; min-height: 380px; }
+      .article-hero__title { font-size: 24px; }
+      .article-hero__content { padding: 32px 32px 48px 24px; }
+    }
+    @media (max-width: 680px) {
+      /* Sur mobile : image en haut, contenu en dessous */
+      .article-hero {
+        clip-path: polygon(0 0, 100% 0, 100% 96%, 0 100%);
+        margin-bottom: -24px;
+        padding-bottom: 24px;
+      }
+      .article-hero::before { width: 100%; }
+      .article-hero__inner {
+        grid-template-columns: 1fr;
+        grid-template-rows: 220px auto;
+      }
+      .article-hero__img {
+        order: -1;
+        height: 220px;
+      }
+      .article-hero__content {
+        padding: 28px 20px 40px;
+        order: 1;
+      }
+      .article-hero__title { font-size: 22px; }
+      .article-hero__chapeau { font-size: 12px; }
+      .article-body-wrap {
+        grid-template-columns: 1fr;
+        padding: 80px 16px 60px;
+        gap: 0;
+      }
+      .article-toc {
+        position: static;
+        border: 2px solid #e4e8f0;
+        padding: 16px;
+        margin-bottom: 32px;
+      }
+      .article-hero__title { font-size: 22px; }
+      .article-suggestions__grid { grid-template-columns: 1fr; gap: 32px 0; }
+      .sugg-card__img { aspect-ratio: 16 / 9; }
+    }
+  </style>
+</head>
+<body class="nav-loading">
+<a href="#main-content" class="sr-only focusable">Aller au contenu principal</a>
+<header class="orege-header" role="banner">
+  <a href="index.html" class="orege-header__logo" aria-label="Observatoire de l'Eau Grand Est – Accueil">
+    <img src="images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true" width="44" height="44" loading="eager">
+    <span class="orege-header__logo-text">Observatoire de l'Eau<br><span>Grand Est</span></span>
+  </a>
+</header>
+
+<!-- ══ HERO : fond blanc, titre gauche + image plein bord droite ══ -->
+<section class="article-hero" aria-label="En-tête de l'article">
+  <div class="article-hero__inner">
+
+    <!-- Colonne gauche : fil d'ariane + titre + chapeau -->
+    <div class="article-hero__content">
+
+      <!-- Fil d'ariane -->
+      <nav class="article-hero__breadcrumb" aria-label="Fil d'ariane">
+        <a href="index.html">Accueil</a>
+        <i class="ph ph-caret-right" aria-hidden="true"></i>
+        <a href="actualites.html">Actualités</a>
+        <i class="ph ph-caret-right" aria-hidden="true"></i>
+        <span>Bilan de la sécheresse 2024 en Grand Est : des nappes sous tension continue</span>
+      </nav>
+
+      <!-- Titre -->
+      <h1 class="article-hero__title">Bilan de la sécheresse 2024 en Grand Est : des nappes sous tension continue</h1>
+
+    </div>
+
+    <!-- Colonne droite : image pleine hauteur collée au bord -->
+    <div class="article-hero__img">
+      <img
+        src="images/article-hero-meandre.jpg"
+        alt="Vue aérienne d'un méandre de rivière en Grand Est"
+        onerror="this.parentElement.innerHTML='<div class=\'article-hero__img-fallback\'><i class=\'fa fa-water\'></i></div>'"
+      >
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ CORPS : sommaire sticky + texte ══ -->
+<main id="main-content">
+<div class="article-body-wrap">
+
+    <!-- Sommaire sticky -->
+    <aside class="article-toc" aria-label="Sommaire de l'article">
+      <div class="article-toc__title">Sommaire</div>
+      <ul class="article-toc__list" id="toc-list">
+        <li class="is-active"><a href="#intro">Introduction</a></li>
+        <li><a href="#contexte">Un contexte déficitaire depuis 2021</a></li>
+        <li><a href="#impacts">Impacts sur les usages de l'eau</a></li>
+        <li><a href="#perspectives">Perspectives et adaptation</a></li>
+      </ul>
+
+      <hr class="article-toc__sep">
+
+      <a href="actualites.html" class="article-back">
+        <i class="ph ph-arrow-left" aria-hidden="true"></i> Toutes les actualités
+      </a>
+    </aside>
+
+  <!-- Texte de l'article -->
+  <article>
+    <div class="article-text">
+
+      <p id="intro">Les niveaux des nappes phréatiques ont atteint des seuils d'alerte dans plusieurs secteurs du Bas-Rhin, de la Marne et des Ardennes durant l'été 2024, prolongeant une tendance déficitaire observée depuis 2021. Cet article dresse un bilan complet des indicateurs hydrologiques et des impacts sur les usages agricoles et l'alimentation en eau potable.</p>
+
+      <blockquote>
+        « La succession des épisodes de sécheresse depuis 2018 a progressivement entamé les réserves des nappes alluviales de la région, réduisant leur capacité de récupération hivernale. » — Équipe Orège
+      </blockquote>
+
+      <h2 id="contexte">Un contexte déficitaire depuis 2021</h2>
+      <p>Les bilans piézométriques annuels réalisés par le BRGM font état d'une tendance à la baisse des niveaux de nappe, particulièrement marquée dans les secteurs calcaires de Champagne-Ardenne et sur les alluvions du Rhin. La recharge hivernale 2023–2024 s'est avérée insuffisante pour compenser les déficits accumulés.</p>
+
+      <ul>
+        <li>Bas-Rhin : déficit de recharge hivernale estimé à -18 % par rapport à la normale 1981-2010</li>
+        <li>Marne (51) : 62 % des stations piézométriques en dessous du seuil d'alerte en juillet 2024</li>
+        <li>Ardennes (08) : étiages prolongés sur la Meuse avec des débits inférieurs au VCN10</li>
+        <li>Vosges (88) : impact notable sur les captages d'eau potable en zones rurales</li>
+      </ul>
+
+      <h2 id="impacts">Des impacts sur les usages de l'eau</h2>
+      <p>Les restrictions d'usage ont été activées dans 7 des 10 départements du Grand Est entre juin et septembre 2024, affectant l'irrigation agricole, le lavage de véhicules et les prélèvements industriels. Certains captages d'eau potable ont nécessité une interconnexion avec des réseaux voisins pour sécuriser l'approvisionnement.</p>
+      <p>Le secteur agricole a subi les impacts les plus significatifs : réduction des surfaces irriguées, baisse des rendements sur les cultures de maïs et de betterave sucrière, et tensions sur les droits de prélèvement dans les zones en déséquilibre quantitatif.</p>
+
+      <h2 id="perspectives">Perspectives et adaptation</h2>
+      <p>La mise en place de systèmes de prévision des étiages et l'élaboration de Plans de Gestion de la Ressource en Eau (PGRE) dans les bassins les plus vulnérables constituent les principales réponses à court terme. À moyen terme, la révision du SDAGE 2028-2033 devra intégrer ces nouvelles réalités climatiques, en renforçant les objectifs quantitatifs et les outils de gestion collective de la ressource.</p>
+
+      <!-- Tags -->
+      <div class="article-tags" role="list">
+        <span class="article-tags__label">Tags :</span>
+        <a href="actualites.html?cat=climat" class="article-tag" role="listitem">Sécheresse</a>
+        <a href="actualites.html?cat=quantitatif" class="article-tag" role="listitem">Nappes phréatiques</a>
+        <a href="actualites.html?cat=quantitatif" class="article-tag" role="listitem">Étiages</a>
+        <a href="actualites.html?cat=usages" class="article-tag" role="listitem">Eau potable</a>
+        <a href="actualites.html?cat=climat" class="article-tag" role="listitem">Changement climatique</a>
+      </div>
+
+    </div>
+  </article>
+
+</div>
+</main>
+
+<!-- ══ SUGGESTIONS EN BAS ══ -->
+<section class="article-suggestions" aria-labelledby="sugg-title">
+  <div class="article-suggestions__inner">
+    <h2 id="sugg-title" class="article-suggestions__title">À lire également</h2>
+    <div class="article-suggestions__grid">
+
+      <a href="article.html" class="sugg-card">
+        <div class="sugg-card__img">
+          <span class="sugg-card__badge">Gouvernance</span>
+          <img src="https://sspark.genspark.ai/cfimages?u1=xCEWLbF2K2e16reKbmlQq%2FHoo6mJaeyjnjQs5mbuFrtRIfLNuXgFrSvPuBDZug81PjnLUGkdMXnV6dxznCnLIfMfseN5o101exM1KPyog90owRqLP%2Bghm8jN1HqxvOOClnRN%2BH9UlgBCqEba%2BvDZJw9MC9cjQdbDWevOiJRb2aAh3ENU5kv%2FFPlmgcCgjv%2FCX%2Ft%2BTIM6i1bwJXHIBnQgrzHNN0NpVy2dYiK7eBnE5FxtoKZA8%2B4sb1ea8a0YR1TqBm9oajvjdxtoXEmDdWa8U90l%2F%2BVZAyNOKR8sXvVk5c7Xxmatrl75I6huJRphjD4A0eUDQ%2FcflYOhdA%3D%3D&u2=CMQOqbznhROT4YC%2F&width=800"
+               alt="Révision du SDAGE"
+               onerror="this.parentElement.innerHTML='<span class=\'sugg-card__badge\'>Gouvernance</span><div class=\'sugg-card__img-fallback\' style=\'background:linear-gradient(135deg,#b9e100,#2a347d);\'><i class=\'fa fa-gavel\' style=\'color:#fff;font-size:52px;\'></i></div>'">
+        </div>
+        <div class="sugg-card__body">
+          <div class="sugg-card__date">3 Février 2025</div>
+          <h3 class="sugg-card__title">Révision du SDAGE 2028-2033 : quels enjeux pour la région ?</h3>
+        </div>
+      </a>
+
+      <a href="article.html" class="sugg-card">
+        <div class="sugg-card__img">
+          <span class="sugg-card__badge">Gestion quantitative</span>
+          <img src="https://sspark.genspark.ai/cfimages?u1=OSbhC6Sn3OTLSdt1beLlB1kYZzpQiLL6MG6a7pkcJ8raUP3ZMJkaoW7kVtOlsRcb3yHuN9gl7e0bIv%2BRsyejaN8u8mNXPDk88P2XSuwmCY%2B3YI6YXQU%2BdA%3D%3D&u2=V0c2V7fSg%2BriLaUx&width=800"
+               alt="Nappe rhénane"
+               onerror="this.parentElement.innerHTML='<span class=\'sugg-card__badge\'>Quantitatif</span><div class=\'sugg-card__img-fallback\' style=\'background:linear-gradient(135deg,#731e8c,#2a347d);\'><i class=\'fa fa-gauge\' style=\'color:#fff;font-size:52px;\'></i></div>'">
+        </div>
+        <div class="sugg-card__body">
+          <div class="sugg-card__date">2 Décembre 2024</div>
+          <h3 class="sugg-card__title">Nappe rhénane : bilan 2024 et perspectives face au changement climatique</h3>
+        </div>
+      </a>
+
+      <a href="article.html" class="sugg-card">
+        <div class="sugg-card__img">
+          <span class="sugg-card__badge">Milieux aquatiques</span>
+          <img src="https://sspark.genspark.ai/cfimages?u1=IkRNtX2At%2BgAUInt%2BJlqa6MoQY1K1UGemZAUihgrXlXxHwIU4xHD7UuxPN5zundtFW9bIK3LNxLhcpyE1oih0RSMWwRBcCMDaOSjbOY0RIHyTADOlw%3D%3D&u2=IDW0vv3q1yeb2WSW&width=800"
+               alt="Saumon Moselle"
+               onerror="this.parentElement.innerHTML='<span class=\'sugg-card__badge\'>Milieux</span><div class=\'sugg-card__img-fallback\' style=\'background:linear-gradient(135deg,#b9e100,#2a347d);\'><i class=\'fa fa-fish\' style=\'color:#fff;font-size:52px;\'></i></div>'">
+        </div>
+        <div class="sugg-card__body">
+          <div class="sugg-card__date">20 Janvier 2025</div>
+          <h3 class="sugg-card__title">Retour du saumon atlantique dans la Moselle : un signal positif</h3>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- BANDEAU PARTENAIRES -->
+<section class="partenaires-bandeau" aria-label="Partenaires">
+  <div class="partenaires-bandeau__inner">
+    <p class="partenaires-bandeau__label">Une plateforme à<br>l'initiative de</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://www.grandest.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-grandest.png" alt="La Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.prefectures-regions.gouv.fr/grand-est" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-prefet-grand-est.png" alt="Préfet de la Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <p class="partenaires-bandeau__label">Et co-financé<br>par</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://european-union.europa.eu/index_fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-union-europeenne.png" alt="Union Européenne" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.lesagencesdeleau.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-agences-eau.png" alt="Les Agences de l'Eau" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+  </div>
+</section>
+<div class="orege-footer-placeholder"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/a11y.js"></script>
+<script>
+/* ── Sommaire : surlignage actif au scroll ── */
+(function () {
+  var tocItems = document.querySelectorAll('.article-toc__list li');
+  var sections = [];
+  tocItems.forEach(function(li) {
+    var a = li.querySelector('a');
+    if (a) {
+      var id = a.getAttribute('href').replace('#','');
+      var el = document.getElementById(id);
+      if (el) sections.push({ li: li, el: el });
+    }
+  });
+
+  function onScroll() {
+    var scrollY = window.scrollY + 120;
+    var current = sections[0];
+    sections.forEach(function(s) {
+      if (s.el.offsetTop <= scrollY) current = s;
+    });
+    tocItems.forEach(function(li) { li.classList.remove('is-active'); });
+    if (current) current.li.classList.add('is-active');
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

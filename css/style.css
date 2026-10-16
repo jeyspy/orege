@@ -1,0 +1,1087 @@
+/**
+ * style.css — Global UI stylesheet (Grand Est design system)
+ * Observatoire de l'Eau Grand Est
+ *
+ * Loaded on every page of the site. Defines the design tokens,
+ * base resets, typography and shared UI components.
+ *
+ * TABLE OF CONTENTS
+ * 1.  CSS Variables (design tokens)
+ * 2.  Reset & base styles
+ * 3.  Typography
+ * 4.  Site header
+ * 5.  Main navigation bar (see also css/nav.css for mega-menu styles)
+ * 6.  Contextual toolbar
+ * 7.  Sidebar / side panel
+ * 8.  Buttons
+ * 9.  Thematic category badges
+ * 10. Forms & selects
+ * 11. Footer
+ * 12. Utilities
+ */
+
+/* ============================================================
+   1. CSS VARIABLES (design tokens)
+   All colours, type sizes and spacing defined here as CSS custom
+   properties so they can be reused consistently across every file.
+   ============================================================ */
+:root {
+
+  /* ── Primary colours — Grand Est brand palette ── */
+  --color-primary:        #2a347d;
+  --color-primary-dark:   #2a347d;
+  --color-primary-xlight: rgba(42,52,125,.12);
+
+  /* ── Accent / complementary colours (Grand Est brand) ── */
+  --color-comp-1: #fa8f75;   /* Orange/Pink */
+  --color-comp-2: #fbd020;   /* Yellow */
+  --color-comp-3: #b9e100;   /* Green */
+  --color-comp-4: #731e8c;   /* Purple */
+  --color-comp-5: #fa640a;   /* Orange */
+  --color-comp-6: #fbd020;   /* Yellow (alias) */
+  --color-comp-7: #b9e100;   /* Green (alias) */
+  --color-comp-8: #fa8f75;   /* Orange/Pink (alias) */
+
+  /* ── Button colours (background; text always #2a347d) ── */
+  --color-btn-1: #7fddf0;   /* Sky blue */
+  --color-btn-2: #ffffff;   /* White */
+  --color-btn-3: #7fddf0;   /* Sky blue (alias) */
+  --color-btn-4: #ffffff;   /* White (alias) */
+
+  /* ── Neutral colours ── */
+  --color-white:          #FFFFFF;
+  --color-bg:             #ffffff;
+  --color-bg-panel:       #FFFFFF;
+  --color-border:         rgba(42,52,125,.15);
+  --color-text:           #1d1d1b;
+  --color-text-muted:     rgba(42,52,125,.5);
+  --color-text-light:     rgba(42,52,125,.35);
+
+  /* ── Thematic category colours (used by badge and chip components) ── */
+  --color-cat-milieux:          #b9e100;  /* Aquatic environments */
+  --color-cat-qualite:          #7fddf0;  /* Water quality */
+  --color-cat-gouvernance:      #fbd020;  /* Governance */
+  --color-cat-climat:           #fa640a;  /* Climate */
+  --color-cat-usages:           #fbd020;  /* Water uses */
+  --color-cat-quantitatif:      #731e8c;  /* Quantitative management */
+
+  /* ── Theme aliases (matching data key names in data-indicateurs.js) ── */
+  --color-theme-eau-potable:    #7fddf0;
+  --color-theme-milieux:        #b9e100;
+  --color-theme-assainissement: #731e8c;
+  --color-theme-risques:        #fa640a;
+  --color-theme-climat:         #fa8f75;
+  --color-theme-gouvernance:    #fbd020;
+
+  /* ── Typography — Grand Est design system ── */
+  --font-h1:              'Cabinet Grotesk', 'Source Sans 3', system-ui, sans-serif;
+  --font-body:            'Satoshi', 'Source Sans 3', system-ui, sans-serif;
+  --font-family-base:     'Satoshi', 'Source Sans 3', system-ui, sans-serif;
+
+  /* Type scale */
+  --font-size-h1:         60px;
+  --font-size-h1-mobile:  26px;
+  --font-size-h2:         44px;
+  --font-size-h2-mobile:  34px;
+  --font-size-h3:         37px;
+  --font-size-h3-mobile:  19px;
+  --font-size-h4:         25px;
+  --font-size-subhead:    20px;
+  --font-size-subhead-mobile: 13px;
+  --font-size-base:       16px;
+  --font-size-sm:         12px;
+  --font-size-lg:         20px;
+  --font-size-xl:         25px;
+  --font-size-xxl:        37px;
+
+  /* Line heights */
+  --lh-h1:   75px;
+  --lh-h2:   54px;
+  --lh-h3:   44px;
+  --lh-h4:   30px;
+  --lh-sub:  24px;
+  --lh-body: 20px;
+  --lh-link: 25px;
+  --lh-cap:  15px;
+
+  /* Text colours (duplicated below to ensure specificity) */
+  --color-text:           #1d1d1b;
+  --color-text-muted:     #5a6280;
+  --color-text-light:     #9399b8;
+  --line-height-base:     1.25;
+
+  /* ── Spacing scale ── */
+  --spacing-xs:   4px;
+  --spacing-sm:   8px;
+  --spacing-md:   16px;
+  --spacing-lg:   24px;
+  --spacing-xl:   40px;
+
+  /* ── Border radii
+     The Grand Est brand favours sharp, almost square corners ── */
+  --radius-sm:    2px;
+  --radius-md:    0px;
+  --radius-lg:    6px;
+  --radius-pill:  0px;
+
+  /* ── Drop shadows ── */
+  --shadow-sm:    0 1px 4px rgba(42,52,125,.08);
+  --shadow-md:    0 4px 16px rgba(42,52,125,.12);
+  --shadow-lg:    0 8px 32px rgba(42,52,125,.16);
+
+  /* ── Layout dimensions ── */
+  --header-height:      68px;  /* Fixed top navigation bar height */
+  --toolbar-height:     52px;  /* Secondary tool bar (dashboard pages) */
+  --sidebar-width:      300px; /* Default side panel width */
+  --sidebar-width-sm:   260px; /* Compact side panel (smaller screens) */
+}
+
+/* ============================================================
+   2. RESET & BASE
+   Minimal opinionated reset on top of the browser defaults.
+   box-sizing: border-box applied universally.
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: var(--font-size-base);
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  overflow-x: hidden;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color .2s ease;
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+/* ============================================================
+   3. TYPOGRAPHY — Grand Est design system
+   All heading styles follow the official Grand Est brand manual.
+   ============================================================ */
+
+/* H1 — Cabinet Grotesk 800, 60 px, uppercase, line-height 75 px */
+h1 {
+  font-family: var(--font-h1);
+  font-size: var(--font-size-h1);
+  font-weight: 800;
+  line-height: var(--lh-h1);
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #1d1d1b;
+  margin-top: 0;
+}
+
+/* H2 — Satoshi 700, 44 px, line-height 54 px, letter-spacing -1 px */
+h2 {
+  font-family: var(--font-body);
+  font-size: var(--font-size-h2);
+  font-weight: 700;
+  line-height: var(--lh-h2);
+  letter-spacing: -1px;
+  color: var(--color-primary);
+  margin-top: 0;
+}
+
+/* H3 — Satoshi 700, 37 px, line-height 44 px, letter-spacing -1 px */
+h3 {
+  font-family: var(--font-body);
+  font-size: var(--font-size-h3);
+  font-weight: 700;
+  line-height: var(--lh-h3);
+  letter-spacing: -1px;
+  color: var(--color-primary);
+  margin-top: 0;
+}
+
+/* H4 — Satoshi 700, 25px, interligne 30px, approche -1px */
+h4 {
+  font-family: var(--font-body);
+  font-size: var(--font-size-h4);
+  font-weight: 700;
+  line-height: var(--lh-h4);
+  letter-spacing: -1px;
+  color: var(--color-primary);
+  margin-top: 0;
+}
+
+h5, h6 {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-top: 0;
+}
+
+/* Body text / paragraphs — Satoshi 400, 16 px, line-height 20 px */
+p, li, td, th, span, div {
+  font-family: var(--font-body);
+}
+
+/* Default paragraph style */
+.body-text, p {
+  font-size: var(--font-size-base);
+  font-weight: 400;
+  line-height: var(--lh-body);
+  color: #1d1d1b;
+}
+
+/* Bold / strong */
+strong, b, .text-bold {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  line-height: var(--lh-body);
+  color: #1d1d1b;
+}
+
+/* Sub-title / section eyebrow — Satoshi 400, 20 px, uppercase, line-height 24 px */
+.subhead, .section-eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--font-size-subhead);
+  font-weight: 400;
+  line-height: var(--lh-sub);
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+/* Caption — Satoshi 400, 12 px, line-height 15 px */
+.caption, figcaption, .text-caption {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  line-height: var(--lh-cap);
+  color: #1d1d1b;
+}
+
+/* Links — Satoshi 700, 16 px, indigo, cyan underline */
+a {
+  font-family: var(--font-body);
+  font-size: inherit;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: #7fddf0; /* Grand Est cyan accent */
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  line-height: var(--lh-link);
+  transition: color .2s ease, text-decoration-color .2s ease;
+}
+a:hover {
+  color: var(--color-primary-dark);
+  text-decoration-color: var(--color-primary);
+}
+
+/* Typography utilities */
+.text-muted   { color: var(--color-text-muted) !important; }
+.text-small   { font-size: var(--font-size-sm); }
+.text-primary { color: var(--color-primary) !important; }
+
+/* Responsive typography breakpoints */
+@media (max-width: 768px) {
+  h1 { font-size: var(--font-size-h1-mobile); line-height: 32px; }
+  h2 { font-size: var(--font-size-h2-mobile); line-height: 42px; }
+  h3 { font-size: var(--font-size-h3-mobile); line-height: 26px; }
+  .subhead, .section-eyebrow { font-size: var(--font-size-subhead-mobile); }
+}
+
+/* ============================================================
+   4. SITE HEADER
+   Fixed header bar at the top of every page.
+   Navigation is injected by nav.js into .orege-header.
+   ============================================================ */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--header-height);
+  background-color: var(--color-primary-dark);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.site-header__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  text-decoration: none;
+}
+
+.site-header__logo-img {
+  height: 36px;
+  width: auto;
+}
+
+.site-header__logo-text {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-white);
+  letter-spacing: .2px;
+  white-space: nowrap;
+}
+
+.site-header__logo-text span {
+  font-weight: 300;
+  opacity: .8;
+}
+
+.site-header__nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.site-header__nav-link {
+  color: rgba(255,255,255,.75);
+  font-size: 13px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: background .2s ease, color .2s ease;
+  text-decoration: none;
+}
+
+.site-header__nav-link:hover,
+.site-header__nav-link.is-active {
+  color: var(--color-white);
+  background-color: rgba(255,255,255,.15);
+  text-decoration: none;
+}
+
+.site-header__nav-link.is-active {
+  background-color: rgba(255,255,255,.2);
+  font-weight: 600;
+}
+
+/* ============================================================
+   5. SECONDARY NAV BAR
+   Fixed sub-navigation below the main header (used on dashboard
+   and interactive tool pages for breadcrumb / context controls).
+   ============================================================ */
+.site-subnav {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  z-index: 999;
+  height: var(--toolbar-height);
+  background-color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-lg);
+  gap: var(--spacing-sm);
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
+
+.site-subnav__label {
+  font-size: var(--font-size-sm);
+  color: rgba(255,255,255,.7);
+  font-weight: 500;
+  margin-right: var(--spacing-xs);
+  white-space: nowrap;
+}
+
+.site-subnav__select {
+  height: 32px;
+  padding: 0 var(--spacing-md) 0 var(--spacing-sm);
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: var(--radius-sm);
+  background-color: rgba(255,255,255,.12);
+  color: var(--color-white);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-base);
+  cursor: pointer;
+  outline: none;
+  min-width: 180px;
+  transition: background .2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+}
+
+.site-subnav__select:hover,
+.site-subnav__select:focus {
+  background-color: rgba(255,255,255,.22);
+  border-color: rgba(255,255,255,.55);
+}
+
+.site-subnav__select option {
+  background-color: var(--color-primary-dark);
+  color: var(--color-white);
+}
+
+.site-subnav__separator {
+  width: 1px;
+  height: 24px;
+  background-color: rgba(255,255,255,.25);
+  margin: 0 var(--spacing-xs);
+}
+
+.site-subnav__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* ============================================================
+   6. SIDEBAR / SIDE PANEL
+   Fixed side panel used on cartography and dashboard pages.
+   Width is controlled via CSS variables (--sidebar-width).
+   ============================================================ */
+.sidebar {
+  position: fixed;
+  top: calc(var(--header-height) + var(--toolbar-height));
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background-color: var(--color-bg-panel);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 900;
+  box-shadow: var(--shadow-sm);
+}
+
+.sidebar__header {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--color-bg);
+  flex-shrink: 0;
+}
+
+.sidebar__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin: 0;
+}
+
+.sidebar__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-sm) 0;
+}
+
+.sidebar__body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar__body::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 2px;
+}
+
+/* Groupes de filtres (accordéon) */
+.filtre-groupe {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.filtre-groupe__entete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  user-select: none;
+  transition: background .15s ease;
+}
+
+.filtre-groupe__entete:hover {
+  background-color: var(--color-bg);
+}
+
+.filtre-groupe__titre {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--color-text);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.filtre-groupe__chevron {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  transition: transform .25s ease;
+}
+
+.filtre-groupe.is-open .filtre-groupe__chevron {
+  transform: rotate(180deg);
+}
+
+.filtre-groupe__contenu {
+  padding: 0 var(--spacing-sm) var(--spacing-sm);
+}
+
+/* Sous-groupes */
+.filtre-sous-groupe {
+  margin-bottom: var(--spacing-xs);
+}
+
+.filtre-sous-groupe__titre {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  margin: 0;
+}
+
+/* Items de filtre (checkboxes) */
+.filtre-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 5px var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background .15s ease;
+  user-select: none;
+}
+
+.filtre-item:hover {
+  background-color: var(--color-primary-xlight);
+}
+
+.filtre-item input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.filtre-item__label {
+  font-size: 12px;
+  color: var(--color-text);
+  flex: 1;
+  line-height: 1.4;
+}
+
+.filtre-item__count {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  padding: 1px 5px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+}
+
+/* État désactivé des filtres */
+.filtre-item.is-disabled {
+  opacity: .35;
+  pointer-events: none;
+}
+
+.filtre-groupe.is-disabled {
+  opacity: .35;
+  pointer-events: none;
+}
+
+/* ============================================================
+   7. BUTTONS
+   Site-wide button components using the Grand Est brand palette.
+   Primary CTA = cyan (#7fddf0) background, dark blue text.
+   ============================================================ */
+.btn-observatoire {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 9px 22px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  letter-spacing: .4px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+  white-space: nowrap;
+  text-decoration: none;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.btn-observatoire:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Primaire : bleu ciel #7fddf0, texte #2a347d */
+.btn-observatoire--primary {
+  background-color: #7fddf0;
+  color: #2a347d;
+  border-color: #7fddf0;
+}
+.btn-observatoire--primary:hover {
+  background-color: #2a347d;
+  border-color: #2a347d;
+  color: #ffffff;
+}
+
+/* Secondaire : blanc, texte #2a347d */
+.btn-observatoire--secondary {
+  background-color: #ffffff;
+  color: #2a347d;
+  border-color: #2a347d;
+}
+.btn-observatoire--secondary:hover {
+  background-color: #2a347d;
+  border-color: #2a347d;
+  color: #ffffff;
+}
+
+/* Tertiaire : #7fddf0, texte #2a347d */
+.btn-observatoire--tertiary {
+  background-color: #7fddf0;
+  color: #2a347d;
+  border-color: #7fddf0;
+}
+.btn-observatoire--tertiary:hover {
+  background-color: #2a347d;
+  border-color: #2a347d;
+  color: #ffffff;
+}
+
+/* Quaternaire : blanc, texte #2a347d */
+.btn-observatoire--quaternary {
+  background-color: #ffffff;
+  color: #2a347d;
+  border-color: #2a347d;
+}
+.btn-observatoire--quaternary:hover {
+  background-color: #2a347d;
+  border-color: #2a347d;
+  color: #ffffff;
+}
+
+/* Outline sur fond coloré (hero, bannières) */
+.btn-observatoire--outline {
+  background-color: transparent;
+  color: var(--color-white);
+  border-color: rgba(255,255,255,.6);
+}
+.btn-observatoire--outline:hover {
+  background-color: rgba(255,255,255,.18);
+  border-color: rgba(255,255,255,.9);
+  color: var(--color-white);
+}
+
+/* Ghost : fond transparent, contour indigo, hover bleu ciel */
+.btn-observatoire--ghost {
+  background-color: transparent;
+  color: #2a347d;
+  border-color: #2a347d;
+}
+.btn-observatoire--ghost:hover {
+  background-color: #7fddf0;
+  color: #2a347d;
+  border-color: #7fddf0;
+}
+
+.btn-observatoire--sm {
+  padding: 4px var(--spacing-sm);
+  font-size: 11px;
+}
+
+/* ============================================================
+   8. THEMATIC CATEGORY BADGES
+   Small inline colour-coded labels used to tag content by theme
+   (water quality, governance, climate, etc.).
+   ============================================================ */
+.badge-thematique {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  white-space: nowrap;
+}
+
+.badge-thematique--eau-potable {
+    background-color: #7fddf0;   /* Sky blue — Grand Est complementary brand colour */
+  color: #2a347d;
+}
+
+.badge-thematique--milieux {
+    background-color: #bff09e;   /* Mint green — Grand Est complementary brand colour */
+  color: #2a347d;
+}
+
+.badge-thematique--assainissement {
+  background-color: #bab0ed;   /* Lavande — complémentaire charte */
+  color: #2a347d;
+}
+
+.badge-thematique--risques {
+  background-color: #ec947b;   /* Terracotta — complémentaire charte */
+  color: #2a347d;
+}
+
+.badge-thematique--climat {
+  background-color: #f6da73;   /* Jaune doux — complémentaire charte */
+  color: #2a347d;
+}
+
+.badge-thematique--gouvernance {
+  background-color: #c7de6e;   /* Soft green — Grand Est complementary brand colour */
+  color: #2a347d;
+}
+
+/* ============================================================
+   9. FORMS & SELECTS
+   Custom form controls styled to match the Grand Est brand.
+   ============================================================ */
+.form-select-observatoire {
+  height: 36px;
+  padding: 0 32px 0 var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-white);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-base);
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7A99' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.form-select-observatoire:hover,
+.form-select-observatoire:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(42,52,125,.12);
+}
+
+/* ============================================================
+   10. BANDEAU PARTENAIRES
+   ============================================================ */
+.partenaires-bandeau {
+  background: #ffffff;
+  border-top: 1px solid rgba(42,52,125,.10);
+  border-bottom: 1px solid rgba(42,52,125,.10);
+  padding: 24px 40px;
+}
+
+.partenaires-bandeau__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.partenaires-bandeau__label {
+  font-family: 'Satoshi', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2a347d;
+  line-height: 1.35;
+  white-space: nowrap;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.partenaires-bandeau__separator {
+  width: 2px;
+  height: 48px;
+  background: rgba(42,52,125,.18);
+  flex-shrink: 0;
+}
+
+.partenaires-bandeau__logos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: nowrap;
+  flex: 1;
+}
+
+.partenaires-bandeau__logos li {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-right: 1px solid rgba(42,52,125,.10);
+}
+
+.partenaires-bandeau__logos li:last-child {
+  border-right: none;
+}
+
+.partenaires-bandeau__logos a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.partenaires-bandeau__logos img {
+  height: 52px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  transition: opacity .2s ease;
+}
+
+.partenaires-bandeau__logos a:hover img {
+  opacity: .75;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .partenaires-bandeau {
+    padding: 20px 24px;
+  }
+  .partenaires-bandeau__logos img {
+    height: 44px;
+    max-width: 100px;
+  }
+  .partenaires-bandeau__logos li {
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 700px) {
+  .partenaires-bandeau {
+    padding: 24px 16px;
+  }
+  .partenaires-bandeau__inner {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    text-align: center;
+    width: 100%;
+  }
+  .partenaires-bandeau__label {
+    white-space: normal;
+    text-align: center;
+    width: 100%;
+    display: block;
+  }
+  .partenaires-bandeau__separator {
+    width: 48px;
+    height: 2px;
+    margin: 0 auto;
+  }
+  .partenaires-bandeau__logos {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    flex: unset;
+    width: 100%;
+  }
+  .partenaires-bandeau__logos li {
+    flex: unset;
+    border-right: none;
+    padding: 6px 10px;
+    justify-content: center;
+  }
+  .partenaires-bandeau__logos img {
+    height: 40px;
+    max-width: 90px;
+  }
+}
+
+@media (max-width: 768px) {
+  .partenaires-bandeau__inner {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .partenaires-bandeau__separator {
+    display: none;
+  }
+  .partenaires-bandeau__logos {
+    flex-wrap: wrap;
+    gap: 4px;
+    width: 100%;
+  }
+  .partenaires-bandeau__logos li {
+    flex: 0 0 calc(33.33% - 4px);
+    border-right: none;
+    border-bottom: 1px solid rgba(42,52,125,.08);
+    padding: 10px 8px;
+  }
+  .partenaires-bandeau__logos li:nth-last-child(-n+3) {
+    border-bottom: none;
+  }
+  .partenaires-bandeau__logos img {
+    height: 40px;
+    max-width: 90px;
+  }
+}
+
+@media (max-width: 480px) {
+  .partenaires-bandeau {
+    padding: 20px 16px;
+  }
+  .partenaires-bandeau__logos li {
+    flex: 0 0 calc(50% - 4px);
+  }
+  .partenaires-bandeau__logos li:nth-last-child(-n+3) {
+    border-bottom: 1px solid rgba(42,52,125,.08);
+  }
+  .partenaires-bandeau__logos li:nth-last-child(-n+2) {
+    border-bottom: none;
+  }
+}
+
+/* ============================================================
+   11. FOOTER
+   ============================================================ */
+.site-footer {
+  background-color: var(--color-primary-dark);
+  color: rgba(255,255,255,.65);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-md) var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.site-footer__copyright {
+  color: rgba(255,255,255,.5);
+}
+
+.site-footer__links {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.site-footer__links a {
+  color: rgba(255,255,255,.65);
+  font-size: var(--font-size-sm);
+}
+
+.site-footer__links a:hover {
+  color: var(--color-white);
+  text-decoration: underline;
+}
+
+/* ============================================================
+   11. UTILITAIRES
+   ============================================================ */
+
+/* Zone principale (décalée du header + toolbar + sidebar) */
+.page-content {
+  margin-top: calc(var(--header-height) + var(--toolbar-height));
+  margin-left: var(--sidebar-width);
+  min-height: calc(100vh - var(--header-height) - var(--toolbar-height));
+}
+
+.page-content--no-sidebar {
+  margin-left: 0;
+}
+
+/* Chargement */
+.spinner-observatoire {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Tooltip */
+.tooltip-observatoire {
+  position: absolute;
+  z-index: 9999;
+  background: var(--color-text);
+  color: var(--color-white);
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+}
+
+/* Scrollbar globale */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-light); }
+
+/* Transition générale */
+.transition-all { transition: all .2s ease; }
+
+/* Overlay plein écran */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  z-index: 800;
+  display: none;
+}
+
+.overlay.is-visible { display: block; }

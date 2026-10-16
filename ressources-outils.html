@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>Outils et liens utiles – Ressources – Observatoire de l'Eau Grand Est</title>
+  <meta name="description" content="Outils, portails et liens utiles pour les professionnels et citoyens de l'eau en Grand Est.">
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="css/fonts.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/a11y.css">
+  <!-- Page-specific styles for the tools & useful links page -->
+  <link rel="stylesheet" href="css/ressources-outils.css">
+</head>
+<body class="nav-loading">
+<a href="#main-content" class="sr-only focusable">Aller au contenu principal</a>
+
+<header class="orege-header" role="banner">
+  <a href="index.html" class="orege-header__logo" aria-label="Observatoire de l'Eau Grand Est – Accueil">
+    <img src="images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true" width="44" height="44" loading="eager">
+    <span class="orege-header__logo-text">Observatoire de l'Eau<br><span>Grand Est</span></span>
+  </a>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero__inner">
+    <nav class="page-hero__eyebrow" aria-label="Fil d'ariane">
+      <ol>
+        <li><a href="index.html"><i class="ph ph-house" aria-hidden="true"></i> Accueil</a></li>
+        <li><i class="ph ph-caret-right" aria-hidden="true"></i></li>
+        <li><a href="ressources-retex.html">Ressources</a></li>
+        <li><i class="ph ph-caret-right" aria-hidden="true"></i></li>
+        <li><span aria-current="page">Outils &amp; liens utiles</span></li>
+      </ol>
+    </nav>
+    <h1 class="page-hero__title">Outils et liens utiles</h1>
+    <p class="page-hero__sub">Les portails, outils partenaires et références en ligne incontournables pour les professionnels et citoyens de l'eau.</p>
+  </div>
+</div>
+
+<main id="main-content">
+<div class="page-content">
+
+  <!-- Recherche -->
+  <div class="search-bar">
+    <input type="search" id="outils-search" placeholder="Rechercher un outil ou portail…" aria-label="Rechercher un outil ou portail" autocomplete="off">
+    <i class="ph ph-magnifying-glass search-bar__icon" aria-hidden="true"></i>
+  </div>
+
+  <!-- Filtres catégories -->
+  <div class="outils-filters" role="group" aria-label="Filtrer par catégorie">
+    <button class="outils-filter-btn is-active" data-filter="all" aria-pressed="true">
+      <i class="ph ph-list" aria-hidden="true"></i> Toutes les catégories
+    </button>
+    <button class="outils-filter-btn" data-filter="donnees" aria-pressed="false">
+      <i class="ph ph-database" aria-hidden="true"></i> Données &amp; indicateurs
+    </button>
+    <button class="outils-filter-btn" data-filter="carto" aria-pressed="false">
+      <i class="ph ph-map" aria-hidden="true"></i> Cartographie &amp; SIG
+    </button>
+    <button class="outils-filter-btn" data-filter="gouvernance" aria-pressed="false">
+      <i class="ph ph-gavel" aria-hidden="true"></i> Gouvernance &amp; planification
+    </button>
+    <button class="outils-filter-btn" data-filter="partenaires" aria-pressed="false">
+      <i class="ph ph-handshake" aria-hidden="true"></i> Partenaires Grand Est
+    </button>
+  </div>
+
+  <div id="no-results" class="no-results">
+    <i class="ph ph-warning-circle" aria-hidden="true"></i>
+    Aucun outil ne correspond à votre recherche.
+  </div>
+
+  <!-- Données et indicateurs nationaux -->
+  <section class="cat-section" data-category="donnees">
+    <h2 class="cat-title"><i class="ph ph-database" aria-hidden="true"></i> Données & indicateurs nationaux</h2>
+    <p class="cat-subtitle">Portails de données officiels de référence pour l'eau en France.</p>
+    <div class="outils-grid">
+
+      <div class="outil-card" data-keywords="sandre eau données référentiels qualité masses">
+        <div class="outil-card__header">
+          <div class="outil-card__icon" style="background:rgba(42,52,125,.08);color:#2a347d"><i class="ph ph-bookmark" aria-hidden="true"></i></div>
+          <div class="outil-card__title-area">
+            <div class="outil-card__name">SANDRE</div>
+          </div>
+        </div>
+        <div class="outil-card__body">
+          <p class="outil-card__desc">Le Système d'Information sur l'Eau fournit les référentiels, normes et données officielles sur les milieux et usages de l'eau en France (masses d'eau, stations, paramètres).</p>
+
+        </div>
+        <div class="outil-card__footer">
+          <a href="https://www.sandre.eaufrance.fr" target="_blank" rel="noopener" class="outil-card__link">
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i> Accéder
+          </a>
+        </div>
+      </div>
+
+      <div class="outil-card" data-keywords="hub eau API données hydrologie qualité potable nappes">
+        <div class="outil-card__header">
+          <div class="outil-card__icon" style="background:rgba(42,52,125,.08);color:#2a347d"><i class="ph ph-bookmark" aria-hidden="true"></i></div>
+          <div class="outil-card__title-area">
+            <div class="outil-card__name">Hub'Eau</div>
+          </div>
+        </div>
+        <div class="outil-card__body">
+          <p class="outil-card__desc">Portail d'accès aux API de données sur l'eau : hydrologie en temps réel, qualité des cours d'eau, eau potable, eaux souterraines, piézométrie. Données en JSON/GeoJSON.</p>
+
+        </div>
+        <div class="outil-card__footer">
+          <a href="https://hubeau.eaufrance.fr" target="_blank" rel="noopener" class="outil-card__link">
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i> Accéder
+          </a>
+        </div>
+      </div>
+
+      <div class="outil-card" data-keywords="BRGM eaux souterraines nappes piézométrie ADES hydrogéologie">
+        <div class="outil-card__header">
+          <div class="outil-card__icon" style="background:rgba(42,52,125,.08);color:#2a347d"><i class="ph ph-bookmark" aria-hidden="true"></i></div>
+          <div class="outil-card__title-area">
+            <div class="outil-card__name">ADES – Portail nappes</div>
+          </div>
+        </div>
+        <div class="outil-card__body">
+          <p class="outil-card__desc">Accès aux données sur les eaux souterraines : piézométrie, qualité des nappes, réseau de surveillance de la nappe phréatique. Intégration via API Hub'Eau.</p>
+
+        </div>
+        <div class="outil-card__footer">
+          <a href="https://ades.eaufrance.fr" target="_blank" rel="noopener" class="outil-card__link">
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i> Accéder
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Cartographie et SIG -->
+  <section class="cat-section" data-category="carto">
+    <h2 class="cat-title"><i class="ph ph-map" aria-hidden="true"></i> Cartographie & SIG</h2>
+    <p class="cat-subtitle">Outils cartographiques et portails géographiques dédiés à l'eau.</p>
+    <div class="outils-grid">
+
+      <div class="outil-card" data-keywords="vigieau sécheresse restriction eau alerte arrêté préfectoral">
+        <div class="outil-card__header">
+          <div class="outil-card__icon" style="background:rgba(42,52,125,.08);color:#2a347d"><i class="ph ph-bookmark" aria-hidden="true"></i></div>
+          <div class="outil-card__title-area">
+            <div class="outil-card__name">VigiEau</div>
+          </div>
+        </div>
+        <div class="outil-card__body">
+          <p class="outil-card__desc">Portail national de suivi des restrictions d'eau par commune. Affiche en temps réel les arrêtés préfectoraux et niveaux d'alerte sécheresse (vigilance, alerte, alerte renforcée, crise).</p>
+
+        </div>
+        <div class="outil-card__footer">
+          <a href="https://vigieau.gouv.fr" target="_blank" rel="noopener" class="outil-card__link">
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i> Accéder
+          </a>
+        </div>
+      </div>
+
+      <div class="outil-card" data-keywords="georisques inondations PPRI PGRI cartographie zones inondables">
+        <div class="outil-card__header">
+          <div class="outil-card__icon" style="background:rgba(42,52,125,.08);color:#2a347d"><i class="ph ph-bookmark" aria-hidden="true"></i></div>
+          <div class="outil-card__title-area">
+            <div class="outil-card__name">Géorisques</div>
+          </div>
+        </div>
+        <div class="outil-card__body">
+          <p class="outil-card__desc">Portail national d'information sur les risques naturels et technologiques : zones inondables, PPRI, retrait-gonflement des argiles, séismes. Inclut le simulateur de risques par adresse.</p>
+
+        </div>
+        <div class="outil-card__footer">
+          <a href="https://www.georisques.gouv.fr" target="_blank" rel="noopener" class="outil-card__link">
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i> Accéder
+          </a>
+        </div>
+      </div>
+
+      <div class="outil-card" data-keywords="vigicrue inondations crues débits hydrologie temps réel">
+        <div class="outil-card__header">
+          <div class="outil-card__icon" style="background:rgba(42,52,125,.08);color:#2a347d"><i class="ph ph-bookmark" aria-hidden="true"></i></div>
+          <div class="outil-card__title-area">
+            <div class="outil-card__name">Vigicrues</div>
+          </div>
+        </div>
+        <div class="outil-card__body">
+          <p class="outil-card__desc">Carte nationale de vigilance crues en temps réel. Niveaux d'alerte par cours d'eau, prévisions hydrologiques, archives des événements. Service national de prévision des crues (SCHAPI).</p>
+
+        </div>
+        <div class="outil-card__footer">
+          <a href="https://www.vigicrues.gouv.fr" target="_blank" rel="noopener" class="outil-card__link">
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i> Accéder
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Gouvernance et planification -->
+  <section class="cat-section" data-category="gouvernance">
+    <h2 class="cat-title"><i class="ph ph-gavel" aria-hidden="true"></i> Gouvernance & planification</h2>
+    <p class="cat-subtitle">Portails et outils pour la gouvernance de l'eau, SAGE, SDAGE et planification.</p>
+    <div class="outils-grid">
+
+      <div class="outil-card" data-keywords="gesteau SAGE SDAGE EPTB CLE gouvernance commissions locales eau">
+        <div class="outil-card__header">
+          <div class="outil-card__icon" style="background:rgba(42,52,125,.08);color:#2a347d"><i class="ph ph-bookmark" aria-hidden="true"></i></div>
+          <div class="outil-card__title-area">
+            <div class="outil-card__name">Gest'eau</div>
+          </div>
+        </div>
+        <div class="outil-card__body">
+          <p class="outil-card__desc">Portail national de gestion des SAGE (Schémas d'Aménagement et de Gestion des Eaux) : localisation, état d'avancement, documents approuvés, commissions locales de l'eau.</p>
+
+        </div>
+        <div class="outil-card__footer">
+          <a href="https://www.gesteau.fr" target="_blank" rel="noopener" class="outil-card__link">
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i> Accéder
+          </a>
+        </div>
+      </div>
+
+      <div class="outil-card" data-keywords="DCE directive cadre eau état masses eau bon état ecologique chimique">
+        <div class="outil-card__header">
+          <div class="outil-card__icon" style="background:rgba(42,52,125,.08);color:#2a347d"><i class="ph ph-bookmark" aria-hidden="true"></i></div>
+          <div class="outil-card__title-area">
+            <div class="outil-card__name">DCE – État des masses d'eau</div>
+          </div>
+        </div>
+        <div class="outil-card__body">
+          <p class="outil-card__desc">Portail de suivi de l'état écologique et chimique des masses d'eau superficielles et souterraines selon la Directive Cadre sur l'Eau. Données par cycle de gestion SDAGE.</p>
+
+        </div>
+        <div class="outil-card__footer">
+          <a href="https://www.eaufrance.fr" target="_blank" rel="noopener" class="outil-card__link">
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i> Eau France
+          </a>
+        </div>
+      </div>
+
+      <div class="outil-card" data-keywords="assainissement collectif non collectif conformité SPANC">
+        <div class="outil-card__header">
+          <div class="outil-card__icon" style="background:rgba(42,52,125,.08);color:#2a347d"><i class="ph ph-bookmark" aria-hidden="true"></i></div>
+          <div class="outil-card__title-area">
+            <div class="outil-card__name">SISPEA – Eau & Assainissement</div>
+          </div>
+        </div>
+        <div class="outil-card__body">
+          <p class="outil-card__desc">Système d'information sur les services publics d'eau et d'assainissement. Observatoire des services (prix, performance, conformité) et données des rapports annuels des services.</p>
+
+        </div>
+        <div class="outil-card__footer">
+          <a href="https://www.services.eaufrance.fr" target="_blank" rel="noopener" class="outil-card__link">
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i> Accéder
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Outils partenaires Grand Est -->
+  <section class="cat-section" data-category="partenaires">
+    <h2 class="cat-title"><i class="ph ph-handshake" aria-hidden="true"></i> Outils partenaires Grand Est</h2>
+    <p class="cat-subtitle">Portails et outils spécifiques au territoire Grand Est.</p>
+    <div class="outils-grid">
+
+      <div class="outil-card" data-keywords="eau rhin meuse agence redevances bassins versants subventions aides">
+        <div class="outil-card__header">
+          <div class="outil-card__icon" style="background:rgba(42,52,125,.08);color:#2a347d"><i class="ph ph-bookmark" aria-hidden="true"></i></div>
+          <div class="outil-card__title-area">
+            <div class="outil-card__name">Eau Rhin-Meuse</div>
+          </div>
+        </div>
+        <div class="outil-card__body">
+          <p class="outil-card__desc">Site de l'Agence de l'eau Rhin-Meuse : appels à projets, données territoriales, programme de mesures, aides et redevances pour les acteurs du bassin Rhin-Meuse.</p>
+
+        </div>
+        <div class="outil-card__footer">
+          <a href="https://www.eau-rhin-meuse.fr" target="_blank" rel="noopener" class="outil-card__link">
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i> Accéder
+          </a>
+        </div>
+      </div>
+
+      <div class="outil-card" data-keywords="DREAL Grand Est environnement eau arrêtés autorisation">
+        <div class="outil-card__header">
+          <div class="outil-card__icon" style="background:rgba(42,52,125,.08);color:#2a347d"><i class="ph ph-bookmark" aria-hidden="true"></i></div>
+          <div class="outil-card__title-area">
+            <div class="outil-card__name">DREAL Grand Est – Eau</div>
+          </div>
+        </div>
+        <div class="outil-card__body">
+          <p class="outil-card__desc">Rubrique eau de la DREAL Grand Est : politiques régionales, instructions des dossiers loi sur l'eau, police de l'eau, données réglementaires et rapports de bassin.</p>
+
+        </div>
+        <div class="outil-card__footer">
+          <a href="https://www.grand-est.developpement-durable.gouv.fr" target="_blank" rel="noopener" class="outil-card__link">
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i> Accéder
+          </a>
+        </div>
+      </div>
+
+      <div class="outil-card" data-keywords="Météo France précipitations sécheresse climatologie Grand Est">
+        <div class="outil-card__header">
+          <div class="outil-card__icon" style="background:rgba(42,52,125,.08);color:#2a347d"><i class="ph ph-bookmark" aria-hidden="true"></i></div>
+          <div class="outil-card__title-area">
+            <div class="outil-card__name">Météo-France – Climatologie</div>
+          </div>
+        </div>
+        <div class="outil-card__body">
+          <p class="outil-card__desc">Portail climatologique de Météo-France : séries historiques de précipitations, températures, évènements extrêmes. Données essentielles pour l'analyse des ressources et des risques liés à l'eau.</p>
+
+        </div>
+        <div class="outil-card__footer">
+          <a href="https://donneespubliques.meteofrance.fr" target="_blank" rel="noopener" class="outil-card__link">
+            <i class="ph ph-arrow-square-out" aria-hidden="true"></i> Accéder
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Charger plus -->
+  <div class="load-more-wrap" id="outils-load-more-wrap">
+    <button class="load-more-btn" id="outils-load-more-btn" aria-label="Charger plus d'outils">
+      <i class="ph ph-plus" aria-hidden="true"></i> Charger plus d'outils
+    </button>
+    <p class="load-more-count" id="outils-load-more-count"></p>
+  </div>
+
+  <!-- Suggérer un outil -->
+  <div class="notice notice--info">
+    <i class="ph ph-circle-plus" aria-hidden="true"></i>
+    <span>Vous connaissez un outil ou portail pertinent non référencé ? <a href="mentions-legales.html#contact">Signalez-le à l'équipe</a> pour enrichir cette liste.</span>
+  </div>
+
+</div>
+</main>
+
+<!-- BANDEAU PARTENAIRES -->
+<section class="partenaires-bandeau" aria-label="Partenaires">
+  <div class="partenaires-bandeau__inner">
+    <p class="partenaires-bandeau__label">Une plateforme à<br>l'initiative de</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://www.grandest.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-grandest.png" alt="La Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.prefectures-regions.gouv.fr/grand-est" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-prefet-grand-est.png" alt="Préfet de la Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <p class="partenaires-bandeau__label">Et co-financé<br>par</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://european-union.europa.eu/index_fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-union-europeenne.png" alt="Union Européenne" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.lesagencesdeleau.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-agences-eau.png" alt="Les Agences de l'Eau" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+  </div>
+</section>
+<div class="orege-footer-placeholder"></div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/a11y.js"></script>
+<!-- Page-specific JS: search, category filters, load more -->
+<script src="js/ressources-outils.js"></script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+ENJEUX;Exposition / Sensibilité / Vulnérabilité;Catégories;sous-Catégories;Nom_indicateur;Description;Unités;Echelle de représentation;"Type de représentation :
+cartographie";"Type de représentation :
+graphique";"Type de représentation :
+chiffre clé";Libellés de catégories;Commentaires;Intérêt;Faisabilité;Disponibilité de la donnée;"Priorité
+V1 - Juin 2026
+V2 - Fin d'année 2026
+V3 - Futur";Thématique RGE;Remarque Antea;Etat d'avancement;Fiche descriptive indicateur;Texte explicatif de la donnée (RGE)
+Aménagement du territoire et zonage;Sensibilité;Zonage;Zones humides;Nombre de zones humides;Recencement en nombre des zones humides (ZH DREAL Grand-Est + Ramsar) différencié selon la typologie;Nombre;Avis Antea : représentation adaptée à tous les territoires;x;"x
+(type camembert/donut)";;ZHE-LsE (cf. symbo DREAL GE) / ZHE-LsE-AM08 (cf. symbo DREAL GE);"Donnée à l'échelle du département et en total pour la région + EPCI et BV
+Différencier la typologie  (ZHE-LsE / ZHE-LsE-AM08 / ZHP-MNHN + RAMSAR)";Connaissance / aculturation;Facile;Disponible facilement mais à collecter;V2;;"Zones humides DREAL <-> Pb géométrie ZHE-LsE / ZHE-LsE-AM08 OK / Pb format (raster) ZHP-MNHN
+Ramsar : donnée source référentielle V2 <-> source INPN non disponible > table spatialege
+Comment prendre en compte les ZH superposées (risque de double compte ?)
+";"En attente donnée ""propre"" pour ZHE-LsE et ZHE-LsE-AM08
+Pas de donnée vectoriel pour ZHP-MNHN
+On retire RAMSAR";En attente donnée;
+Aménagement du territoire et zonage;Sensibilité;Zonage;Zones humides;Surface de zones humides;Recencement en nombre des zones humides (ZH DREAL Grand-Est + Ramsar) différencié selon la typologie;Hectare;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type camembert/donut)";;ZHE-LsE (cf. symbo DREAL GE) / ZHE-LsE-AM08 (cf. symbo DREAL GE);"Différencier la typologie (ZHE-LsE / ZHE-LsE-AM08 / ZHP-MNHN + RAMSAR)
+Donnée à l'échelle du département et en total pour la région
+Possibilité de faire un % de superficie totale de la région + EPCI et BV";Connaissance / aculturation;Facile;Disponible facilement mais à collecter;V2;;"Zones humides DREAL <-> Pb géométrie ZHE-LsE / ZHE-LsE-AM08 OK / Pb format (raster) ZHP-MNHN
+Ramsar : donnée source référentielle V2 <-> source INPN non disponible > table spatialege
+Comment prendre en compte les ZH superposées (risque de double compte ?)
+";"En attente donnée ""propre"" pour ZHE-LsE et ZHE-LsE-AM08
+Pas de donnée vectoriel pour ZHP-MNHN
+On retire RAMSAR";En attente donnée;
+Aménagement du territoire et zonage;Sensibilité;Zonage;Zones humides;Typologie des zones humides;Présentation du % de chaque typologie de ZH (% de superficie ou de nombre);Pourcentage;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type camembert/donut)";;ZHE-LsE (cf. symbo DREAL GE) / ZHE-LsE-AM08 (cf. symbo DREAL GE);"Différencier la typologie (ZHE-LsE / ZHE-LsE-AM08 / ZHP-MNHN + RAMSAR)
+Donnée à l'échelle du département et en total pour la région
+Possibilité de faire un % de superficie totale de la région + EPCI et BV";Connaissance / aculturation;Facile;Disponible facilement mais à collecter;V2;;"Zones humides DREAL <-> Pb géométrie ZHE-LsE / ZHE-LsE-AM08 OK / Pb format (raster) ZHP-MNHN
+Ramsar : donnée source référentielle V2 <-> source INPN non disponible > table spatialege
+Comment prendre en compte les ZH superposées (risque de double compte ?)
+";"En attente donnée ""propre"" pour ZHE-LsE et ZHE-LsE-AM08
+Pas de donnée vectoriel pour ZHP-MNHN
+On retire RAMSAR";En attente donnée;
+Aménagement du territoire et zonage;Sensibilité;Zonage;Zones humides;Pourcentage de territoire couvert par une zone humide;% du territoire couvert par des zones humides inventoriées;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;;;x;-;"Ne pas différencier les ZH selon la typologie
+Attention au double compte lié au superposition de ZH de source différente";Connaissance / aculturation;Facile;Disponible facilement mais à collecter;V2;;"Zones humides DREAL <-> Pb géométrie ZHE-LsE / ZHE-LsE-AM08 OK / Pb format (raster) ZHP-MNHN
+Ramsar : donnée source référentielle V2 <-> source INPN non disponible > table spatialege
+Dissoudre les ZH superposées afin d'éviter les doubles comptes
+";"En attente donnée ""propre"" pour ZHE-LsE et ZHE-LsE-AM08
+Pas de donnée vectoriel pour ZHP-MNHN
+On retire RAMSAR";En attente donnée;
+Aménagement du territoire et zonage;Sensibilité;Zonage;Zones humides;Evolution des ZH effectives (inventaire);Evolution de la superficie des ZH effectives où il y a eu un inventaire par rapport au ZH potentielles (voir avec DREAL si on peut avoir le territoire total de l'inventaire en flux);Hectare;Avis Antea : représentation adaptée à tous les territoires;;;?;;Prévoir un comparatif par rapport au GE;Connaissance / aculturation;Moyen;Pas de donnée disponible;V3;;"Nécessite une historisation de la donnée pour suivi évolution
+Donnée disponible au sein de la DREAL Grand-Est > Comment la collecter ?";A étudier dans le cadre de la V3;;
+Aménagement du territoire et zonage;Sensibilité;Zonage;RAMSAR;Nombre de zones RAMSAR;Présence ou non d'une zone RAMSAR sur le territoire et nom;Nombre;Avis Antea : représentation adaptée à tous les territoires;x;;x;-;-;Connaissance / aculturation;Facile;Disponible facilement;V2;;"Ramsar : donnée source référentielle V2 <-> source INPN non disponible > table spatialege
+";100%;En attente de validation;
+Aménagement du territoire et zonage;Sensibilité;Zonage;RAMSAR;Surface de zones RAMSAR;Superficie en ha des zones RAMSAR par territoire;Hectare;Avis Antea : représentation adaptée à tous les territoires;;;x;-;Prévoir un comparatif par rapport au GE;Connaissance / aculturation;Facile;Disponible facilement;V2;;"Ramsar : donnée source référentielle V2 <-> source INPN non disponible > table spatialege
+";100%;En attente de validation;
+Aménagement du territoire et zonage;Sensibilité;Zonage;RAMSAR;Evolution des zones RAMSAR;Peut-on avoir un indicateur d'évolution des zones;Nombre/Hectare;Avis Antea : représentation adaptée à tous les territoires;;;x;;-;Connaissance / aculturation;Moyen;Pas de donnée disponible;V3;;"Nécessite une historisation de la donnée pour suivi évolution
+Donnée disponible au sein de spatialege ?";A étudier dans le cadre de la V3;;
+Aménagement du territoire et zonage;Sensibilité;Aménagement;ZRE;Nombre de zones de répartition des eaux (ZRE);Carte des ZRE superficielles et souterraines ;Nombre;Avis Antea : représentation adaptée à tous les territoires;x;;x;-;-;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege;100%;En attente de validation;
+Aménagement du territoire et zonage;Sensibilité;Aménagement;ZRE;Pourcentage de territoire couvert par une zone de répartition des eaux (ZRE);% du territoire couvert par une ZRE;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;;;x;-;Prévoir un comparatif par rapport au GE;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege;100%;En attente de validation;
+Aménagement du territoire et zonage;Sensibilité;Aménagement;ZRE;Pourcentage de territoire couvert par une zone de répartition des eaux (ZRE);% du territoire couvert par typologie de ZRE (nappe captive, surface, nappe affleurante,…);Pourcentage;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type camembert/donut)";;"Inconnu / ZRESup / ZRESout / Mixte
+cf https://www.sandre.eaufrance.fr/?urn=urn:sandre:donnees:629::::::referentiel:3.1:html";Prévoir un comparatif par rapport au GE;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege;100%;En attente de validation;
+Aménagement du territoire et zonage;Sensibilité;Aménagement;Occupation du sol;Typologie de l'occupation du sol;Couverture de la Région par type d'occupation du sol;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;"x
+Lien externe ocs.datagrandest.fr";"x
+(type camembert/donut)";;Niveau 1;% selon les principaux couverts (emprises agricoles, Espaces forestiers et semi-naturels, emprises urbaines, surfaces en eau, milieux naturels liés à l'eau) - indicateurs existants dans OCS Grand Est - 2021;Connaissance / aculturation;Facile;Open source / déjà dans datagrandest;V2;;donnée source référentielle V2+ <-> table spatialege;50%;En attente de validation;
+Aménagement du territoire et zonage;Sensibilité;Aménagement;Occupation du sol;Imperméabilisation des sols urbanisés;% de sols perméables urbain, Imperméable non bâti, Impérméable bâti sur les territoires de l'OCS Grand Est - 2021;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;;;x;;A travailler avec Enora si possible?;Connaissance / aculturation;Moyen;Pas de donnée disponible;V3;;donnée source à définir;A étudier dans le cadre de la V3;;
+Aménagement du territoire et zonage;Sensibilité;Aménagement;Occupation du sol;Mutations d'occupation du sol;Evolution d'une typologie d'espace vers une autre (exemple milieux naturels vers urbains) - disponible dans l'OCS GE entre 2010 et 2021;?;Avis Antea : représentation adaptée à tous les territoires;;;x;;A travailler avec Enora si possible?;Connaissance / aculturation;Moyen;Pas de donnée disponible;V3;;donnée source à définir;A étudier dans le cadre de la V3;;
+Aménagement du territoire et zonage;Sensibilité;Aménagement;Surface en eau;Nouvelles surfaces en eau ;Ha de nouvelles surfaces en eau sur le territoire OCS entre 2010 et 2021;Hectare;Avis Antea : représentation adaptée à tous les territoires;;;x;;A travailler avec Enora si possible?;Connaissance / aculturation;Moyen;Pas de donnée disponible;V3;;donnée source à définir;A étudier dans le cadre de la V3;;
+Aménagement du territoire et zonage;Sensibilité;Aménagement;Assainissement collectif;Zones sensibles;% de territoire concerné par l'application de la Directive (UE) 2024/3019 relative au traitement des eaux résiduaires urbaines;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;x;;x;-;-;Aide à la décision;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege;100%;En attente de validation;
+Aménagement du territoire et zonage;Sensibilité;Aménagement;Obstacles à l'écoulement;Nombre d'obstacles à l'écoulement;Sur un territoire donné référence le nombre d'obstacle à l'écoulement;Nombre;Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege;50%;En attente de validation;
+Aménagement du territoire et zonage;Sensibilité;Aménagement;Obstacles à l'écoulement;Typologie d'obstacles à l'écoulement ;Indique si ce sont des barrages, seuils en rivière, digues, obstacles induit par un pont, épis en rivière ou Grille;Nombre;Avis Antea : représentation adaptée à tous les territoires;(x);"x
+(type camembert/donut)";;"Niveau 2
+https://www.sandre.eaufrance.fr/?urn=urn:sandre:donnees:284::::::referentiel:3.1:html";-;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege;50%;En attente de validation;
+Aménagement du territoire et zonage;Sensibilité;Aménagement;Obstacles à l'écoulement;Nombre de principaux barrages;Localisation des principaux barrages;Nombre;Avis Antea : représentation adaptée à tous les territoires;x;;x;;"Définir la source de données
+Issu du CFBR ?";Connaissance / aculturation;Difficile;Pas de donnée disponible;V3;;-;A étudier dans le cadre de la V3;;
+Gouvernance et action menées;Sensibilité;Gouvernance;Organisation des acteurs;Agence de l'eau;Couverture du territoire par les agences de l'Eau;"Pourcentage
+Nom";Avis Antea : quel intérêt à représenter à l'échelle du bassin hydrographique/comité de bassin ?;(x);"x
+(type camembert/donut)";;"RHIN-MEUSE / SEINE-NORMANDIE / RHONE-MEDITERRANEE
+cf. https://www.sandre.eaufrance.fr/?urn=urn:sandre:donnees:447::::::referentiel:3.1:html";-;Connaissance / aculturation;Facile;Disponible facilement;V2;;"utilisation de la donnée source référentielle V1 comité de bassin (administratif)
+donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege";100%;En attente de validation;
+Gouvernance et action menées;Sensibilité;Gouvernance;Organisation des acteurs;Etablissement Public Territorial de Bassin (EPTB);Couverture du territoire par les EPTB;"Pourcentage
+Nom";Avis Antea : quel intérêt à représenter à l'échelle de l'EPTB ?;(x);;x;-;-;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege;100%;En attente de validation;
+Gouvernance et action menées;Sensibilité;Actions menées;Plans et programmes en matière de gestion de l'eau;Schémas d'Aménagement et de Gestion des Eaux (SAGE);Couverture du territoire par les SAGE;"Pourcentage
+Nom";Avis Antea : quel intérêt à représenter à l'échelle du SAGE ?;(x);;x;-;-;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> OK, disponible dans spatialege;100%;En attente de validation;
+Gouvernance et action menées;Sensibilité;Actions menées;Plans et programmes en matière de gestion de l'eau;Schémas d'Aménagement et de Gestion des Eaux (SAGE);Couverture du territoire par les SAGE par avancement des procédures ;"Pourcentage
+Nom";Avis Antea : quel intérêt à représenter à l'échelle du SAGE ?;;"x
+(type camembert/donut)";;"Niveau 1 de la nomenclature
+'cf. https://www.sandre.eaufrance.fr/?urn=urn:sandre:donnees:617::::::referentiel:3.1:html";-;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> OK, disponible dans spatialege;100%;En attente de validation;
+Gouvernance et action menées;Sensibilité;Actions menées;Plans et programmes en matière de gestion de l'eau;Démarches concertées pour la gestion et la restauration des MA (Contrats milieux, Contrats bassin, ...);Couverture du territoire par les contrats de milieu;"Pourcentage
+Nom";Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege;100%;En attente de validation;
+Gouvernance et action menées;Sensibilité;Actions menées;Plans et programmes en matière de gestion de l'eau;Démarches concertées pour la gestion et la restauration des MA (Contrats milieux, Contrats bassin, ...);Couverture du territoire par les contrats de milieu par avancement des procédures ;"Pourcentage
+Nom";Avis Antea : représentation adaptée à tous les territoires;;"x
+(type camembert/donut)";;cf. https://www.sandre.eaufrance.fr/?urn=urn:sandre:donnees:971::::::referentiel:3.1:html;-;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege;100%;En attente de validation;
+Gouvernance et action menées;Sensibilité;Actions menées;Plans et programmes en matière de gestion de l'eau;Démarches concertées de gestion de la ressource en eau (PTGE, ...);Couverture du territoire par les PTGE ;"Pourcentage
+Nom";Avis Antea : quel intérêt à représenter à l'échelle du PTGE ?;(x);;x;-;-;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible en flux Oieau, sera poussée dans spatialege;100%;En attente de validation;
+Gouvernance et action menées;Sensibilité;Actions menées;Plans et programmes en matière de gestion de l'eau;Démarches concertées de gestion de la ressource en eau (PTGE, ...);Couverture du territoire par les PTGE par avancement des procédures ;"Pourcentage
+Nom";Avis Antea : quel intérêt à représenter à l'échelle du PTGE ?;;"x
+(type camembert/donut)";;"Niveau 1 de la nomenclature
+'cf. https://www.sandre.eaufrance.fr/?urn=urn:sandre:donnees:617::::::referentiel:3.1:html";-;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible en flux Oieau, sera poussée dans spatialege;100%;En attente de validation;
+Gouvernance et action menées;Sensibilité;Gouvernance;Organisation des acteurs;Etablissements Publics d’Aménagement et de Gestion de l’Eau (EPAGE);Couverture du territoire par les EPAGE;"Pourcentage
+Nom";Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Connaissance / aculturation;Moyen;téléchargement - à refaire ponctuellement;V2;;"donnée source référentielle V2+ <-> pas de fournisseur unique identifié
+Téléchargement d'un fichier Excel (Banatic) pour construire une couche à la commune";Différence notable entre les périmètres obtenus à partir de Banatic et la carte présente sur le site de l'ANEB (Association Nationale des Elus des Bassins) : https://bassinversant.org/epage/les-epage/;En attente de validation;
+Gouvernance et action menées;Sensibilité;Gouvernance;Organisation des acteurs;Collectivités compétentes en matière de production d'eau potable;Nombre de collectivités compétentes sur le territoire;"Nombre
+Nom";Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Connaissance / aculturation;Facile;téléchargement - à refaire ponctuellement;V2;;"donnée source référentielle V2 <-> téléchargement d'une archive Zip contenant un fichier Excel (SISPEA) et reconstruction d'une couche à la commune
+Prévoir des tables de correspondance pour les différents périmètres d'analyse/de recherche ?";100%;En attente de validation;
+Gouvernance et action menées;Sensibilité;Gouvernance;Organisation des acteurs;Collectivités compétentes en matière de distribution d'eau potable;Nombre de collectivités compétentes sur le territoire;"Nombre
+Nom";Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Connaissance / aculturation;Facile;téléchargement - à refaire ponctuellement;V2;;"donnée source référentielle V2 <-> téléchargement d'une archive Zip contenant un fichier Excel (SISPEA) et reconstruction d'une couche à la commune
+Prévoir des tables de correspondance pour les différents périmètres d'analyse/de recherche ?";100%;En attente de validation;
+Gouvernance et action menées;Sensibilité;Gouvernance;Organisation des acteurs;Collectivités compétentes en matière d'assainissement collectif (Dépollution);Nombre de collectivités compétentes sur le territoire;"Nombre
+Nom";Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Connaissance / aculturation;Facile;téléchargement - à refaire ponctuellement;V2;;"donnée source référentielle V2 <-> téléchargement d'une archive Zip contenant un fichier Excel (SISPEA) et reconstruction d'une couche à la commune
+Prévoir des tables de correspondance pour les différents périmètres d'analyse/de recherche ?";100%;En attente de validation;
+Gouvernance et action menées;Sensibilité;Gouvernance;Organisation des acteurs;Collectivités compétentes en matière d'assainissement non collectif;Nombre de collectivités compétentes sur le territoire;"Nombre
+Nom";Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Connaissance / aculturation;Facile;téléchargement - à refaire ponctuellement;V2;;"donnée source référentielle V2 <-> téléchargement d'une archive Zip contenant un fichier Excel (SISPEA) et reconstruction d'une couche à la commune
+Prévoir des tables de correspondance pour les différents périmètres d'analyse/de recherche ?";100%;En attente de validation;
+Gouvernance et action menées;Sensibilité;Gouvernance;Organisation des acteurs;Collectivités compétentes en matière de GEMAPI (1,2,5,8);Nombre de collectivités compétentes sur le territoire;"Nombre
+Nom";Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Connaissance / aculturation;Moyen;téléchargement - à refaire ponctuellement;V2;;"donnée source référentielle V2+ <-> pas de fournisseur unique identifié
+Téléchargement d'un fichier Excel (Banatic) pour construire une couche à la commune";0%;En attente de validation;
+Gouvernance et action menées;Vulnérabilité;Actions menées;Plans et programmes en matière de réduction des risques naturels;Programme d'Actions de Prévention des Inondations (PAPI);Couverture du territoire par les procédures (PEP/PAPI);Pourcentage;"Avis Antea : représentation adaptée à tous les territoires
+Pas forcément représentatif pour les communes";x;;x;;-;Connaissance / aculturation;Difficile;Données incomplètes ou indisponibles;V3;;donnée source référentielle V2+ <-> pas de fournisseur unique identifié;A étudier dans le cadre de la V3;;
+Gouvernance et action menées;Vulnérabilité;Actions menées;Plans et programmes en matière de réduction des risques naturels;Programme d'Actions de Prévention des Inondations (PAPI);Couverture du territoire par les procédures (PEP/PAPI) par avancement des procédures ;Pourcentage;"Avis Antea : représentation adaptée à tous les territoires
+Pas forcément représentatif pour les communes";;"x
+(type camembert/donut)";;;-;Connaissance / aculturation;Difficile;Données incomplètes ou indisponibles;V3;;donnée source référentielle V2+ <-> pas de fournisseur unique identifié;A étudier dans le cadre de la V3;;
+Gouvernance et action menées;Vulnérabilité;Actions menées;Plans et programmes en matière de réduction des risques naturels;Stratégie Locale de Gestion du Risque Inondation (SLGRI);Couverture du territoire par les procédures SLGRI;"Pourcentage
+Nom";Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Connaissance / aculturation;Moyen;téléchargement - à refaire ponctuellement;V2;;donnée source référentielle V2+ <-> téléchargement d'un fichier géographique, sera poussée dans spatialege;100%;En attente de validation;
+Gouvernance et action menées;Vulnérabilité;Actions menées;Plans et programmes en matière de réduction des risques naturels;Stratégie Locale de Gestion du Risque Inondation (SLGRI);Couverture du territoire par les procédures SLGRI par avancement des procédures ;Pourcentage;"Avis Antea : représentation adaptée à tous les territoires
+Pas forcément représentatif pour les communes";;"x
+(type camembert/donut)";;;-;Connaissance / aculturation;Difficile;Données incomplètes ou indisponibles;V3;;"donnée source référentielle V2+ <-> téléchargement d'un fichier géographique, sera poussée dans spatialege
+Pas de niveau d'avancement de la procédure disponible dans le jeu de données";A étudier dans le cadre de la V3;;
+Gouvernance et action menées;Vulnérabilité;Actions menées;Plans et programmes en matière de réduction des risques naturels;Plans de Préventions des Risques Inondation ( PPRI );Nombre de cours d'eau du territoire couvert par un PPRI sur le territoire;"Nombre
+Nom";Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible en flux Georisques, sera poussée dans spatialege (demande Enora);100%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Ressources;Eaux de surface;Indicateurs descriptifs des plans d'eau;Nombre de plans d'eau sur le territoire sélectionné;Nombre;Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Aide à la décision;Facile;Disponible facilement;V2;;"donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege
+utiliser l'INPE : https://cartes.gouv.fr/rechercher-une-donnee/dataset/IGNF_INPE";100%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Ressources;Eaux de surface;Indicateurs descriptifs des plans d'eau;Superficie de plans d'eau sur le territoire sélectionné;Hectare;Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Aide à la décision;Facile;Disponible facilement;V2;;"donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege
+utiliser l'INPE : https://cartes.gouv.fr/rechercher-une-donnee/dataset/IGNF_INPE";100%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Ressources;Eaux de surface;Indicateurs descriptifs des cours d'eau;Linéaire de cours d'eau sur l'entité géographique sélectionnée;Km;Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Aide à la décision;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege;100%;En attente de validation;
+Ressource / usage / pression;Sensibilité;ressources;Eaux de surface;Hydrologie moyenne;"Identification du module des stations de mesure sur le territoire
+Représentatité = 30 ans";m3/s;Avis Antea : représentation adaptée à tous les territoires;"x
+(plusieurs points de mesure par territoire)";;x;-;Préciser l'évolution par rapport aux années précédentes/années de références (cf Mind Map);Aide à la décision;Moyen;Disponible facilement;V2;;Lister les stations de la région (Hub'eau) / Récupérer les chroniques (Hub'eau) / Calculer la valeur de débit;0%;En attente de validation;
+Ressource / usage / pression;Sensibilité;ressources;Eaux de surface;Hydrologie moyenne;"Comparaison du module des stations de mesure sur le territoire par rapport au Qmoyen année n, donc module n-31 à n-1 => n= 2025 donc Module 1995-2024
+";m3/s;Avis Antea : représentation adaptée à tous les territoires;;;"x
+(à la hausse ou à la baisse)";-;Préciser l'évolution par rapport aux années précédentes/années de références (cf Mind Map);Aide à la décision;Moyen;Disponible facilement;V2;;Lister les stations de la région (Hub'eau) / Récupérer les chroniques (Hub'eau) / Calculer la valeur de débit;0%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Ressources;Eaux de surface;Hydrologie d'étiage;"Identification du QMNA5 sur le territoire
+Calcul sur 5 ans à l'année N-1";m3/s;Avis Antea : représentation adaptée à tous les territoires;"x
+(plusieurs points de mesure par territoire)";;x;-;Préciser l'évolution par rapport aux années précédentes/années de références (cf Mind Map);Aide à la décision;Moyen;Disponible facilement;V2;;Lister les stations de la région (Hub'eau) / Récupérer les chroniques (Hub'eau) / Calculer la valeur de débit;0%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Ressources;Eaux de surface;Hydrologie d'étiage;"Evolution du QMNA5 sur le territoire (depuis quand?)
+Tendance Mann-Kendall ";m3/s;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type histogramme)";;-;Préciser l'évolution par rapport aux années précédentes/années de références (cf Mind Map);Aide à la décision;Moyen;Disponible facilement;V2;;Lister les stations de la région (Hub'eau) / Récupérer les chroniques (Hub'eau) / Calculer la valeur de débit;0%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Ressources;Eaux souterraines;Evolution de la piézométrie;Evolution de la piézométrie sur l'ensemble de la chronique disponible;m;Avis Antea : représentation adaptée à tous les territoires;"x
+(plusieurs points de mesure par territoire)";"x
+(type histogramme)";;-;Préciser l'évolution par rapport aux années précédentes/années de références (cf Mind Map);Aide à la décision;Moyen;Disponible facilement;V2;;Lister les stations de la région (Hub'eau) / Récupérer les chroniques (Hub'eau) / Calculer la hauteur d'eau;0%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Ressources;Evaluation DCE;Etat écologique ESU;Présentation du % de masse d'eau superficielle (et des stations) dans chacune des classes d'état - état écologique - MECE+MEPE;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;(x);"x
+(type camembert/donut)";;"Très bon / Bon / Moyen / Médiocre / Mauvais
+cf. https://www.sandre.eaufrance.fr/?urn=urn:sandre:donnees:650::::::referentiel:3.1:html";présenter pour chacun des cycles le % correspondant à chaque modalité permettant ainsi on visualisation de l'évolution;Connaissance / aculturation;Moyen;Disponible facilement mais à collecter;V2;;"Collecter la donnée sur les SIE des 3 agences
+Reconstruire une table ME/valeur
+Pas d'évolution possible entre millésime à cause des évolutions de référentielles ME";100%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Ressources;Evaluation DCE;Etat chimique ESU;Présentation du % de masse d'eau superficielle (et des stations) dans chacune des classes d'état - état chimique - MECE+MEPE;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;(x);"x
+(type camembert/donut)";;"Bon / Mauvais
+cf. https://www.sandre.eaufrance.fr/?urn=urn:sandre:donnees:650::::::referentiel:3.1:html";présenter pour chacun des cycles le % correspondant à chaque modalité permettant ainsi on visualisation de l'évolution;Connaissance / aculturation;Moyen;Disponible facilement mais à collecter;V2;;"Collecter la donnée sur les SIE des 3 agences
+Reconstruire une table ME/valeur
+Pas d'évolution possible entre millésime à cause des évolutions de référentielles ME";100%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Ressources;Evaluation DCE;Etat quantitatif ESO;Présentation du % de masse d'eau souterraines dans chacune des classes d'état - état  quantitatif - MESO;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;(x);"x
+(type camembert/donut)";;"Bon / Médiocre
+cf. https://www.sandre.eaufrance.fr/?urn=urn:sandre:donnees:650::::::referentiel:3.1:html";présenter pour chacun des cycles le % correspondant à chaque modalité permettant ainsi on visualisation de l'évolution;Connaissance / aculturation;Moyen;Disponible facilement mais à collecter;V2;;"Collecter la donnée sur les SIE des 3 agences
+Reconstruire une table ME/valeur
+Pas d'évolution possible entre millésime à cause des évolutions de référentielles ME";100%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Ressources;Evaluation DCE;Etat chimique ESO;Présentation du % de masse d'eau souterraines dans chacune des classes d'état - état  chimique - MESO;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;(x);"x
+(type camembert/donut)";;"Bon / Médiocre
+cf. https://www.sandre.eaufrance.fr/?urn=urn:sandre:donnees:650::::::referentiel:3.1:html";présenter pour chacun des cycles le % correspondant à chaque modalité permettant ainsi on visualisation de l'évolution;Connaissance / aculturation;Moyen;Disponible facilement mais à collecter;V2;;"Collecter la donnée sur les SIE des 3 agences
+Reconstruire une table ME/valeur
+Pas d'évolution possible entre millésime à cause des évolutions de référentielles ME";100%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Ressources;Qualité de l'eau;Nitrates Eaux de surface;% de stations avec un niveau de nitrates > 18 mg/l (eutrophisation) - réseau DCE/RCS;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;x;;x;;"Ce seuil permet d’identifier les eaux douces superficielles considérées comme subissant ou susceptibles de subir une eutrophisation
+(arrêté du 5 mars 2015). / Station de suivi DCE";Aide à la décision;Difficile;Disponible facilement;V3;;"Pas identifié initialement
+Nécessite un nettoyage des données de chronique
+Se rapprocher de AERM pour échange";A étudier dans le cadre de la V3;;
+Ressource / usage / pression;Sensibilité;Usages;Industrie;Installations Classées pour Protecrtion de l'Environnement (ICPE);Répartition des ICPE entre SEVESO et non-SEVESO;"Nombre
+Nom";Avis Antea : représentation adaptée à tous les territoires;(x);"x
+(type camembert/donut)";;-;-;Aide à la décision;Facile;téléchargement - à refaire ponctuellement;V2;Usages sectoriels de l'eau;donnée source référentielle V2 <-> téléchargement d'un fichier géographique (Georisques);100%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Pression;Industrie;Sites et sols pollués;Sites et sols pollués ou potentiellement pollués (ex-BASOL);"Nombre
+Nom";Avis Antea : représentation adaptée à tous les territoires;(x);;x;Seveso / Non Seveso / NULL;-;Connaissance / aculturation;Facile;Disponible facilement;V2;Usages sectoriels de l'eau;donnée source référentielle V1 <-> disponible en flux Georisques, sera poussée dans spatialege;100%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Usages;Agriculture;Surfaces agricoles du Registre Parcellaire Graphique (RPG) par catégorie;Localiser et caractériser les surfaces cultivées par type de culture;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;;x (https://aquarepere.banquedesterritoires.fr/territoire/commune-57463/metz/decouvrir);;-;-;Aide à la décision;Moyen;téléchargement - à refaire ponctuellement;V2;Usages sectoriels de l'eau;donnée source référentielle V2+ <-> téléchargement d'un fichier géographique (IGN);100%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Usages;Agriculture;Evolution des volumes d'eau prélevés à usage irrigation par type d'eau;Evolution des volumes d'eau prélevés pour un usage irrigation par type d'eau (ESU, ESO) sur toute la chronique disponible (2008->2023);m3;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type histogramme)
+https://statics.teams.cdn.office.net/evergreen-assets/safelinks/2/atp-safelinks.html";;-;BNPE, chronique disponible 2008-2023;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible avec l'API Hub'eau;0%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Usages;Agriculture;Indicateur Deaumin'eau;?;;;;;;;;;;;V3;;Pas identifié initialement;A étudier dans le cadre de la V3;;
+Ressource / usage / pression;Sensibilité;Usages;Agriculture - Irrigation;Surface Agricole Utilisée (SAU) irrigée;Part de la SAU irriguée dans la superficie territoriale;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;;;x;-;réaliser un prorata des surfaces pour les communes à cheval sur un territoire;Aide à la décision;Moyen;Disponible facilement;V2;Usages sectoriels de l'eau;donnée source référentielle V2 <-> téléchargement d'un fichier CSV (Agreste) et reconstruction d'une table d'attributs;0%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Usages;Assainissement ;Caractéristiques des stations d'épuration des collectivités;Capacités des stations d'épuration des collectivités (EH) par station ;EH;Avis Antea : représentation adaptée à tous les territoires;"x
+(plusieurs points de mesure par territoire)";;x;-;-;Aide à la décision;Facile;Disponible facilement;V2;Usages sectoriels de l'eau;donnée source référentielle V1 <-> disponible en flux Sandre, sera poussée dans spatialege;100%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Usages;Assainissement;Personnes couvertes par l'assainissement collectif;Indique le nombre d'habitants qui sont raccordé à l'assainissement collectif;Nombre;Avis Antea : représentation adaptée à tous les territoires;;;x;;-;Connaissance / aculturation;;;V3;;Pas identifié initialement;A étudier dans le cadre de la V3;;
+Ressource / usage / pression;Sensibilité;Usages;Assainissement;Projet de REUT ;Présence d'un projet de REUT sur la STEU;Nombre;Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Connaissance / aculturation;Moyen;téléchargement - à refaire ponctuellement;V2;;"Pas de couche géographique téléchargeable depuis le site de l'AC
+https://assainissement.developpement-durable.gouv.fr/pages/data/carteIntReut.php
+Juste un fichier excel sans coordonnées XY
+Aller chercher les stations du fichier Excel dans le référentiel des STEU grâce au code SANDRE";0%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Usages;Assainissement;Prix de l'assainissement collectif;Prix de l'assainissement collectif;Nombre;Avis Antea : représentation adaptée à tous les territoires;x;;x;;-;Connaissance / aculturation;;;V3;;Pas identifié initialement;A étudier dans le cadre de la V3;;
+Ressource / usage / pression;Sensibilité;Usages;Eau potable;Evolution des volumes d'eau prélevés à usage AEP par type d'eau;Evolution des volumes d'eau prélevés pour un usage AEP par type d'eau (ESU, ESO) sur toute la chronique disponible (2008->2023);m3;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type histogramme)
+https://statics.teams.cdn.office.net/evergreen-assets/safelinks/2/atp-safelinks.html";;-;-;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible avec l'API Hub'eau;0%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Usages;Eau potable;Volume prélevé à usage AEP;M3/habitant;Nombre;Avis Antea : représentation adaptée à tous les territoires;x;;x;;-;Connaissance / aculturation;;;V3;;Pas identifié initialement;A étudier dans le cadre de la V3;;
+Ressource / usage / pression;Sensibilité;Usages;Eau potable;Indicateurs rendement des réseaux;%  de réseau efficace (Min, Max, Moy) sur le territoire ;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;"x
+Symbologie par classe";;x;-;"https://www.services.eaufrance.fr/indicateurs/P104.3
+Fichier tabulaire des % à la commune -> reconstruire une couche géographique pour croisement";Connaissance / aculturation;;;V2;;Identifier la source de données;0%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Usages;Eau potable;Indicateurs prix de l'eau;€/m3 pour une consommation moyenne de 120m3 max (Min, Max, Moy) sur le territoire;€;Avis Antea : représentation adaptée à tous les territoires;"x
+Symbologie par classe";;x;-;"https://www.services.eaufrance.fr/indicateurs/D102.0
+Fichier tabulaire des prix à la commune -> reconstruire une couche géographique pour croisement";Connaissance / aculturation;Facile;téléchargement - à refaire ponctuellement;V2;;"donnée source référentielle V2 <-> téléchargement d'une archive Zip contenant un fichier Excel (SISPEA) et reconstruction d'une couche à la commune
+Prévoir des tables de correspondance pour les différents périmètres d'analyse/de recherche ?";0%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Usages;Eau potable;AAC;% du territoire couvert par une AAC;Pourcentage;Avis Antea : représentation adaptée à tous les territoires;(x);;x;-;-;Connaissance / aculturation;;;V2;;disponible en flux Sandre;0%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Usages;Eau potable;Captages sensibles/prioritaire;"Nombre de captages sensibles ou captages prioritaires sur le territoire (SDAGE)
+Reboucler les sources de données avec Lajlah (cf. mail transmis par Lajlah sur la différence entre les 2)";Nombre;Avis Antea : représentation adaptée à tous les territoires;Pas de carte de localisation (protection localisation précise);"x
+(type camembert/donut)";;-;-;Connaissance / aculturation;;;V2;;Identifier la source de données;En attente donnée;En attente de validation;
+Ressource / usage / pression;Sensibilité;Usages;Plans eau;Nombre de sites de baignade;Nombre de sites de baignade;Nombre;Avis Antea : représentation adaptée à tous les territoires;"(x)
+Renvoie vers https://baignades.sante.gouv.fr/baignades/homeMap.do#a";;x;-;Comparatif par rapport au GE;Connaissance / aculturation;Moyen;téléchargement - à refaire ponctuellement;V2;;donnée source référentielle V2 <-> fichier annuel à télécharger;0%;En attente de validation;
+Ressource / usage / pression;Sensibilité;Usages;Plans eau;Sites de baignade par classe de qualité des eaux de baignade;Sites de baignade par classe de qualité des eaux de baignade;Nombre;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type camembert/donut)";;Excellent / Bon / Suffisant / Insuffisant / Insuffisamment de prélèvements / Site non classé / Interdiction;Comparatif par rapport au GE;Connaissance / aculturation;Moyen;téléchargement - à refaire ponctuellement;V2;;donnée source référentielle V2 <-> fichier annuel à télécharger;0%;En attente de validation;
+Ressource / usage / pression;Vulnérabilité;Pression;Prélèvement;Evolution des volumes d'eau prélevés tous usages confondus par type d'eau;Evolution des volumes d'eau prélevés tous usages confondus par type d'eau (ESU, ESO) sur toute la chronique disponible (2008->2023);m3;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type histogramme)
+https://statics.teams.cdn.office.net/evergreen-assets/safelinks/2/atp-safelinks.html";;"CONT / LIT / SOUT / STOC
+cf. https://www.sandre.eaufrance.fr/?urn=urn:sandre:donnees:472::::::referentiel:3.1:html";-;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible avec l'API Hub'eau;0%;En attente de validation;
+Ressource / usage / pression;Vulnérabilité;Pression;Industrie;Evolution des volumes d'eau prélevés à usage industrie par type d'eau;Evolution des volumes d'eau prélevés pour un usage industrie par type d'eau (ESU, ESO) sur toute la chronique disponible (2008->2023);m3;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type histogramme)
+https://statics.teams.cdn.office.net/evergreen-assets/safelinks/2/atp-safelinks.html";;-;prévoir des comparatifs par rapport au GE;Connaissance / aculturation;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible avec l'API Hub'eau;0%;En attente de validation;
+Ressource / usage / pression;Vulnérabilité;Pression;Prélèvement;Ecart par rapport à une moyenne annuelle;Prévoir une période de référence et indiquer l'écart (à discuter);Nombre;Avis Antea : représentation adaptée à tous les territoires;;;x;;-;Connaissance / aculturation;;;V3;;Pas identifié initialement;A étudier dans le cadre de la V3;;
+Ressource / usage / pression;Vulnérabilité;Pression;Industrie;Indicateur d'impact / zone à risque ou non;Emission polluantes par industrie? Géoriques;;;;;;;;Connaissance / aculturation;;;V3;;Pas identifié initialement;A étudier dans le cadre de la V3;;
+Vulnérabilité et adaptation climatique;Exposition;Vulnérabilité;Normales climatiques;Températures moyennes mensuelles de l'année n-1;Valeur de températures moyennes mensuelles sur l'année n-1;°C;Avis Antea : représentation adaptée à tous les territoires;;"x
+(histogramme)";;-;SAFRAN;Connaissance / aculturation;Moyen;Mise à disposition obligatoire / doit être reconstituée;V2;;Antea fournit la donnée;Voir Alexandre pour dispo donnée;En attente de validation;
+Vulnérabilité et adaptation climatique;Exposition;Vulnérabilité;Normales climatiques;Températures moyennes mensuelles sur la période de référence (1991-2020);Valeur de températures moyennes mensuelles sur la période de référence (1991-2020);°C;Avis Antea : représentation adaptée à tous les territoires;;"x
+(histogramme)";;-;SAFRAN;Connaissance / aculturation;Moyen;Mise à disposition obligatoire / doit être reconstituée;V2;;Antea fournit la donnée;Voir Alexandre pour dispo donnée;En attente de validation;
+Vulnérabilité et adaptation climatique;Exposition;Vulnérabilité;Normales climatiques;Température moyenne annuelle de l'année n-1;Valeur de température moyenne annuelle sur l'année n-1;°C;Avis Antea : représentation adaptée à tous les territoires;;;x;-;SAFRAN;Connaissance / aculturation;Moyen;Mise à disposition obligatoire / doit être reconstituée;V2;;Antea fournit la donnée;Voir Alexandre pour dispo donnée;En attente de validation;
+Vulnérabilité et adaptation climatique;Exposition;Vulnérabilité;Normales climatiques;Température moyenne annuelle sur la période de référence (1991-2020);Valeur de température moyenne annuelle sur la période de référence (1991-2020);°C;Avis Antea : représentation adaptée à tous les territoires;;;x;-;SAFRAN;Connaissance / aculturation;Moyen;Mise à disposition obligatoire / doit être reconstituée;V2;;Antea fournit la donnée;Voir Alexandre pour dispo donnée;En attente de validation;
+Vulnérabilité et adaptation climatique;Exposition;Vulnérabilité;Normales climatiques;Cumuls de précipitations mensuelles de l'année n-1;Valeur de précipitations moyennes mensuelles sur l'année n-1;mm;Avis Antea : représentation adaptée à tous les territoires;;"x
+(histogramme)";;-;SAFRAN;Connaissance / aculturation;Moyen;Mise à disposition obligatoire / doit être reconstituée;V2;;Antea fournit la donnée;Voir Alexandre pour dispo donnée;En attente de validation;
+Vulnérabilité et adaptation climatique;Exposition;Vulnérabilité;Normales climatiques;Cumuls de précipitations moyennes mensuelles sur la période de référence (1991-2020);Valeur de précipitations moyennes mensuelles sur la période de référence (1991-2020);mm;Avis Antea : représentation adaptée à tous les territoires;;"x
+(histogramme)";;-;SAFRAN;Connaissance / aculturation;Moyen;Mise à disposition obligatoire / doit être reconstituée;V2;;Antea fournit la donnée;Voir Alexandre pour dispo donnée;En attente de validation;
+Vulnérabilité et adaptation climatique;Exposition;Vulnérabilité;Normales climatiques;Cumul de précipitation moyenne annuelle de l'année n-1;Valeur de précipitation moyenne annuelle sur l'année n-1;mm;Avis Antea : représentation adaptée à tous les territoires;;;x;-;SAFRAN;Connaissance / aculturation;Moyen;Mise à disposition obligatoire / doit être reconstituée;V2;;Antea fournit la donnée;Voir Alexandre pour dispo donnée;En attente de validation;
+Vulnérabilité et adaptation climatique;Exposition;Vulnérabilité;Normales climatiques;Cumul de précipitation moyenne annuelle sur la période de référence (1991-2020);Valeur de précipitation moyenne annuelle sur la période de référence (1991-2020);mm;Avis Antea : représentation adaptée à tous les territoires;;;x;-;SAFRAN;Connaissance / aculturation;Moyen;Mise à disposition obligatoire / doit être reconstituée;V2;;Antea fournit la donnée;Voir Alexandre pour dispo donnée;En attente de validation;
+Vulnérabilité et adaptation climatique;Exposition;Vulnérabilité;Evolution climat passé;Evolution des températures moyennes annuelles sur la période de référence (1991-2020);Tendance d'évolution des températures moyennes annuelles sur la période de référence (1991-2020);°C/an;Avis Antea : représentation adaptée à tous les territoires;;;"x
+(tendance)";-;SAFRAN;Renforcement de l'expertise;Moyen;Mise à disposition obligatoire / doit être reconstituée;V2;;Antea fournit la donnée;Voir Alexandre pour dispo donnée;En attente de validation;
+Vulnérabilité et adaptation climatique;Exposition;Vulnérabilité;Evolution climat passé;Evolution des cumuls de précipitations moyennes annuelles sur la période de référence (1991-2020);Tendance d'évolution des cumuls de précipitations moyennes annuelles sur la période de référence (1991-2020);mm/an;Avis Antea : représentation adaptée à tous les territoires;;;"x
+(tendance)";-;SAFRAN;Renforcement de l'expertise;Moyen;Mise à disposition obligatoire / doit être reconstituée;V2;;Antea fournit la donnée;Voir Alexandre pour dispo donnée;En attente de validation;
+Vulnérabilité et adaptation climatique;Vulnérabilité;Vulnérabilité;Vulnérabilité;Vulnérabilité au changement climatique;Reprise des résultats des atlas de vulnérabilité des comités de bassins Seine Normandie et Rhin Meuse et RMC;?;;;;;;il pourra s'agit de reprendre la vulnérabiltié globale ou indicateur par indicateur. Il faudra arriver à mettre en cohérence les 3 sources de d'information, et récupérer la donnée en format .shp. Cette vulnérabilité peut éventuellement (difficile) être co-construite avec la région;Aide à la décision;;;V3;;;A étudier dans le cadre de la V3;;
+Vulnérabilité et adaptation climatique;Vulnérabilité;Vulnérabilité;Gestion;Nombre de jours sous arrêtés de restrictions d'eau de l'année n-1;"Nombre de jours sous arrêtés de restrictions d'eau par niveau de gravité (Vigilance, Alerte, Alerte renforcée et Crise) de l'année n-1
++ Faire un renvoi vers VIGIEAU pour année en cours";Nombre;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type camembert/donut)";;Vigilance / Alerte / Alerte renforcée / Crise;Source : VigiEau / prévoir un comparatif par rapport au Dpt, Région - prévoir la possibilité de faire une évolution annuelle;;Moyen;téléchargement - à refaire ponctuellement;V2;;Fichier CSV à télécharger à pas de temps régulier;0%;En attente de validation;
+Vulnérabilité et adaptation climatique;Vulnérabilité;Vulnérabilité;Gestion;Evolution annuelle du nombre de jours sous arrêtés de restrictions d'eau sur la période disponible;"Evolution annuelle du nombre de jours sous arrêtés de restrictions d'eau par niveau de gravité (Vigilance, Alerte, Alerte renforcée et Crise) sur la période disponible
+";Nombre;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type histogramme)";;Vigilance / Alerte / Alerte renforcée / Crise;Source : VigiEau / prévoir un comparatif par rapport au Dpt, Région - prévoir la possibilité de faire une évolution annuelle;;Moyen;téléchargement - à refaire ponctuellement;V2;Fichier Excel à télécharger à pas de temps régulier;Fichier CSV à télécharger à pas de temps régulier;0%;En attente de validation;
+ ;Vulnérabilité;Vulnérabilité;Eaux superficielles;Observations visuelles sur l'écoulement des cours d'eau de l'année n-1;"Répartition mensuelle (de mai à septembre) des observations visuelles sur l'écoulement des cours d'eau par modalités d'écoulement (Ecoulement visible, Ecoulement non visible et Assec) de l'année n-1
++ Faire un renvoi vers ONDE pour année en cours";Pourcentage;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type histogramme)";;Ecoulement visible / Ecoulement non visible / Assec;a mettre également dans l'espace cartographique;;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible avec l'API Hub'eau;0%;En attente de validation;
+Vulnérabilité et adaptation climatique;Vulnérabilité;Vulnérabilité;Eaux superficielles;Observations visuelles sur l'écoulement des cours d'eau sur la période disponible (de 2012 à l'année n-1);"Répartition mensuelle (de mai à septembre) des observations visuelles sur l'écoulement des cours d'eau par modalités d'écoulement (Ecoulement visible, Ecoulement non visible et Assec) sur la période disponible
++ Faire un renvoi vers ONDE pour année en cours";Pourcentage;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type histogramme)";;Ecoulement visible / Ecoulement non visible / Assec;a mettre également dans l'espace cartographique;;Facile;Disponible facilement;V2;;donnée source référentielle V1 <-> disponible avec l'API Hub'eau;0%;En attente de validation;
+Vulnérabilité et adaptation climatique;Sensibilité;Vulnérabilité;Eau potable;Pénurie eau potable;Captages avec interruption d'alimentation AEP;Nombre;Avis Antea : représentation adaptée à tous les territoires;;;x;-;;Aide à la décision;Moyen;;V3;Usages sectoriels de l'eau;"information sur la rupture d'alimentation en année sèche disponible dans BDD ARS ?
+Si c'est bien le cas, prévoir une convention Région/ARS pour collecte des données";-;;
+Vulnérabilité et adaptation climatique;Vulnérabilité;Vulnérabilité;Hydrologie;Indicateurs d'impact sur la population (surface inondable vs nbre d'hab par exemple);;?;;;;;;;;;;V3;;Pas identifié initialement;A étudier dans le cadre de la V3;;
+Vulnérabilité et adaptation climatique;Vulnérabilité;Vulnérabilité;CatNat;Nombre d'arrêtés de catastrophes naturelles de l'année n-1;Nombre d'arrêtés de catastrophes naturelles par type de risque (Sécheresse, Inondations, etc.) de l'année n-1;Nombre;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type camembert/donut)";;Il existe de nombreux risques identifiés (environ 20). Proposition de conserver uniquement le risque Sécheresse / Inondations et/ou Coulées de Boue / Inondations Remontée Nappe ?;Lajlah : oui, ne conserver que les risques en liens avec l'eau, votre proposition me convient !;;Moyen;téléchargement - à refaire ponctuellement;V2;;Fichier Excel à télécharger à pas de temps régulier;0%;En attente de validation;
+Vulnérabilité et adaptation climatique;Vulnérabilité;Vulnérabilité;CatNat;Evolution du nombre d'arrêtés de catastrophes naturelles sur la période disponible;Evolution du nombre d'arrêtés de catastrophes naturelles par type de risque (Sécheresse, Inondations, etc.) sur la période disponible;Nombre;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type histogramme)";;Il existe de nombreux risques identifiés (environ 20). Proposition de conserver uniquement le risque Sécheresse / Inondations et/ou Coulées de Boue / Inondations Remontée Nappe ?;Lajlah : oui, ne conserver que les risques en liens avec l'eau, votre proposition me convient !;;Moyen;téléchargement - à refaire ponctuellement;V2;Fichier Excel à télécharger à pas de temps régulier;A calculer;0%;En attente de validation;
+fiche d'identité;;Eaux de surface;Prélèvement;Volume prélevé;Somme des volumes d'eau prélevée tous usages confondus par le type de ressource ESU sur toute la chronique disponible (BNPE 2008-2023);"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";V2;;"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";;
+fiche d'identité;;Eaux souterraines;Prélèvement;Volume prélevé;Somme des volumes d'eau prélevée tous usages confondus par le type de ressource ESO sur toute la chronique disponible (BNPE 2008-2023);"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";V2;;"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";;
+fiche d'identité;;Données administratives;Population;Population totale ;Population totale sur un territoire donné;Nombre d'habitant;Avis Antea : représentation adaptée à tous les territoires;;;x;-;;;;;V2;;champ pmun_rp2023 de la table commune_actuelle du schéma acal de la base spatialege ;-;;
+fiche d'identité;;Données administratives;Population;Evolution de la population totale ;Evolution de la population totale sur toute la chronique disponible (source Région);Nombre d'habitant;Avis Antea : représentation adaptée à tous les territoires;;"x
+(type histogramme)";;-;;;;;V2;;champs pnum_rp2006 -> pmun_rp2023 de la table commune_actuelle du schéma acal de la base spatialege ;-;;
+fiche d'identité;;Données administratives;Population;Densité;Indique le nombre d'habitant au km2 / prévoir un comparatif par rapport au GE;hab/km2;Avis Antea : représentation adaptée à tous les territoires;;;x;-;;;;;V2;;table commune_actuelle du schéma acal de spatialege ;-;;
+fiche d'identité;;Données administratives;Population;Ruralité;Indique la typologie du territoire (selon l'échelle, prévoir des comparatifs);-;Avis Antea : représentation adaptée à tous les territoires;;;x;-;Uniquement à la commune sinon renvoie vers site Région;;;;V2;;champ lib_insee_grille_7n_2025 de la table commune_actuelle du schéma acal de la base spatialege;-;;
+fiche d'identité;;Données administratives;Superficie du territoire;Superficie;Indique la superficie du territoire donnée;km2;Avis Antea : représentation adaptée à tous les territoires;;;x;-;Uniquement sur les territoires administratifs (donc pas hydrographiques);;;;V2;;champ superf_km de la table commune_actuelle du schéma acal de la base spatialege ;A calculer;;
+fiche d'identité;;Données administratives;Echelles administratives;Nom du territoire;Indique si le territoire donné est une commune, une EPCI….;oui/non;Avis Antea : représentation adaptée à tous les territoires;;;x;-;;;;;V2;;-;A calculer;;
+fiche d'identité;;Données administratives;Echelles géographiques;Nom du territoire;Indique si le territoire donné est un BV…;oui/non;Avis Antea : représentation adaptée à tous les territoires;;;x;-;;;;;V2;;-;A calculer;;
+fiche d'identité;;Données administratives;Echelles territoires de projet;Nom du territoire;Indique si le territoire donné est un SCOT, PAOT, PTG, SAGE,…;oui/non;Avis Antea : représentation adaptée à tous les territoires;;;x;-;;;;;V2;;-;A calculer;;
+fiche d'identité;;Eau potable;Coûts de la gestion de l'eau;Prix de l'eau;Présenter prix des services de l'eau des collectivités compétentes en matière de distribution;"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";V2;;"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";;
+fiche d'identité;Sensibilité;Usages;Eau potable;AAC;% du territoire couvert par une AAC;"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";V2;;"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";;
+fiche d'identité;Sensibilité;Usages;Eau potable;Captages sensibles;Nombre de captages sensibles sur le territoire;"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";V2;;"Reprise indicateurs Ressources
+";"Reprise indicateurs Ressources
+";;

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <title>Tableau de bord Élu – Observatoire de l'Eau Grand Est</title>
+
+  <!-- Bunny Fonts: Cabinet Grotesk (headings) + Satoshi (body) — GDPR-compliant -->
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../css/fonts.css">
+
+  <!-- Bootstrap 5 CSS — grid and utility styles -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+  <!-- Phosphor Icons — loaded with defer to avoid render blocking -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+
+  <!-- Observatory custom CSS files -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/nav.css">
+  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/tableau-de-bord.css">
+  <link rel="stylesheet" href="../css/tdb-v2.css">
+  <link rel="stylesheet" href="../css/tdb-elu.css">
+  <link rel="stylesheet" href="../css/a11y.css">
+  <style>
+    body { padding-top: 0; }
+  </style>
+</head>
+
+<body class="nav-loading tdb-elu-page-fixed">
+
+  <!-- ── Liens d'évitement RGAA 12.1 ── -->
+  <div class="skip-links">
+    <a class="skip-link" href="#main-content">Aller au contenu principal</a>
+    <a class="skip-link" href="#tdb-elu-nav">Aller à la navigation thématique</a>
+  </div>
+
+  <!-- ================================================================
+       EN-TÊTE PRINCIPAL (injecté par nav.js)
+  ================================================================ -->
+  <header class="orege-header" id="site-header" role="banner">
+    <a href="../index.html" class="orege-header__logo" aria-label="Accueil – Observatoire de l'Eau Grand Est">
+      <img src="../images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true">
+      <span class="orege-header__logo-text">Observatoire de l'Eau <span>Grand Est</span></span>
+    </a>
+    <!-- Navigation bar injected by nav.js -->
+  </header>
+
+  <!-- ================================================================
+       EN-TÊTE H1 + CONTRÔLES (barre fusionnée, identique au TdB principal)
+  ================================================================ -->
+  <div class="tdb-page-header" id="tdb-page-header">
+    <div class="tdb-page-header__inner">
+
+      <!-- H1 title on the left side of the toolbar -->
+      <div class="tdb-page-header__left">
+        <a href="tableaux-de-bord.html" class="tdb-page-header__back" title="Retour à la liste" aria-label="Retour à la liste des tableaux de bord">
+          <i class="ph ph-arrow-left" aria-hidden="true"></i>
+        </a>
+        <h1 class="tdb-page-header__title">
+          <i class="ph ph-identification-card" aria-hidden="true"></i>
+          Tableau de bord Élu &ndash;
+          <span id="tdb-elu-territoire">Grand Est</span>
+        </h1>
+      </div>
+
+      <!-- Controls on the right side of the toolbar -->
+      <div class="tdb-page-header__controls">
+
+        <!-- Sélecteur Échelle territoriale -->
+        <div class="tdb-ctrl-groupe">
+          <span class="tdb-ctrl-label">
+            <i class="ph ph-layer-group" aria-hidden="true"></i> Échelle
+          </span>
+          <label for="tdb-elu-select-echelle" class="sr-only">Filtre par échelle territoriale</label>
+          <select id="tdb-elu-select-echelle" class="tdb-ctrl-select" style="min-width:130px;">
+            <!-- Rempli dynamiquement -->
+          </select>
+        </div>
+
+        <div class="tdb-ctrl-sep"></div>
+
+        <!-- Sélecteur Territoire avec recherche -->
+        <div class="tdb-ctrl-groupe tdb-territoire-groupe">
+          <span class="tdb-ctrl-label">
+            <i class="ph ph-map-pin" aria-hidden="true"></i> Territoire
+          </span>
+          <!-- Champ de recherche avec autocomplétion -->
+          <div class="tdb-search-territoire" id="tdb-elu-search-wrap">
+            <div class="tdb-search-territoire__field">
+              <i class="ph ph-magnifying-glass tdb-search-territoire__icon" aria-hidden="true"></i>
+              <input
+                type="text"
+                id="tdb-elu-territoire-search"
+                class="tdb-search-territoire__input"
+                placeholder="Rechercher un territoire…"
+                autocomplete="off"
+                aria-label="Rechercher un territoire"
+                aria-autocomplete="list"
+                aria-controls="tdb-elu-territoire-suggestions"
+                aria-expanded="false"
+              >
+              <button class="tdb-search-territoire__clear" id="tdb-elu-search-clear" type="button" aria-label="Effacer la recherche" style="display:none">
+                <i class="ph ph-x"></i>
+              </button>
+            </div>
+            <!-- Liste de suggestions -->
+            <ul class="tdb-territoire-suggestions" id="tdb-elu-territoire-suggestions" role="listbox" aria-label="Suggestions de territoires"></ul>
+          </div>
+          <!-- Select caché utilisé par le JS -->
+          <label for="tdb-elu-select-territoire" class="sr-only">Filtre par territoire</label>
+          <select id="tdb-elu-select-territoire" class="sr-only" aria-hidden="true">
+            <!-- Rempli dynamiquement -->
+          </select>
+        </div>
+
+        <div class="tdb-ctrl-sep"></div>
+
+        <!-- Sélecteur Année -->
+        <div class="tdb-ctrl-groupe">
+          <span class="tdb-ctrl-label">
+            <i class="ph ph-calendar" aria-hidden="true"></i> Année
+          </span>
+          <label for="tdb-elu-select-annee" class="sr-only">Année de référence</label>
+          <select id="tdb-elu-select-annee" class="tdb-ctrl-select" style="min-width:80px;">
+            <option value="2025" selected>2025</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+          </select>
+        </div>
+
+        <div class="tdb-ctrl-sep"></div>
+
+        <!-- Boutons action -->
+        <button class="tdb-ctrl-btn" aria-label="Exporter le tableau de bord en PDF">
+          <i class="ph ph-file-pdf" aria-hidden="true"></i> PDF
+        </button>
+        <button class="tdb-ctrl-btn" aria-label="Partager ce tableau de bord">
+          <i class="ph ph-share-network" aria-hidden="true"></i> Partager
+        </button>
+
+      </div><!-- /.tdb-page-header__controls -->
+    </div><!-- /.tdb-page-header__inner -->
+  </div><!-- /.tdb-page-header -->
+
+  <!-- ================================================================
+       BARRE DE NAVIGATION THÉMATIQUE (5 sections)
+  ================================================================ -->
+  <nav class="tdb-elu-nav" id="tdb-elu-nav" role="tablist" aria-label="Sections thématiques du tableau de bord élu">
+    <div class="tdb-elu-nav__inner">
+      <!-- Rempli dynamiquement par tableau-de-bord-elu.js -->
+    </div>
+  </nav>
+
+  <!-- ================================================================
+       CONTENU PRINCIPAL DU TABLEAU DE BORD ÉLU
+  ================================================================ -->
+  <main class="tdb-elu-page" id="main-content" style="padding-top:180px;">
+    <div id="tdb-elu-content">
+      <!-- Rempli dynamiquement par tableau-de-bord-elu.js -->
+      <div class="tdb-elu-section" style="text-align:center;padding:80px 24px;">
+        <i class="ph ph-spinner ph-spin" style="font-size:40px;color:#1565C0;"></i>
+        <p style="margin-top:16px;color:#64748B;">Chargement des indicateurs…</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================================================================
+       LIGHTBOX COMPARAISON DE TERRITOIRES
+  ================================================================ -->
+  <div class="tdb-elu-compare-overlay" id="tdb-elu-compare-overlay" aria-hidden="true" role="dialog" aria-label="Comparer avec un autre territoire">
+    <div class="tdb-elu-compare-modal">
+      <button class="tdb-elu-compare-modal__close" id="tdb-elu-compare-close" type="button" aria-label="Fermer">
+        <i class="ph ph-x"></i>
+      </button>
+      <h3><i class="ph ph-arrows-left-right"></i> Comparer les territoires</h3>
+      <p>Sélectionnez un territoire à comparer avec le territoire actuellement affiché.</p>
+
+      <div class="tdb-elu-compare-modal__field">
+        <label class="tdb-elu-compare-modal__label" for="tdb-elu-compare-echelle">Échelle</label>
+        <select class="tdb-elu-compare-modal__select" id="tdb-elu-compare-echelle"></select>
+      </div>
+
+      <div class="tdb-elu-compare-modal__field">
+        <label class="tdb-elu-compare-modal__label" for="tdb-elu-compare-search">Territoire</label>
+        <input type="text" class="tdb-elu-compare-modal__search" id="tdb-elu-compare-search"
+               placeholder="Rechercher un territoire…" autocomplete="off">
+        <ul class="tdb-elu-compare-modal__suggestions" id="tdb-elu-compare-suggestions"></ul>
+      </div>
+
+      <button class="tdb-elu-compare-modal__validate" id="tdb-elu-compare-validate" type="button" disabled>
+        <i class="ph ph-check-circle"></i> Valider la comparaison
+      </button>
+    </div>
+  </div>
+
+  <!-- jQuery 3 -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+  <!-- Bootstrap 5 Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Chart.js 4 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+  <!-- OpenLayers 9 (mini-cartes intégrées) -->
+  <script src="https://cdn.jsdelivr.net/npm/ol@9.2.4/dist/ol.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@9.2.4/ol.css">
+
+  <!-- Données des indicateurs Élu (105 indicateurs + sections + mapping) -->
+  <script src="../js/data-indicateurs-elu.js"></script>
+
+  <!-- Données des territoires (TERRITOIRES : Grand Est, Département, EPCI, Commune) -->
+  <script src="../js/data-indicateurs.js"></script>
+
+  <!-- SheetJS pour chargement des communes -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Chargement asynchrone des 5 115 communes depuis listing_territoires.xlsx -->
+  <script src="../js/data-communes.js"></script>
+
+  <!-- Injection des communes dans TERRITOIRES["Commune"] une fois chargées -->
+  <script>
+  document.addEventListener('communes:loaded', function(e) {
+    if (!e.detail || !e.detail.count) return;
+    if (typeof COMMUNES_TERRITOIRES === 'undefined' || typeof TERRITOIRES === 'undefined') return;
+    var noms = COMMUNES_TERRITOIRES.map(function(c) { return c.label; });
+    noms.sort(function(a, b) { return a.localeCompare(b, 'fr'); });
+    TERRITOIRES['Commune'] = noms;
+    console.log('[TDB-ELU] Communes injectées dans TERRITOIRES :', noms.length);
+  });
+  </script>
+
+  <!-- Données géographiques pour les mini-cartes -->
+  <script src="../js/data-geo-elu.js"></script>
+
+  <!-- Moteur de rendu du tableau de bord Élu -->
+  <script src="../js/tableau-de-bord-elu.js"></script>
+
+  <!-- Accessibilité RGAA 4.1 -->
+  <script src="../js/a11y.js"></script>
+  <!-- Navigation principale -->
+  <script src="../js/nav.js"></script>
+  <!-- Transition de page -->
+  <script src="../js/page-transition.js"></script>
+
+<div class="orege-footer-placeholder"></div>
+</body>
+</html>

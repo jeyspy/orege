@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>Je suis citoyen / habitant – Observatoire de l'Eau Grand Est</title>
+  <meta name="description" content="La plateforme Orège pour les citoyens et habitants du Grand Est : qualité de l'eau, enjeux locaux, actualités et FAQ.">
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="preload" href="images/hero-citoyen.jpg" as="image">
+  <link rel="stylesheet" href="css/fonts.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/a11y.css">
+  <link rel="stylesheet" href="css/profil-page.css">
+  <link rel="stylesheet" href="css/je-suis-habitant.css">
+</head>
+<body class="nav-loading">
+<a href="#main-content" class="sr-only focusable">Aller au contenu principal</a>
+<header class="orege-header" role="banner">
+  <a href="index.html" class="orege-header__logo" aria-label="Observatoire de l'Eau Grand Est – Accueil">
+    <img src="images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true" width="44" height="44" loading="eager">
+    <span class="orege-header__logo-text">Observatoire de l'Eau<br><span>Grand Est</span></span>
+  </a>
+</header>
+
+<div class="page-hero">
+  <div class="profil-hero-img" aria-hidden="true">
+    <img src="images/hero-citoyen.jpg?v=2" alt="" width="600" height="500" loading="eager">
+  </div>
+  <div class="page-hero__inner">
+    <h1 class="page-hero__title">Je suis citoyen / habitant</h1>
+    <p class="page-hero__sub">Informez-vous sur la qualité de l'eau autour de chez vous, comprenez les risques et les enjeux de l'eau en Grand Est — en langage accessible à tous.</p>
+  </div>
+</div>
+
+<main id="main-content">
+<div class="profil-body-wrap">
+
+  <!-- Sticky table of contents (active item updated by js/profil-page.js) -->
+  <aside class="article-toc" aria-label="Sommaire">
+    <div class="article-toc__title">Sommaire</div>
+    <ul class="article-toc__list" id="toc-list">
+      <li class="is-active"><a href="#intro">À propos de cette section</a></li>
+      <li><a href="#trouver">Ce que vous trouverez ici</a></li>
+      <li><a href="#commencer">Par où commencer ?</a></li>
+      <li><a href="#questions">Vos questions</a></li>
+    </ul>
+    <hr class="article-toc__sep">
+    <a href="index.html" style="font-size:12px;color:#5a6a88;text-decoration:none;display:flex;align-items:center;gap:6px;">
+      <i class="ph ph-arrow-left" aria-hidden="true"></i> Accueil
+    </a>
+  </aside>
+
+  <!-- Main content area -->
+  <div>
+
+    <!-- Introduction: platform overview for citizens / residents -->
+    <div class="profil-section profil-section__anchor" id="intro">
+      <div class="profil-section__header">
+        <div class="profil-section__icon"><i class="ph ph-person" aria-hidden="true"></i></div>
+        <div>
+          <div class="profil-section__tag">Votre profil</div>
+          <h2 class="profil-section__title">Citoyens &amp; habitants : votre espace</h2>
+        </div>
+      </div>
+      <div class="profil-section__body">
+        <blockquote>
+          L'eau est un bien commun. L'Observatoire de l'Eau Grand Est est une plateforme publique et gratuite, conçue pour rendre l'information sur l'eau accessible à tous — sans jargon technique, ni expertise préalable.
+        </blockquote>
+        <p>Résidents du Grand Est, que vous soyez riverain d'une rivière, parent soucieux de la qualité de l'eau du robinet, ou simplement curieux de comprendre les enjeux de l'eau sur votre territoire, cette plateforme est faite pour vous.</p>
+        <p>En quelques clics, vous pouvez <strong>consulter la qualité de l'eau distribuée dans votre commune</strong>, visualiser les zones à risque d'inondation près de chez vous, ou encore découvrir les milieux aquatiques de votre région — rivières, zones humides, lacs et étangs.</p>
+        <p>L'Observatoire vous propose également un accès simplifié aux <strong>actualités de l'eau en Grand Est</strong> : bilans de sécheresse, épisodes de crues, nouvelles espèces réintroduites dans les rivières, avancées des politiques de l'eau. Toute l'information régionale, rassemblée en un seul endroit.</p>
+      </div>
+    </div>
+
+    <!-- What you will find on the platform -->
+    <div class="profil-section profil-section__anchor" id="trouver">
+      <div class="profil-section__header">
+        <div class="profil-section__icon"><i class="ph ph-info" aria-hidden="true"></i></div>
+        <div>
+          <div class="profil-section__tag">Contenu disponible</div>
+          <h2 class="profil-section__title">Ce que vous trouverez ici</h2>
+        </div>
+      </div>
+      <div class="profil-section__body">
+        <p>L'Observatoire de l'Eau Grand Est est une plateforme publique et gratuite. En tant que citoyen du Grand Est, vous pouvez :</p>
+        <ul>
+          <li>Consulter la <strong>qualité de l'eau distribuée</strong> dans votre commune — conformité bactériologique, taux de nitrates, dureté</li>
+          <li>Comprendre les <strong>risques d'inondation ou de sécheresse</strong> sur votre territoire grâce aux cartes interactives</li>
+          <li>Découvrir les <strong>milieux naturels aquatiques</strong> proches de chez vous : rivières, zones humides, espèces patrimoniales</li>
+          <li>Accéder aux <strong>actualités et publications</strong> sur l'eau en Grand Est en langage accessible</li>
+          <li>Comprendre les <strong>six grands enjeux de l'eau</strong> dans la région : qualité, quantité, milieux, usages, climat, gouvernance</li>
+          <li>Poser vos questions via la <strong>FAQ</strong> et trouver les contacts utiles</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Where to start: recommended entry points -->
+    <div class="profil-section profil-section__anchor" id="commencer">
+      <div class="profil-section__header">
+        <div class="profil-section__icon"><i class="ph ph-compass" aria-hidden="true"></i></div>
+        <div>
+          <div class="profil-section__tag">Premiers pas</div>
+          <h2 class="profil-section__title">Par où commencer ?</h2>
+        </div>
+      </div>
+      <div class="profil-section__body">
+        <div class="action-grid">
+          <a href="enjeux.html" class="action-card">
+            <div class="action-card__icon"><i class="ph ph-lightbulb" aria-hidden="true"></i></div>
+            <div class="action-card__title">Comprendre les enjeux de l'eau</div>
+            <p class="action-card__desc">Découvrez en langage clair les principaux défis de l'eau en Grand Est : qualité, sécheresse, inondations, biodiversité aquatique.</p>
+            <span class="action-card__link"><i class="ph ph-arrow-right" aria-hidden="true"></i> Lire</span>
+          </a>
+          <a href="template/decouvrir-mon-territoire.html" class="action-card">
+            <div class="action-card__icon"><i class="ph ph-map-pin" aria-hidden="true"></i></div>
+            <div class="action-card__title">Mon territoire en un coup d'œil</div>
+            <p class="action-card__desc">Accédez aux indicateurs clés de votre commune, de votre département ou de votre agglomération — qualité de l'eau, risques, milieux.</p>
+            <span class="action-card__link"><i class="ph ph-arrow-right" aria-hidden="true"></i> Explorer</span>
+          </a>
+          <a href="actualites.html" class="action-card">
+            <div class="action-card__icon"><i class="ph ph-newspaper" aria-hidden="true"></i></div>
+            <div class="action-card__title">Dernières actualités</div>
+            <p class="action-card__desc">Articles, bilans de sécheresse, nouvelles sur les rivières et la biodiversité aquatique du Grand Est. Mises à jour régulières.</p>
+            <span class="action-card__link"><i class="ph ph-arrow-right" aria-hidden="true"></i> Lire les actus</span>
+          </a>
+          <a href="faq.html" class="action-card">
+            <div class="action-card__icon"><i class="ph ph-question" aria-hidden="true"></i></div>
+            <div class="action-card__title">Foire aux questions</div>
+            <p class="action-card__desc">Toutes les réponses à vos questions sur la plateforme, la donnée eau et les ressources disponibles pour les citoyens.</p>
+            <span class="action-card__link"><i class="ph ph-arrow-right" aria-hidden="true"></i> Consulter la FAQ</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frequently asked questions (short version) -->
+    <div class="profil-section profil-section__anchor" id="questions">
+      <div class="profil-section__header">
+        <div class="profil-section__icon"><i class="ph ph-envelope" aria-hidden="true"></i></div>
+        <div>
+          <div class="profil-section__tag">Échanges &amp; contact</div>
+          <h2 class="profil-section__title">Vos questions</h2>
+        </div>
+      </div>
+      <div class="profil-section__body">
+        <p>Vous ne trouvez pas l'information que vous cherchez ? Vous souhaitez signaler une anomalie sur la qualité de l'eau de votre commune ? Vous pouvez contacter l'équipe de l'Observatoire qui orientera votre demande vers les services compétents.</p>
+        <p>Pour les questions urgentes liées à la qualité de l'eau potable, contactez directement votre mairie ou votre gestionnaire de réseau d'eau potable. Pour les situations d'urgence environnementale (pollution d'un cours d'eau, déversement…), contactez le <strong>0800 192 019</strong> (numéro vert de l'Office Français de la Biodiversité, gratuit 24h/24).</p>
+        <div class="profil-notice">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          <div>
+            Consultez la <a href="faq.html">Foire Aux Questions</a> pour les réponses aux interrogations les plus fréquentes sur la plateforme et les données sur l'eau en Grand Est.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.content -->
+</div><!-- /.profil-body-wrap -->
+</main>
+
+<!-- PARTNER LOGO BANNER -->
+<section class="partenaires-bandeau" aria-label="Partenaires">
+  <div class="partenaires-bandeau__inner">
+    <p class="partenaires-bandeau__label">Une plateforme à<br>l'initiative de</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://www.grandest.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-grandest.png" alt="La Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.prefectures-regions.gouv.fr/grand-est" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-prefet-grand-est.png" alt="Préfet de la Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <p class="partenaires-bandeau__label">Et co-financé<br>par</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://european-union.europa.eu/index_fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-union-europeenne.png" alt="Union Européenne" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.lesagencesdeleau.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-agences-eau.png" alt="Les Agences de l'Eau" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+  </div>
+</section>
+<div class="orege-footer-placeholder"></div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/a11y.js"></script>
+<script src="js/profil-page.js"></script>
+</body>
+</html>

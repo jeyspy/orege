@@ -1,0 +1,357 @@
+/* ============================================================
+   css/ressources-docs.css
+   Page-specific styles for ressources-docs.html
+   (Documentary database — search, filters, document list)
+
+   Sections:
+     1. FEATURED DOCUMENTS — "Derniers ajouts" cards
+     2. SEARCH BAR
+     3. FILTER BUTTONS
+     4. DOCUMENT LIST — one row per file
+     5. NO RESULTS + LOAD MORE
+============================================================ */
+
+/* ── 1. FEATURED DOCUMENTS ── */
+/* Section wrapper for the "recent additions" card grid */
+.docs-featured {
+  margin-bottom: 40px;
+}
+
+/* Section label — "Derniers ajouts" with star icon */
+.docs-featured__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #2a347d;
+  margin-bottom: 14px;
+}
+.docs-featured__label i { font-size: 13px; }
+
+/* 3-column grid for featured document cards */
+.docs-featured__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 900px) { .docs-featured__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 580px) { .docs-featured__grid { grid-template-columns: 1fr; } }
+
+/* Individual featured card */
+.doc-featured-card {
+  background: #fff;
+  border: 1px solid rgba(42,52,125,.18);
+  border-top: 3px solid #7fddf0; /* sky-blue top accent */
+  border-radius: 0;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow .2s;
+  position: relative;
+}
+.doc-featured-card:hover { box-shadow: 0 4px 16px rgba(42,52,125,.10); }
+
+/* "Nouveau" badge — floats top-right above the card border */
+.doc-featured-card__badge {
+  position: absolute;
+  top: -1px;
+  right: 16px;
+  background: #2a347d;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  padding: 3px 10px;
+  border-radius: 0;
+}
+
+/* File type icon */
+.doc-featured-card__icon { font-size: 22px; color: #2a347d; }
+
+/* Document title */
+.doc-featured-card__title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #1d1d1b;
+  line-height: 1.4;
+}
+
+/* Metadata chips (date, author, size) */
+.doc-featured-card__meta {
+  font-size: 11px;
+  color: rgba(42,52,125,.5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Download CTA button */
+.doc-featured-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2a347d;
+  text-decoration: none;
+  margin-top: auto;
+  padding: 6px 14px;
+  border-radius: 0;
+  background: #7fddf0;
+  border: none;
+  align-self: flex-start;
+  transition: background .15s, color .15s;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+.doc-featured-card__link:hover { background: #2a347d; color: #fff; text-decoration: none; }
+
+/* ── 2. SEARCH BAR ── */
+.docs-search {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+/* Full-width search input with a 2px primary-blue border */
+.docs-search__input {
+  width: 100%;
+  padding: 12px 44px 12px 16px;
+  border: 2px solid #2a347d;
+  border-radius: 0;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  color: #1d1d1b;
+  background: #fff;
+}
+.docs-search__input:focus { border-color: #7fddf0; }
+
+/* Magnifying-glass icon inside the search bar */
+.docs-search__icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #2a347d;
+  pointer-events: none;
+  font-size: 14px;
+}
+
+/* ── 3. FILTER BUTTONS ── */
+/* Vertical stack of filter rows (category, file type…) */
+.docs-filters-row {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 36px;
+}
+
+/* Single row of filters for one dimension */
+.docs-filters-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(42,52,125,.12);
+}
+/* First group has no top border */
+.docs-filters-group:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+/* Dimension label ("Catégorie", "Type"…) */
+.docs-filters-group__label {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(42,52,125,.45);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-right: 4px;
+  white-space: nowrap;
+}
+
+/* Individual filter button */
+.doc-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 0;
+  border: 1px solid rgba(42,52,125,.22);
+  background: #fff;
+  color: #2a347d;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Satoshi', system-ui, sans-serif;
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.doc-filter-btn:hover    { border-color: #2a347d; background: rgba(42,52,125,.06); }
+/* Active / selected filter — solid dark blue */
+.doc-filter-btn.is-active { background: #2a347d; border-color: #2a347d; color: #fff; }
+.doc-filter-btn i { font-size: 12px; }
+
+/* ── 4. DOCUMENT LIST ── */
+/* Vertical list — one row per document */
+.docs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Single document row */
+.doc-item {
+  background: #fff;
+  border: none;
+  border-bottom: 1px solid rgba(42,52,125,.1);
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: background .12s;
+}
+/* Top border on the first item */
+.doc-item:first-of-type { border-top: 1px solid rgba(42,52,125,.1); }
+.doc-item:hover { background: rgba(42,52,125,.03); }
+
+/* File type icon (PDF, XLS, SHP…) */
+.doc-item__icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  color: #2a347d;
+  width: 28px;
+  text-align: center;
+}
+
+/* Body row: category | title | metadata */
+.doc-item__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Fixed-width category column */
+.doc-item__cat {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: rgba(42,52,125,.45);
+  white-space: nowrap;
+  flex-shrink: 0;
+  width: 160px;
+}
+
+/* Document title — grows to fill remaining space */
+.doc-item__title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1d1d1b;
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Metadata chips (date, author) */
+.doc-item__meta {
+  font-size: 11px;
+  color: rgba(42,52,125,.4);
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.doc-item__meta span { display: flex; align-items: center; gap: 4px; }
+.doc-item__footer { display: none; } /* reserved for future use */
+
+/* Format badge (PDF · 2.8 Mo) */
+.doc-item__type-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 0;
+  background: rgba(42,52,125,.08);
+  color: #2a347d;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Download button */
+.doc-item__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2a347d;
+  text-decoration: none;
+  padding: 6px 13px;
+  border-radius: 0;
+  background: #7fddf0;
+  transition: background .15s, color .15s;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.doc-item__link:hover { background: #2a347d; color: #fff; text-decoration: none; }
+
+/* Mobile: hide category and metadata columns to save space */
+@media (max-width: 700px) {
+  .doc-item__cat  { display: none; }
+  .doc-item__meta { display: none; }
+  .doc-item__body { gap: 8px; }
+}
+
+/* ── 5. NO RESULTS + LOAD MORE ── */
+/* Centered "no results" message */
+.docs-no-results {
+  text-align: center;
+  padding: 48px;
+  color: rgba(42,52,125,.4);
+  display: none;
+  grid-column: 1 / -1;
+}
+.docs-no-results i { font-size: 36px; display: block; margin-bottom: 12px; }
+
+/* Load-more wrapper and button */
+.load-more-wrap {
+  text-align: center;
+  margin: 36px 0 8px;
+}
+.load-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 32px;
+  border-radius: 0;
+  border: 2px solid #2a347d;
+  background: #fff;
+  color: #2a347d;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Satoshi', system-ui, sans-serif;
+  cursor: pointer;
+  transition: all .2s;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+.load-more-btn:hover     { background: #2a347d; color: #fff; }
+.load-more-btn:disabled  { opacity: .4; cursor: default; }
+
+/* "N documents remaining" count below the button */
+.load-more-count {
+  font-size: 12px;
+  color: rgba(42,52,125,.45);
+  margin-top: 10px;
+}

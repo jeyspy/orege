@@ -1,0 +1,323 @@
+/* ============================================================
+   404.css – Page « introuvable » — Observatoire de l'Eau Grand Est
+   ============================================================ */
+
+/* ── 1. Layout principal ── */
+.notfound-main {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px 80px;
+  background: linear-gradient(160deg, #f0f4ff 0%, #e8f4fd 50%, #dbeafe 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Décoration de fond : grandes gouttes abstraites */
+.notfound-main::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 10% 80%, rgba(127,221,240,.12) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 90% 20%, rgba(42,52,125,.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.notfound-container {
+  max-width: 960px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 2. Illustration SVG ── */
+.notfound-illustration {
+  width: 100%;
+  max-width: 540px;
+  filter: drop-shadow(0 12px 32px rgba(42,52,125,.18));
+}
+
+.notfound-svg {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+}
+
+/* Animation vague 1 */
+@keyframes wave1 {
+  0%   { d: path("M0,178 C40,166 80,190 120,178 C160,166 200,190 240,178 C280,166 320,190 360,178 C400,166 440,190 480,178 L520,178 L520,320 L0,320 Z"); }
+  50%  { d: path("M0,182 C40,194 80,170 120,182 C160,194 200,170 240,182 C280,194 320,170 360,182 C400,194 440,170 480,182 L520,182 L520,320 L0,320 Z"); }
+  100% { d: path("M0,178 C40,166 80,190 120,178 C160,166 200,190 240,178 C280,166 320,190 360,178 C400,166 440,190 480,178 L520,178 L520,320 L0,320 Z"); }
+}
+
+@keyframes wave2 {
+  0%   { d: path("M0,188 C50,178 100,200 150,188 C200,178 250,200 300,188 C350,178 400,200 450,188 L520,185 L520,320 L0,320 Z"); }
+  50%  { d: path("M0,192 C50,202 100,182 150,192 C200,202 250,182 300,192 C350,202 400,182 450,192 L520,190 L520,320 L0,320 Z"); }
+  100% { d: path("M0,188 C50,178 100,200 150,188 C200,178 250,200 300,188 C350,178 400,200 450,188 L520,185 L520,320 L0,320 Z"); }
+}
+
+.notfound-wave-1 {
+  animation: wave1 4s ease-in-out infinite;
+}
+
+.notfound-wave-2 {
+  animation: wave2 3.2s ease-in-out infinite reverse;
+}
+
+/* Animation des bulles qui montent */
+@keyframes bubbleRise {
+  0%   { transform: translateY(0) scale(1);   opacity: 0.7; }
+  80%  { opacity: 0.5; }
+  100% { transform: translateY(-60px) scale(1.15); opacity: 0; }
+}
+
+.notfound-bubble-1 { animation: bubbleRise 3.8s ease-in-out infinite 0.2s; }
+.notfound-bubble-2 { animation: bubbleRise 4.2s ease-in-out infinite 1.1s; }
+.notfound-bubble-3 { animation: bubbleRise 3.5s ease-in-out infinite 0.6s; }
+.notfound-bubble-4 { animation: bubbleRise 5s ease-in-out infinite 2s; }
+.notfound-bubble-5 { animation: bubbleRise 4.6s ease-in-out infinite 1.7s; }
+
+/* Animation du poisson qui nage */
+@keyframes fishSwim {
+  0%   { transform: translate(50px, 240px) scaleX(1); }
+  40%  { transform: translate(200px, 260px) scaleX(1); }
+  50%  { transform: translate(220px, 260px) scaleX(-1); }
+  90%  { transform: translate(50px, 248px) scaleX(-1); }
+  100% { transform: translate(50px, 240px) scaleX(1); }
+}
+
+.notfound-fish {
+  animation: fishSwim 8s ease-in-out infinite;
+}
+
+/* Animation de l'éclaboussure */
+@keyframes splashPulse {
+  0%, 100% { transform: translate(262px, 178px) scale(0.85); opacity: 0.5; }
+  50%       { transform: translate(262px, 178px) scale(1.1);  opacity: 1; }
+}
+
+.notfound-splash {
+  animation: splashPulse 2.4s ease-in-out infinite;
+}
+
+/* Animation légère des chiffres */
+@keyframes digitsFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(4px); }
+}
+
+.notfound-digits {
+  animation: digitsFloat 3.5s ease-in-out infinite;
+}
+
+/* ── 3. Contenu textuel ── */
+.notfound-content {
+  text-align: center;
+  max-width: 640px;
+}
+
+/* Badge */
+.notfound-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(127,221,240,.22);
+  color: var(--color-primary, #2a347d);
+  border: 1.5px solid rgba(127,221,240,.5);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.notfound-badge i {
+  font-size: 15px;
+  color: #2a347d;
+}
+
+/* Titre principal */
+.notfound-title {
+  font-family: var(--font-h1, 'Cabinet Grotesk', sans-serif);
+  font-size: clamp(36px, 6vw, 58px);
+  font-weight: 800;
+  color: var(--color-primary, #2a347d);
+  line-height: 1.12;
+  margin: 0 0 20px;
+}
+
+.notfound-title span {
+  color: #2a347d;
+  position: relative;
+  display: inline-block;
+}
+
+/* Soulignement décoratif "vague" sous le mot mis en valeur */
+.notfound-title span::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #7fddf0, #2a347d, #7fddf0);
+  border-radius: 2px;
+  opacity: 0.55;
+}
+
+/* Texte introducteur */
+.notfound-lead {
+  font-size: clamp(16px, 2vw, 19px);
+  color: var(--color-primary, #2a347d);
+  font-weight: 600;
+  line-height: 1.55;
+  margin: 0 0 16px;
+}
+
+/* Texte secondaire */
+.notfound-text {
+  font-size: 15px;
+  color: var(--color-text-muted, rgba(42,52,125,.6));
+  line-height: 1.7;
+  margin: 0 0 36px;
+}
+
+/* ── 4. Boutons d'action ── */
+.notfound-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.notfound-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .18s, box-shadow .18s, background .18s;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.notfound-btn:hover {
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.notfound-btn--primary {
+  background: var(--color-primary, #2a347d);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(42,52,125,.28);
+}
+
+.notfound-btn--primary:hover {
+  background: #1e2760;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(42,52,125,.38);
+}
+
+.notfound-btn--secondary {
+  background: #7fddf0;
+  color: var(--color-primary, #2a347d);
+  box-shadow: 0 4px 14px rgba(127,221,240,.35);
+}
+
+.notfound-btn--secondary:hover {
+  background: #5ccfe4;
+  color: var(--color-primary, #2a347d);
+  box-shadow: 0 6px 20px rgba(127,221,240,.5);
+}
+
+.notfound-btn--ghost {
+  background: transparent;
+  color: var(--color-primary, #2a347d);
+  border-color: rgba(42,52,125,.3);
+}
+
+.notfound-btn--ghost:hover {
+  background: rgba(42,52,125,.06);
+  color: var(--color-primary, #2a347d);
+  border-color: rgba(42,52,125,.5);
+}
+
+/* ── 5. Liens rapides ── */
+.notfound-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text-muted, rgba(42,52,125,.55));
+}
+
+.notfound-links__label {
+  font-weight: 600;
+  color: var(--color-primary, #2a347d);
+  margin-right: 2px;
+}
+
+.notfound-links a {
+  color: var(--color-primary, #2a347d);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color .15s;
+}
+
+.notfound-links a:hover {
+  color: #7fddf0;
+  text-decoration: underline;
+}
+
+/* ── 6. Responsive ── */
+@media (max-width: 640px) {
+  .notfound-main {
+    padding: 40px 16px 60px;
+    min-height: calc(100vh - 60px);
+  }
+
+  .notfound-container {
+    gap: 32px;
+  }
+
+  .notfound-illustration {
+    max-width: 100%;
+  }
+
+  .notfound-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .notfound-btn {
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
+  }
+
+  .notfound-title {
+    font-size: 34px;
+  }
+
+  .notfound-lead {
+    font-size: 15px;
+  }
+
+  .notfound-text {
+    font-size: 13px;
+  }
+}

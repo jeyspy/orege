@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <title>Découvrir mon territoire – Observatoire de l'Eau Grand Est</title>
+
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/nav.css">
+  <link rel="stylesheet" href="../css/tdb-v2.css">
+  <link rel="stylesheet" href="../css/a11y.css">
+
+  <style>
+    /* Variables manquantes si style.css absent */
+    :root {
+      --header-height: 60px;
+      --color-primary: #1565C0;
+      --color-primary-dark: #0d47a1;
+      --color-text: #1a2233;
+      --color-text-muted: #6b7a99;
+      --color-border: #dde3ef;
+      --color-border-light: #f0f4f8;
+      --color-bg: #f0f4f8;
+      --color-bg-card: #f8fafc;
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --spacing-xl: 40px;
+      --font-size-sm: 13px;
+    }
+    body { padding-top: 102px; font-family: 'Source Sans 3', 'Inter', system-ui, sans-serif; background: #f5f6fa; }
+  </style>
+</head>
+<body class="nav-loading">
+
+<!-- ── Liens d'évitement RGAA 12.1 ────────────────────────── -->
+<nav class="skip-links" aria-label="Liens d'évitement">
+  <a class="skip-link" href="#main-content">Aller au contenu principal</a>
+  <a class="skip-link" href="#tdbv2-search">Aller à la recherche</a>
+  <a class="skip-link" href="#phares-grid">Aller aux territoires phares</a>
+</nav>
+
+<!-- ================================================================
+     EN-TÊTE PRINCIPAL (injecté par nav.js)
+================================================================ -->
+<header class="orege-header" id="site-header">
+  <a href="../index.html" class="orege-header__logo">
+    <img src="../images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true">
+    <span class="orege-header__logo-text">Observatoire de l'Eau <span>Grand Est</span></span>
+  </a>
+  <!-- Nav injectée par nav.js -->
+</header>
+
+<!-- ================================================================
+     HERO
+================================================================ -->
+<div class="tdbv2-hero">
+  <div class="tdbv2-hero__inner">
+    <div>
+      <div class="tdbv2-hero__badge">
+        <i class="ph ph-bank"></i> Élus &amp; Citoyens
+      </div>
+      <h1 class="tdbv2-hero__title">Découvrir mon territoire</h1>
+      <p class="tdbv2-hero__sub">
+        Accédez aux tableaux de bord de chaque territoire du Grand Est — indicateurs eau, ressources, vulnérabilité climatique et gouvernance.
+      </p>
+      <!-- Thèmes -->
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;">
+        <span style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:12px;font-weight:600;padding:6px 14px;border-radius:0;"><i class="ph ph-buildings"></i> Aménagement du territoire &amp; Zonage</span>
+        <span style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:12px;font-weight:600;padding:6px 14px;border-radius:0;"><i class="ph ph-drop"></i> Ressources &amp; Usages</span>
+        <span style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:12px;font-weight:600;padding:6px 14px;border-radius:0;"><i class="ph ph-cloud-lightning"></i> Vulnérabilité &amp; Adaptation climatique</span>
+        <span style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:12px;font-weight:600;padding:6px 14px;border-radius:0;"><i class="ph ph-gavel"></i> Gouvernance</span>
+      </div>
+    </div>
+    <div class="tdbv2-hero__actions">
+      <a href="mon-tableau-de-bord.html" class="tdbv2-hero__btn">
+        <i class="ph ph-sliders"></i> Mon tableau de bord
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     BARRE DE RECHERCHE ENRICHIE
+================================================================ -->
+<div class="tdbv2-search-bar">
+  <div class="tdbv2-search-bar__inner">
+
+    <!-- Champ libre + autocomplétion -->
+    <div class="tdbv2-search-wrap">
+      <label for="tdbv2-search" class="sr-only">Rechercher un territoire ou une commune</label>
+      <i class="ph ph-magnifying-glass tdbv2-search-icon" aria-hidden="true"></i>
+      <input type="text" id="tdbv2-search"
+             class="tdbv2-search-input"
+             placeholder="Rechercher un territoire, une commune…"
+             role="combobox"
+             aria-autocomplete="list"
+             aria-expanded="false"
+             aria-controls="tdbv2-autocomplete"
+             aria-label="Rechercher un territoire ou une commune"
+             autocomplete="off">
+      <button class="tdbv2-search-clear" id="tdbv2-search-clear"
+              aria-label="Effacer la recherche">
+        <i class="ph ph-x" aria-hidden="true"></i>
+      </button>
+      <div class="tdbv2-autocomplete" id="tdbv2-autocomplete"
+           role="listbox"
+           aria-label="Suggestions de territoires"></div>
+    </div>
+
+    <!-- Filtre Année -->
+    <label for="tdbv2-year" class="sr-only">Filtrer par année</label>
+    <select class="tdbv2-year-select" id="tdbv2-year" aria-label="Filtrer par année">
+      <option value="all"><i class="ph ph-calendar"></i> Toutes les années</option>
+    </select>
+
+    <!-- Filtres par type (col. A) -->
+    <div class="tdbv2-filters" id="tdbv2-type-filters" role="group" aria-label="Filtrer par type de territoire">
+      <span class="tdbv2-filters__label" aria-hidden="true"><i class="ph ph-filter" aria-hidden="true"></i></span>
+      <button class="tdbv2-chip is-active" data-type="all" aria-pressed="true">Tout</button>
+      <!-- Rempli dynamiquement -->
+    </div>
+
+  </div>
+</div>
+
+<!-- ================================================================
+     CORPS DE PAGE
+================================================================ -->
+<main id="main-content" class="tdbv2-body" aria-label="Tableaux de bord par territoire">
+
+  <!-- ── Compteur ──────────────────────────────────────────── -->
+  <p class="tdbv2-count" id="tdbv2-count"></p>
+
+  <!-- ── VUE PAR DÉFAUT (phares + liste) ────────────────────── -->
+  <div id="vue-defaut">
+
+    <!-- Section : Territoires phares -->
+    <section class="tdbv2-section-phares" aria-labelledby="titre-phares">
+      <div class="tdbv2-section-title">
+        <i class="ph ph-star" aria-hidden="true" style="color:#F59E0B;"></i>
+        <h2 id="titre-phares" style="display:inline;font-size:inherit;font-weight:inherit;margin:0;">Territoires phares</h2>
+        <span id="phares-count-badge" aria-label="26 territoires phares">26</span>
+        <i class="ph ph-info" aria-hidden="true"
+           style="color:#8fa0b8;font-size:12px;"></i>
+        <span class="sr-only">Territoires les plus consultés – modifiables dans le fichier de configuration</span>
+      </div>
+      <div class="tdbv2-phares-grid" id="phares-grid" role="list" aria-label="Territoires phares">
+        <!-- Rempli par JS -->
+      </div>
+    </section>
+
+    <!-- Section : Tous les territoires (liste texte) -->
+    <section class="tdbv2-section-liste" aria-labelledby="titre-liste">
+      <div class="tdbv2-section-title">
+        <i class="ph ph-list" aria-hidden="true" style="color:#6b7a99;"></i>
+        <h2 id="titre-liste" style="display:inline;font-size:inherit;font-weight:inherit;margin:0;">Tous les territoires</h2>
+        <span id="liste-count-badge" aria-live="polite">…</span>
+      </div>
+      <div id="liste-accordeons">
+        <!-- Rempli par JS -->
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ── VUE RÉSULTATS RECHERCHE ─────────────────────────────── -->
+  <section class="tdbv2-section-results" id="vue-results" aria-labelledby="titre-results" aria-live="polite">
+    <div class="tdbv2-section-title">
+      <i class="ph ph-magnifying-glass" aria-hidden="true" style="color:#1565C0;"></i>
+      <h2 id="titre-results" style="display:inline;font-size:inherit;font-weight:inherit;margin:0;">Résultats de recherche</h2>
+    </div>
+    <div class="tdbv2-results-grid" id="results-grid">
+      <!-- Rempli par JS -->
+    </div>
+    <div class="tdbv2-empty" id="results-empty" role="status">
+      <div class="tdbv2-empty__icon"><i class="ph ph-magnifying-glass" aria-hidden="true"></i></div>
+      <p style="font-size:15px;font-weight:600;">Aucun résultat</p>
+      <p style="font-size:13px;">Essayez un autre terme ou supprimez des filtres.</p>
+    </div>
+  </section>
+
+</main><!-- /#main-content -->
+
+<!-- ================================================================
+     SCRIPTS
+================================================================ -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- SheetJS pour le chargement des communes depuis Excel -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="../js/data-indicateurs.js"></script>
+<script src="../js/data-tdb-territoires.js"></script>
+<!-- Communes (5 115 depuis Excel – async) -->
+<script src="../js/data-communes.js"></script>
+
+<script>
+(function() {
+'use strict';
+
+// ============================================================
+// 0. CONFIG : années disponibles
+// ============================================================
+var ANNEES = [2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015];
+var ANNEE_DEFAUT = 2025;
+
+// ============================================================
+// 1. ÉTAT DE L'APPLICATION
+// ============================================================
+var etat = {
+  recherche: '',
+  annee: 'all',
+  type: 'all',
+  rechercheActive: false
+};
+
+// Liste plate des communes (alimentée après chargement Excel)
+var COMMUNES_LISTE = [];
+
+// ============================================================
+// 2. CONSTRUIRE LA LISTE PLATE DE TOUS LES TERRITOIRES
+//    (phares + reste de TDB_TOUS_TERRITOIRES)
+// ============================================================
+var TOUS_TERRITOIRES = (function() {
+  var result = [];
+  var ids = {};
+
+  // D'abord les phares (importants)
+  TDB_PLEBISCITES.forEach(function(t) {
+    ids[t.id] = true;
+    result.push({
+      id: t.id,
+      nom: t.nom,
+      type: t.type,
+      description: t.description || '',
+      importance: t.importance,
+      photo: TDB_PHOTOS[t.nom] || null,
+      plebiscite: true,
+      url: tdbUrl(t.nom, ANNEE_DEFAUT, '')
+    });
+  });
+
+  // Puis tous les autres
+  TDB_TOUS_TERRITOIRES.forEach(function(t) {
+    if (!ids[t.id]) {
+      ids[t.id] = true;
+      result.push({
+        id: t.id,
+        nom: t.nom,
+        type: t.type,
+        description: '',
+        importance: 99,
+        photo: TDB_PHOTOS[t.nom] || null,
+        plebiscite: false,
+        url: tdbUrl(t.nom, ANNEE_DEFAUT, '')
+      });
+    }
+  });
+
+  return result;
+})();
+
+// Couleurs et icônes par type
+function typeCfg(type) {
+  return TDB_TYPES_CONFIG[type] || { couleur: '#546E7A', icone: 'fa-map-marker', rang: 99 };
+}
+
+// ============================================================
+// 3. INITIALISATION DES FILTRES DANS LA BARRE DE RECHERCHE
+// ============================================================
+function initFiltres() {
+  // Sélecteur années
+  var $sel = $('#tdbv2-year');
+  ANNEES.forEach(function(a) {
+    $sel.append($('<option>').val(a).text(a));
+  });
+
+  // Chips de type
+  var $chips = $('#tdbv2-type-filters');
+  var types = [];
+  Object.keys(TDB_TYPES_CONFIG).forEach(function(type) {
+    // N'afficher que les types présents
+    var present = TOUS_TERRITOIRES.some(function(t) { return t.type === type; });
+    if (present) types.push(type);
+  });
+  // Tri par rang
+  types.sort(function(a, b) {
+    return (typeCfg(a).rang || 99) - (typeCfg(b).rang || 99);
+  });
+  types.forEach(function(type) {
+    var cfg = typeCfg(type);
+    $chips.append(
+      $('<button>').addClass('tdbv2-chip')
+        .attr('data-type', type)
+        .html('<i class="fa ' + cfg.icone + '" style="color:' + cfg.couleur + ';"></i> ' + type)
+    );
+  });
+
+}
+
+// ============================================================
+// 4. RENDU DES TERRITOIRES PHARES (grille)
+// ============================================================
+function renderPhares() {
+  var phares = TDB_PLEBISCITES.slice().sort(function(a, b) {
+    return (a.importance - b.importance) || a.nom.localeCompare(b.nom, 'fr');
+  });
+
+  $('#phares-count-badge').text(phares.length);
+  $('#hero-nb-phares').text(phares.length);
+
+  var $grid = $('#phares-grid').empty();
+  phares.forEach(function(t) {
+    var cfg = typeCfg(t.type);
+    var photo = TDB_PHOTOS[t.nom] || null;
+    var url = tdbUrl(t.nom, ANNEE_DEFAUT, '');
+    var $card = $('<a>')
+      .addClass('tdbv2-phare-card')
+      .attr('href', url)
+      .attr('data-importance', t.importance)
+      .attr('data-type', t.type)
+      .attr('title', t.nom);
+
+    // Image ou icône
+    if (photo) {
+      $card.append(
+        $('<img>').addClass('tdbv2-phare-card__img')
+          .attr('src', photo)
+          .attr('alt', t.nom)
+          .attr('loading', 'lazy')
+      );
+    } else {
+      $card.append(
+        $('<i>').addClass('fa ' + cfg.icone + ' tdbv2-phare-card__icon')
+      );
+    }
+
+    // Overlay
+    $card.append($('<div>').addClass('tdbv2-phare-card__overlay'));
+
+    // Contenu texte
+    $card.append(
+      $('<div>').addClass('tdbv2-phare-card__content').append(
+        $('<div>').addClass('tdbv2-phare-card__type').css('color', 'rgba(255,255,255,.8)').append(
+          $('<span>').addClass('tdbv2-phare-card__type-dot').css('background', cfg.couleur),
+          document.createTextNode(t.type)
+        ),
+        $('<h3>').addClass('tdbv2-phare-card__nom').text(t.nom),
+        t.description
+          ? $('<p>').addClass('tdbv2-phare-card__desc').text(t.description)
+          : null
+      )
+    );
+
+    // Flèche hover
+    $card.append(
+      $('<div>').addClass('tdbv2-phare-card__arrow')
+        .html('<i class="ph ph-arrow-right"></i>')
+    );
+
+    $grid.append($card);
+  });
+}
+
+// ============================================================
+// 5a. ACCORDÉON GÉNÉRIQUE (pour tous les types sauf Commune)
+// ============================================================
+function creerAccordeon(type, items, openByDefault) {
+  var cfg = typeCfg(type);
+  var typeId = 'acc-type-' + type.replace(/[^a-zA-Z0-9\u00C0-\u017E]/g, '-');
+  var $acc = $('<div>').addClass('tdbv2-liste-accordeon').attr('id', typeId);
+
+  var $header = $('<button>')
+    .addClass('tdbv2-acc-header' + (openByDefault ? ' is-open' : ''))
+    .attr('type', 'button')
+    .attr('aria-expanded', openByDefault ? 'true' : 'false')
+    .append(
+      $('<div>').addClass('tdbv2-acc-icon').css('background', cfg.couleur)
+        .html('<i class="fa ' + cfg.icone + '"></i>'),
+      $('<span>').addClass('tdbv2-acc-title').text(type),
+      $('<span>').addClass('tdbv2-acc-count').text(items.length),
+      $('<i>').addClass('fa fa-chevron-down tdbv2-acc-chevron')
+    );
+
+  var $body = $('<div>').addClass('tdbv2-acc-body' + (openByDefault ? ' is-open' : ''));
+  var $list = $('<ul>').addClass('tdbv2-terr-list');
+
+  items.forEach(function(t) {
+    var url = tdbUrl(t.nom, ANNEE_DEFAUT, '');
+    $list.append(
+      $('<li>').append(
+        $('<a>').addClass('tdbv2-terr-link')
+          .attr('href', url)
+          .css('--dot-color', cfg.couleur)
+          .html(
+            (t.plebiscite
+              ? '<i class="ph ph-star" style="color:#F59E0B;font-size:9px;"></i> '
+              : '') + escHtml(t.nom)
+          )
+      )
+    );
+  });
+
+  $body.append($list);
+  $acc.append($header, $body);
+
+  $header.on('click', function() {
+    $(this).toggleClass('is-open').attr('aria-expanded', function(_, v) { return v === 'true' ? 'false' : 'true'; });
+    $(this).next('.tdbv2-acc-body').toggleClass('is-open');
+  });
+
+  return $acc;
+}
+
+// ============================================================
+// 5b. ACCORDÉON COMMUNES : 50 premiers + nav A-Z
+// ============================================================
+function creerAccordeonCommunes(communes) {
+  var cfg = typeCfg('Commune');
+  var $acc = $('<div>').addClass('tdbv2-liste-accordeon').attr('id', 'acc-type-Commune');
+
+  // Header
+  var $header = $('<button>')
+    .addClass('tdbv2-acc-header')
+    .attr('type', 'button')
+    .attr('aria-expanded', 'false')
+    .append(
+      $('<div>').addClass('tdbv2-acc-icon').css('background', cfg.couleur)
+        .html('<i class="fa ' + cfg.icone + '"></i>'),
+      $('<span>').addClass('tdbv2-acc-title').text('Commune'),
+      $('<span>').addClass('tdbv2-acc-count').text(communes.length),
+      $('<i>').addClass('fa fa-chevron-down tdbv2-acc-chevron')
+    );
+
+  var $body = $('<div>').addClass('tdbv2-acc-body');
+
+  // Construire l'index alphabétique
+  var lettres = {};
+  communes.forEach(function(c) {
+    var l = c.nom.charAt(0).toUpperCase();
+    if (!lettres[l]) lettres[l] = [];
+    lettres[l].push(c);
+  });
+  var lettresTriees = Object.keys(lettres).sort();
+
+  // Barre A-Z
+  var $alphBar = $('<div>').addClass('tdbv2-alph-bar').attr('role', 'navigation').attr('aria-label', 'Filtrer les communes par lettre');
+  var $allBtn = $('<button>').addClass('tdbv2-alph-btn is-active').attr('data-letter', 'all').text('50 premiers');
+  $alphBar.append($allBtn);
+  lettresTriees.forEach(function(l) {
+    $alphBar.append(
+      $('<button>').addClass('tdbv2-alph-btn').attr('data-letter', l).text(l)
+    );
+  });
+
+  // Zone de liste
+  var $listZone = $('<div>').addClass('tdbv2-communes-list-zone');
+
+  function afficherLettre(lettre) {
+    $listZone.empty();
+    $alphBar.find('.tdbv2-alph-btn').removeClass('is-active');
+    $alphBar.find('[data-letter="' + lettre + '"]').addClass('is-active');
+
+    var items;
+    if (lettre === 'all') {
+      items = communes.slice(0, 50);
+    } else {
+      items = lettres[lettre] || [];
+    }
+
+    if (!items.length) {
+      $listZone.append($('<p>').addClass('tdbv2-communes-empty').text('Aucune commune pour cette lettre.'));
+      return;
+    }
+
+    var $list = $('<ul>').addClass('tdbv2-terr-list tdbv2-terr-list--grid');
+    items.forEach(function(c) {
+      var url = tdbUrl(c.nom, ANNEE_DEFAUT, '');
+      $list.append(
+        $('<li>').append(
+          $('<a>').addClass('tdbv2-terr-link')
+            .attr('href', url)
+            .css('--dot-color', cfg.couleur)
+            .text(c.nom)
+        )
+      );
+    });
+
+    if (lettre === 'all') {
+      $list.append(
+        $('<li>').addClass('tdbv2-communes-hint').html(
+          '<i class="ph ph-info" style="color:#8fa0b8"></i> ' +
+          communes.length + ' communes au total — utilisez les lettres ci-dessus pour naviguer'
+        )
+      );
+    } else {
+      var $total = $('<p>').addClass('tdbv2-communes-letter-count')
+        .text(items.length + ' commune' + (items.length > 1 ? 's' : '') + ' commençant par « ' + lettre + ' »');
+      $listZone.prepend($total);
+    }
+
+    $listZone.append($list);
+  }
+
+  // Init : 50 premiers
+  afficherLettre('all');
+
+  // Clic sur une lettre
+  $alphBar.on('click', '.tdbv2-alph-btn', function() {
+    afficherLettre($(this).data('letter'));
+  });
+
+  $body.append($alphBar, $listZone);
+  $acc.append($header, $body);
+
+  $header.on('click', function() {
+    $(this).toggleClass('is-open').attr('aria-expanded', function(_, v) { return v === 'true' ? 'false' : 'true'; });
+    $(this).next('.tdbv2-acc-body').toggleClass('is-open');
+  });
+
+  return $acc;
+}
+
+// ============================================================
+// 5. RENDU DE LA LISTE TEXTE (accordéons par type)
+// ============================================================
+function renderListe() {
+  var all = TOUS_TERRITOIRES;
+  var totalAvecCommunes = all.length + COMMUNES_LISTE.length;
+
+  // Grouper par type (hors communes — traitées séparément)
+  var groupes = {};
+  all.forEach(function(t) {
+    if (t.type === 'Commune') return; // ignoré ici
+    if (!groupes[t.type]) groupes[t.type] = [];
+    groupes[t.type].push(t);
+  });
+
+  // Trier les types par rang
+  var types = Object.keys(groupes).sort(function(a, b) {
+    return (typeCfg(a).rang || 99) - (typeCfg(b).rang || 99);
+  });
+
+  var nbAffiches = COMMUNES_LISTE.length > 0
+    ? totalAvecCommunes
+    : all.length;
+  $('#liste-count-badge').text(nbAffiches + ' territoires');
+
+  var $container = $('#liste-accordeons').empty();
+
+  types.forEach(function(type, idx) {
+    var items = groupes[type].sort(function(a, b) {
+      return a.nom.localeCompare(b.nom, 'fr');
+    });
+    $container.append(creerAccordeon(type, items, idx < 2));
+  });
+
+  // Communes : accordéon spécial A-Z
+  if (COMMUNES_LISTE.length > 0) {
+    $container.append(creerAccordeonCommunes(COMMUNES_LISTE));
+  } else {
+    // Placeholder en attendant le chargement
+    var cfg = typeCfg('Commune');
+    var $ph = $('<div>').addClass('tdbv2-liste-accordeon').attr('id', 'acc-type-Commune');
+    var $phBtn = $('<button>').addClass('tdbv2-acc-header').attr('type','button').attr('aria-expanded','false')
+      .append(
+        $('<div>').addClass('tdbv2-acc-icon').css('background', cfg.couleur).html('<i class="ph ph-house"></i>'),
+        $('<span>').addClass('tdbv2-acc-title').text('Commune'),
+        $('<span>').addClass('tdbv2-acc-count').attr('id','communes-acc-count').text('chargement…'),
+        $('<i>').addClass('fa fa-chevron-down tdbv2-acc-chevron')
+      );
+    var $phBody = $('<div>').addClass('tdbv2-acc-body').append(
+      $('<p>').addClass('tdbv2-communes-empty')
+        .html('<i class="ph ph-spinner fa-spin"></i> Chargement des communes en cours…')
+    );
+    $ph.append($phBtn, $phBody);
+    $phBtn.on('click', function() {
+      $(this).toggleClass('is-open').attr('aria-expanded', function(_, v) { return v === 'true' ? 'false' : 'true'; });
+      $(this).next('.tdbv2-acc-body').toggleClass('is-open');
+    });
+    $container.append($ph);
+  }
+}
+
+// ============================================================
+// 6. RENDU DES RÉSULTATS DE RECHERCHE (vignettes)
+// ============================================================
+function renderResults(items) {
+  var $grid = $('#results-grid').empty();
+  var $empty = $('#results-empty');
+
+  if (items.length === 0) {
+    $empty.addClass('is-visible');
+    return;
+  }
+  $empty.removeClass('is-visible');
+
+  items.forEach(function(t) {
+    var cfg = typeCfg(t.type);
+    var $card = $('<a>').addClass('tdbv2-result-card')
+      .attr('href', t.url)
+      .attr('title', t.nom);
+
+    // Image
+    var $imgWrap = $('<div>').addClass('tdbv2-result-card__img');
+    if (t.photo) {
+      $imgWrap.html(
+        '<img src="' + t.photo + '" alt="' + escHtml(t.nom) + '" loading="lazy">' +
+        '<div class="tdbv2-result-card__img-overlay"></div>'
+      );
+    } else {
+      $imgWrap.html('<i class="fa ' + cfg.icone + '"></i>');
+      $imgWrap.css('background', 'linear-gradient(135deg,' + cfg.couleur + ',' + cfg.couleur + 'aa)');
+    }
+    $imgWrap.append(
+      $('<span>').addClass('tdbv2-result-card__type-badge')
+        .css('background', cfg.couleur)
+        .text(t.type),
+      $('<span>').addClass('tdbv2-result-card__year-badge').text(ANNEE_DEFAUT)
+    );
+    $card.append($imgWrap);
+
+    // Body
+    $card.append(
+      $('<div>').addClass('tdbv2-result-card__body').append(
+        $('<h3>').addClass('tdbv2-result-card__nom').text(t.nom),
+        $('<p>').addClass('tdbv2-result-card__meta')
+          .html('<i class="ph ph-chart-bar"></i> 9 indicateurs · ' + ANNEE_DEFAUT)
+      )
+    );
+
+    $grid.append($card);
+  });
+}
+
+// ============================================================
+// 7. FILTRAGE PRINCIPAL
+// ============================================================
+function filtrer() {
+  var q = etat.recherche.toLowerCase().trim();
+  // La recherche texte OU filtre année déclenche la vue résultats
+  var rechercheActive = q.length > 0 || etat.annee !== 'all';
+  etat.rechercheActive = rechercheActive || etat.type !== 'all';
+
+  // ── Cas 1 : aucun filtre ──────────────────────────────────────────
+  if (!rechercheActive && etat.type === 'all') {
+    $('#vue-defaut').show();
+    $('#vue-results').removeClass('is-visible');
+    // Réafficher toutes les cartes phares
+    $('.tdbv2-phare-card').show();
+    $('#tdbv2-count').text('');
+    // Remonter tout en haut de la page
+    $('html, body').animate({ scrollTop: 0 }, 400);
+    return;
+  }
+
+  // ── Cas 2 : filtre TYPE seul (pas de texte, pas d'année) ──────────
+  if (!rechercheActive && etat.type !== 'all') {
+    $('#vue-defaut').show();
+    $('#vue-results').removeClass('is-visible');
+    $('#tdbv2-count').text('');
+
+    // Masquer/afficher les cartes phares selon le type sélectionné
+    var nbPhares = 0;
+    $('.tdbv2-phare-card').each(function() {
+      if ($(this).data('type') === etat.type) {
+        $(this).show(); nbPhares++;
+      } else {
+        $(this).hide();
+      }
+    });
+
+    // Ouvrir et scroller vers l'accordéon du type concerné
+    var safeType = etat.type.replace(/[^a-zA-Z0-9\u00C0-\u017E]/g, '-');
+    var $acc = $('#acc-type-' + safeType);
+    if ($acc.length) {
+      var $header = $acc.find('.tdbv2-acc-header');
+      if (!$header.hasClass('is-open')) {
+        $header.addClass('is-open').attr('aria-expanded', 'true');
+        $header.next('.tdbv2-acc-body').addClass('is-open');
+      }
+      // Scroll doux vers l'accordéon
+      $('html, body').animate({ scrollTop: $acc.offset().top - 100 }, 450);
+    }
+    return;
+  }
+
+  // ── Cas 3 : recherche texte et/ou filtre année ────────────────────
+  // On réaffiche toutes les cartes phares (la vue-results prend le dessus)
+  $('.tdbv2-phare-card').show();
+
+  var items = TOUS_TERRITOIRES.filter(function(t) {
+    var matchQ  = !q || t.nom.toLowerCase().indexOf(q) !== -1
+                     || t.type.toLowerCase().indexOf(q) !== -1
+                     || (t.description && t.description.toLowerCase().indexOf(q) !== -1);
+    var matchType = etat.type === 'all' || t.type === etat.type;
+    return matchQ && matchType;
+  });
+
+  // Trier : phares d'abord, puis importance, puis alpha
+  items.sort(function(a, b) {
+    if (a.plebiscite && !b.plebiscite) return -1;
+    if (!a.plebiscite && b.plebiscite) return 1;
+    return (a.importance - b.importance) || a.nom.localeCompare(b.nom, 'fr');
+  });
+
+  $('#vue-defaut').hide();
+  $('#vue-results').addClass('is-visible');
+
+  var n = items.length;
+  $('#tdbv2-count').html('<strong>' + n + '</strong> territoire' + (n > 1 ? 's' : '') + ' trouvé' + (n > 1 ? 's' : ''));
+
+  renderResults(items);
+}
+
+// ============================================================
+// 8. AUTOCOMPLÉTION
+// ============================================================
+function obtenirSuggestions(q) {
+  if (!q || q.length < 1) return [];
+  q = q.toLowerCase();
+  var vus = {};
+  var suggestions = [];
+
+  TOUS_TERRITOIRES.forEach(function(t) {
+    if (t.nom.toLowerCase().indexOf(q) !== -1) {
+      var key = t.id;
+      if (!vus[key]) {
+        vus[key] = true;
+        suggestions.push({
+          type: 'territoire',
+          label: t.nom,
+          typeLabel: t.type,
+          couleur: typeCfg(t.type).couleur,
+          icone: typeCfg(t.type).icone,
+          plebiscite: t.plebiscite
+        });
+      }
+    }
+  });
+
+  // Tri : phares d'abord
+  suggestions.sort(function(a, b) {
+    return (a.plebiscite === b.plebiscite) ? 0 : (a.plebiscite ? -1 : 1);
+  });
+  return suggestions.slice(0, 10);
+}
+
+function hl(texte, q) {
+  if (!q) return escHtml(texte);
+  var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+  return escHtml(texte).replace(re, '<em>$1</em>');
+}
+
+function afficherAutocompletion(suggestions, q) {
+  var $drop = $('#tdbv2-autocomplete').empty();
+  if (!suggestions.length) { $drop.removeClass('is-open'); return; }
+
+  suggestions.forEach(function(sug) {
+    var $item = $('<div>').addClass('tdbv2-ac-item');
+    if (sug.plebiscite) {
+      $item.append($('<i>').addClass('fa fa-star').css({ color: '#F59E0B', fontSize: '11px', flexShrink: 0 }));
+    }
+    $item.append(
+      $('<span>').addClass('tdbv2-ac-badge')
+        .css({ background: sug.couleur + '22', color: sug.couleur })
+        .text(sug.typeLabel)
+    );
+    $item.append($('<span>').html(hl(sug.label, q)));
+
+    $item.on('mousedown', function(e) {
+      e.preventDefault();
+      $('#tdbv2-search').val(sug.label);
+      etat.recherche = sug.label;
+      $drop.removeClass('is-open');
+      $('#tdbv2-search-clear').addClass('is-visible');
+      filtrer();
+    });
+    $drop.append($item);
+  });
+  $drop.addClass('is-open');
+}
+
+// ============================================================
+// 9. MÉGA-MENU
+// ============================================================
+function buildMegaMenu() {
+  var $mm = $('#megamenu-tdb');
+  if (!$mm.length) return;
+  $mm.empty();
+
+  // Colonnes par type
+  var groupes = TDB_MEGAMENU;
+  var ordreTypes = Object.keys(TDB_TYPES_CONFIG).filter(function(type) {
+    return groupes[type] && groupes[type].length > 0;
+  });
+
+  ordreTypes.forEach(function(type) {
+    var items = groupes[type];
+    var cfg = typeCfg(type);
+    var $col = $('<div>').addClass('megamenu__col');
+
+    $col.append(
+      $('<div>').addClass('megamenu__col-title')
+        .css('color', cfg.couleur)
+        .html('<i class="fa ' + cfg.icone + '"></i> ' + escHtml(type))
+    );
+
+    items.forEach(function(t) {
+      var url = tdbUrl(t.nom, ANNEE_DEFAUT, '');
+      $col.append(
+        $('<a>').addClass('megamenu__link')
+          .attr('href', url)
+          .html(
+            '<span class="megamenu__link-dot" style="background:' + cfg.couleur + '"></span>' +
+            escHtml(t.nom)
+          )
+      );
+    });
+
+    $mm.append($col);
+  });
+
+  // Footer
+  $mm.append(
+    $('<div>').addClass('megamenu__footer').append(
+      $('<a>').addClass('megamenu__footer-link')
+        .attr('href', 'tableaux-de-bord.html')
+        .html('<i class="ph ph-th"></i> Voir tous les territoires'),
+      $('<a>').addClass('megamenu__footer-link')
+        .attr('href', 'mon-tableau-de-bord.html')
+        .html('<i class="ph ph-sliders"></i> Mon tableau de bord')
+    )
+  );
+}
+
+// ============================================================
+// 10. UTILITAIRES
+// ============================================================
+function escHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ============================================================
+// 11. INITIALISATION
+// ============================================================
+$(document).ready(function() {
+
+  initFiltres();
+  renderPhares();
+  renderListe();
+  buildMegaMenu();
+
+  // Chips de type
+  $(document).on('click', '.tdbv2-chip[data-type]', function() {
+    var newType = $(this).data('type');
+    var isSame  = (etat.type === newType) && newType !== 'all';
+    // Désactiver tous, réactiver "Tout" par défaut
+    $('.tdbv2-chip[data-type]').removeClass('is-active').attr('aria-pressed', 'false');
+    if (isSame) {
+      // Second clic sur le même type = retour à "Tout"
+      etat.type = 'all';
+      $('.tdbv2-chip[data-type="all"]').addClass('is-active').attr('aria-pressed', 'true');
+    } else {
+      etat.type = newType;
+      $(this).addClass('is-active').attr('aria-pressed', 'true');
+    }
+    filtrer();
+  });
+
+  // Filtre Année
+  $('#tdbv2-year').on('change', function() {
+    etat.annee = $(this).val();
+    filtrer();
+  });
+
+  // Champ de recherche
+  $('#tdbv2-search').on('input', function() {
+    var val = $(this).val();
+    etat.recherche = val;
+    if (val.length > 0) {
+      $('#tdbv2-search-clear').addClass('is-visible');
+    } else {
+      $('#tdbv2-search-clear').removeClass('is-visible');
+    }
+    filtrer();
+    var sug = obtenirSuggestions(val);
+    afficherAutocompletion(sug, val);
+  });
+
+  $('#tdbv2-search').on('focus', function() {
+    var val = $(this).val();
+    if (val.length > 0) {
+      afficherAutocompletion(obtenirSuggestions(val), val);
+    }
+  });
+
+  $('#tdbv2-search').on('blur', function() {
+    setTimeout(function() { $('#tdbv2-autocomplete').removeClass('is-open'); }, 160);
+  });
+
+  $('#tdbv2-search-clear').on('click', function() {
+    $('#tdbv2-search').val('').trigger('input');
+    $(this).removeClass('is-visible');
+    $('#tdbv2-autocomplete').removeClass('is-open');
+  });
+
+  // Clic ailleurs → fermer autocomplete
+  $(document).on('click', function(e) {
+    if (!$(e.target).closest('.tdbv2-search-wrap').length) {
+      $('#tdbv2-autocomplete').removeClass('is-open');
+    }
+  });
+
+  console.log('[tdb-v2] Initialisé –',
+    TDB_PLEBISCITES.length, 'phares,',
+    TOUS_TERRITOIRES.length, 'territoires totaux');
+
+  // Communes chargées en async depuis Excel → re-render la liste
+  document.addEventListener('communes:loaded', function() {
+    if (typeof COMMUNES_TERRITOIRES !== 'undefined') {
+      COMMUNES_LISTE = COMMUNES_TERRITOIRES.map(function(c) {
+        // data-communes.js utilise c.label (et non c.nom)
+        var nom = c.label || c.nom || '';
+        return {
+          id: 'commune-' + (c.id || nom.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')),
+          nom: nom,
+          type: 'Commune',
+          plebiscite: false,
+          url: tdbUrl(nom, ANNEE_DEFAUT, '')
+        };
+      }).filter(function(c) { return c.nom; })
+        .sort(function(a, b) { return a.nom.localeCompare(b.nom, 'fr'); });
+
+      renderListe();
+      var nbTotal = TOUS_TERRITOIRES.length + COMMUNES_LISTE.length;
+      $('#liste-count-badge').text(nbTotal + ' territoires');
+      console.log('[tdb-v2] Communes chargées :', COMMUNES_LISTE.length);
+    }
+  });
+});
+
+})();
+</script>
+
+<!-- Transition de page -->
+<script src="../js/page-transition.js"></script>
+<!-- Navigation mégamenu -->
+<script src="../js/nav.js"></script>
+<!-- Patch RGAA 4.1 (en dernier) -->
+<script src="../js/a11y.js"></script>
+
+<div class="orege-footer-placeholder"></div>
+</body>
+</html>

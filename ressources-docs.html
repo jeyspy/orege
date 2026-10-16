@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>Base documentaire – Observatoire de l'Eau Grand Est</title>
+  <meta name="description" content="Études, publications, rapports et documents de référence sur la gestion de l'eau en Grand Est.">
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="css/fonts.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/a11y.css">
+  <!-- Page-specific styles for the documentary database page -->
+  <link rel="stylesheet" href="css/ressources-docs.css">
+</head>
+<body class="nav-loading">
+<a href="#main-content" class="sr-only focusable">Aller au contenu principal</a>
+
+<header class="orege-header" role="banner">
+  <a href="index.html" class="orege-header__logo">
+    <img src="images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true" width="44" height="44" loading="eager">
+    <span class="orege-header__logo-text">Observatoire de l'Eau<br><span>Grand Est</span></span>
+  </a>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero__inner">
+    <nav class="page-hero__eyebrow" aria-label="Fil d'ariane">
+      <ol>
+        <li><a href="index.html">Accueil</a></li>
+        <li><i class="ph ph-caret-right" aria-hidden="true"></i></li>
+        <li><a href="ressources-retex.html">Ressources</a></li>
+        <li><i class="ph ph-caret-right" aria-hidden="true"></i></li>
+        <li><span aria-current="page">Base documentaire</span></li>
+      </ol>
+    </nav>
+    <h1 class="page-hero__title">Base documentaire</h1>
+    <p class="page-hero__sub">Études, publications, rapports et documents de référence sur la gestion de l'eau en Grand Est.</p>
+  </div>
+</div>
+
+<main id="main-content">
+<div class="page-content">
+
+  <!-- FEATURED DOCUMENTS — most recently added -->
+  <div class="docs-featured">
+    <div class="docs-featured__label">
+      <i class="ph ph-star" aria-hidden="true"></i> Derniers ajouts
+    </div>
+    <div class="docs-featured__grid">
+
+      <div class="doc-featured-card">
+        <span class="doc-featured-card__badge">Nouveau</span>
+        <i class="ph ph-file-pdf doc-featured-card__icon"></i>
+        <div class="doc-featured-card__title">Bilan hydrologique Grand Est 2024 – Étiages et nappes</div>
+        <div class="doc-featured-card__meta">
+          <span><i class="ph ph-calendar"></i> Janvier 2025</span>
+          <span><i class="ph ph-building"></i> DREAL Grand Est / BRGM</span>
+          <span><i class="ph ph-paperclip"></i> PDF · 2,8 Mo</span>
+        </div>
+        <a href="#" class="doc-featured-card__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+
+      <div class="doc-featured-card">
+        <span class="doc-featured-card__badge">Nouveau</span>
+        <i class="ph ph-file-text doc-featured-card__icon"></i>
+        <div class="doc-featured-card__title">Prélèvements d'eau en Grand Est – Synthèse 2023 par usage et bassin versant</div>
+        <div class="doc-featured-card__meta">
+          <span><i class="ph ph-calendar"></i> 2024</span>
+          <span><i class="ph ph-building"></i> Agence de l'eau Rhin-Meuse</span>
+          <span><i class="ph ph-paperclip"></i> PDF · 1,9 Mo</span>
+        </div>
+        <a href="#" class="doc-featured-card__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+
+      <div class="doc-featured-card">
+        <span class="doc-featured-card__badge">Nouveau</span>
+        <i class="ph ph-file-excel doc-featured-card__icon"></i>
+        <div class="doc-featured-card__title">Tableau de bord indicateurs eau Grand Est – Données 2023</div>
+        <div class="doc-featured-card__meta">
+          <span><i class="ph ph-calendar"></i> 2024</span>
+          <span><i class="ph ph-building"></i> Observatoire de l'Eau Grand Est</span>
+          <span><i class="ph ph-paperclip"></i> XLSX · 4,1 Mo</span>
+        </div>
+        <a href="#" class="doc-featured-card__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SEARCH BAR -->
+  <div class="docs-search">
+    <input type="search" id="docs-search-input" class="docs-search__input"
+           placeholder="Rechercher un document, un auteur, une thématique…"
+           aria-label="Rechercher dans la base documentaire"
+           autocomplete="off">
+    <i class="ph ph-magnifying-glass docs-search__icon" aria-hidden="true"></i>
+  </div>
+
+  <!-- FILTER BUTTONS -->
+  <div class="docs-filters-row">
+    <div class="docs-filters-group" role="group" aria-label="Filtrer par catégorie">
+      <span class="docs-filters-group__label"><i class="ph ph-tag"></i> Catégorie</span>
+      <button class="doc-filter-btn is-active" data-group="cat" data-filter="all">
+        <i class="ph ph-list"></i> Toutes
+      </button>
+      <button class="doc-filter-btn" data-group="cat" data-filter="sdage">
+        <i class="ph ph-file-text"></i> SDAGE &amp; Programmes
+      </button>
+      <button class="doc-filter-btn" data-group="cat" data-filter="bilan">
+        <i class="ph ph-chart-bar"></i> Bilans &amp; Études
+      </button>
+      <button class="doc-filter-btn" data-group="cat" data-filter="climat">
+        <i class="ph ph-cloud-sun"></i> Climat &amp; Vulnérabilité
+      </button>
+      <button class="doc-filter-btn" data-group="cat" data-filter="gouvernance">
+        <i class="ph ph-gavel"></i> Gouvernance
+      </button>
+      <button class="doc-filter-btn" data-group="cat" data-filter="donnees">
+        <i class="ph ph-database"></i> Données &amp; Indicateurs
+      </button>
+    </div>
+  </div>
+
+  <!-- DOCUMENT GRID -->
+  <div style="margin-bottom: 32px;"></div>
+  <div class="docs-grid" id="docs-grid">
+
+    <!-- No-results message (hidden by default, shown by JS) -->
+    <div class="docs-no-results" id="docs-no-results">
+      <i class="ph ph-warning-circle"></i>
+      Aucun document ne correspond à votre recherche.
+    </div>
+
+    <!-- SDAGE & Programmes -->
+    <div class="doc-item" data-cat="sdage" data-type="pdf" data-keywords="SDAGE Rhin-Meuse 2022 2027 principal comité bassin">
+      <i class="ph ph-file-pdf doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">SDAGE &amp; Programmes</div>
+        <div class="doc-item__title">SDAGE Rhin-Meuse 2022-2027 – Document principal</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> 2021</span>
+          <span><i class="ph ph-building"></i> Comité de Bassin Rhin-Meuse</span>
+        </div>
+        <span class="doc-item__type-badge">PDF · 8,4 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+    <div class="doc-item" data-cat="sdage" data-type="pdf" data-keywords="programme mesures Rhin-Meuse 2022 2027 DREAL">
+      <i class="ph ph-file-pdf doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">SDAGE &amp; Programmes</div>
+        <div class="doc-item__title">Programme de Mesures Rhin-Meuse 2022-2027</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> 2021</span>
+          <span><i class="ph ph-building"></i> DREAL Grand Est</span>
+        </div>
+        <span class="doc-item__type-badge">PDF · 3,2 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+    <div class="doc-item" data-cat="sdage" data-type="pdf" data-keywords="SDAGE Seine-Normandie 2022 2027 chapitres Grand Est agence">
+      <i class="ph ph-file-pdf doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">SDAGE &amp; Programmes</div>
+        <div class="doc-item__title">SDAGE Seine-Normandie 2022-2027 – Chapitres relatifs au Grand Est</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> 2021</span>
+          <span><i class="ph ph-building"></i> Agence de l'eau Seine-Normandie</span>
+        </div>
+        <span class="doc-item__type-badge">PDF · 5,1 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+    <!-- Bilans & Études -->
+    <div class="doc-item" data-cat="bilan" data-type="pdf" data-keywords="bilan hydrologique Grand Est 2024 étiages nappes DREAL BRGM">
+      <i class="ph ph-file-text doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">Bilans &amp; Études</div>
+        <div class="doc-item__title">Bilan hydrologique Grand Est 2024 – Étiages et nappes</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> Janvier 2025</span>
+          <span><i class="ph ph-building"></i> DREAL Grand Est / BRGM</span>
+        </div>
+        <span class="doc-item__type-badge">PDF · 2,8 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+    <div class="doc-item" data-cat="bilan" data-type="pdf" data-keywords="état masses eau Grand Est bilan DCE 2023 agences">
+      <i class="ph ph-file-text doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">Bilans &amp; Études</div>
+        <div class="doc-item__title">État des masses d'eau Grand Est – Bilan DCE 2023</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> 2024</span>
+          <span><i class="ph ph-building"></i> Agences Rhin-Meuse / Seine-Normandie</span>
+        </div>
+        <span class="doc-item__type-badge">PDF · 4,6 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+    <div class="doc-item" data-cat="bilan" data-type="pdf" data-keywords="prélèvements eau Grand Est synthèse 2023 usage bassin versant Rhin-Meuse">
+      <i class="ph ph-file-text doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">Bilans &amp; Études</div>
+        <div class="doc-item__title">Prélèvements d'eau en Grand Est – Synthèse 2023 par usage et bassin versant</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> 2024</span>
+          <span><i class="ph ph-building"></i> Agence de l'eau Rhin-Meuse</span>
+        </div>
+        <span class="doc-item__type-badge">PDF · 1,9 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+    <!-- Climat & Vulnérabilité -->
+    <div class="doc-item" data-cat="climat" data-type="pdf" data-keywords="vulnérabilité territoires Grand Est changement climatique eau milieux Antea Région">
+      <i class="ph ph-file-text doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">Climat &amp; Vulnérabilité</div>
+        <div class="doc-item__title">Vulnérabilité des territoires du Grand Est au changement climatique – Eau et milieux</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> 2023</span>
+          <span><i class="ph ph-building"></i> Antea Group / Région Grand Est</span>
+        </div>
+        <span class="doc-item__type-badge">PDF · 6,2 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+    <div class="doc-item" data-cat="climat" data-type="pdf" data-keywords="sécheresse 2022 retour expérience gestion crise eau Grand Est">
+      <i class="ph ph-file-text doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">Climat &amp; Vulnérabilité</div>
+        <div class="doc-item__title">Sécheresse 2022 en Grand Est – Retour d'expérience et enseignements</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> 2023</span>
+          <span><i class="ph ph-building"></i> DREAL Grand Est</span>
+        </div>
+        <span class="doc-item__type-badge">PDF · 3,7 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+    <!-- Gouvernance -->
+    <div class="doc-item" data-cat="gouvernance" data-type="pdf" data-keywords="guide SAGE élaboration révision CLE gouvernance eau">
+      <i class="ph ph-file-text doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">Gouvernance</div>
+        <div class="doc-item__title">Guide méthodologique pour l'élaboration et la révision des SAGE</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> 2022</span>
+          <span><i class="ph ph-building"></i> OFB</span>
+        </div>
+        <span class="doc-item__type-badge">PDF · 2,1 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+    <div class="doc-item" data-cat="gouvernance" data-type="pdf" data-keywords="contrats rivière programme actions gouvernance bassin versant">
+      <i class="ph ph-file-text doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">Gouvernance</div>
+        <div class="doc-item__title">Les contrats de rivière en Grand Est – État des lieux 2024</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> 2024</span>
+          <span><i class="ph ph-building"></i> Agence de l'eau Rhin-Meuse</span>
+        </div>
+        <span class="doc-item__type-badge">PDF · 1,4 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+    <!-- Données & Indicateurs -->
+    <div class="doc-item" data-cat="donnees" data-type="xlsx" data-keywords="tableau bord indicateurs eau Grand Est données 2023 excel">
+      <i class="ph ph-file-excel doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">Données &amp; Indicateurs</div>
+        <div class="doc-item__title">Tableau de bord indicateurs eau Grand Est – Données 2023</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> 2024</span>
+          <span><i class="ph ph-building"></i> Observatoire de l'Eau Grand Est</span>
+        </div>
+        <span class="doc-item__type-badge">XLSX · 4,1 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+    <div class="doc-item" data-cat="donnees" data-type="csv" data-keywords="export données qualité eaux superficielles stations mesure CSV">
+      <i class="ph ph-file-csv doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">Données &amp; Indicateurs</div>
+        <div class="doc-item__title">Export données qualité des eaux superficielles – Stations Grand Est 2023</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> 2024</span>
+          <span><i class="ph ph-building"></i> SANDRE / OFB</span>
+        </div>
+        <span class="doc-item__type-badge">CSV · 12,3 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+    <div class="doc-item" data-cat="donnees" data-type="shp" data-keywords="masses eau superficielles souterraines shapefile SIG géographique">
+      <i class="ph ph-map doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">Données &amp; Indicateurs</div>
+        <div class="doc-item__title">Masses d'eau superficielles et souterraines Grand Est – Shapefile SIG</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> 2023</span>
+          <span><i class="ph ph-building"></i> BRGM / SANDRE</span>
+        </div>
+        <span class="doc-item__type-badge">SHP · 28 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+    <div class="doc-item" data-cat="donnees" data-type="xlsx" data-keywords="piézométrie nappes phréatiques suivi niveaux excel Grand Est 2023">
+      <i class="ph ph-file-excel doc-item__icon"></i>
+      <div class="doc-item__body">
+        <div class="doc-item__cat">Données &amp; Indicateurs</div>
+        <div class="doc-item__title">Suivi piézométrique des nappes Grand Est – Niveaux 2023</div>
+        <div class="doc-item__meta">
+          <span><i class="ph ph-calendar"></i> 2024</span>
+          <span><i class="ph ph-building"></i> BRGM</span>
+        </div>
+        <span class="doc-item__type-badge">XLSX · 6,8 Mo</span>
+        <a href="#" class="doc-item__link"><i class="ph ph-download"></i> Télécharger</a>
+      </div>
+    </div>
+
+  </div><!-- /.docs-grid -->
+
+  <!-- Load more button (JS controls visibility) -->
+  <div class="load-more-wrap" id="docs-load-more-wrap">
+    <button class="load-more-btn" id="docs-load-more-btn" aria-label="Charger plus de documents">
+      <i class="ph ph-plus" aria-hidden="true"></i> Charger plus de documents
+    </button>
+    <p class="load-more-count" id="docs-load-more-count"></p>
+  </div>
+
+  <!-- Prototype notice -->
+  <div class="notice notice--info" style="margin-top:32px;">
+    <i class="ph ph-info"></i>
+    <span>Tous les documents listés sont indicatifs (prototype). Les liens de téléchargement seront actifs en version de production. Pour demander l'ajout d'un document, contactez <strong>observatoire-eau@antea.fr</strong>.</span>
+  </div>
+
+</div>
+</main>
+
+<!-- PARTNER LOGO BANNER -->
+<section class="partenaires-bandeau" aria-label="Partenaires">
+  <div class="partenaires-bandeau__inner">
+    <p class="partenaires-bandeau__label">Une plateforme à<br>l'initiative de</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://www.grandest.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-grandest.png" alt="La Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.prefectures-regions.gouv.fr/grand-est" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-prefet-grand-est.png" alt="Préfet de la Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <p class="partenaires-bandeau__label">Et co-financé<br>par</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://european-union.europa.eu/index_fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-union-europeenne.png" alt="Union Européenne" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.lesagencesdeleau.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-agences-eau.png" alt="Les Agences de l'Eau" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+  </div>
+</section>
+<div class="orege-footer-placeholder"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/a11y.js"></script>
+<!-- Page-specific JS: search, filters, load more, download modal -->
+<script src="js/ressources-docs.js"></script>
+</body>
+</html>

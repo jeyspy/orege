@@ -1,0 +1,11 @@
+/**
+ * je-suis-elu.css — Styles specific to the "Je suis élu / décideur" page
+ * (je-suis-elu.html)
+ *
+ * Only overrides that differ from the shared profil-page.css base styles.
+ * Currently adjusts the hero image vertical focal point to ensure the
+ * elected-official photo is framed at an appropriate crop position.
+ */
+
+/* Nudge the hero image vertical focus point for this profile's photo */
+.profil-hero-img img { object-position: center 40%; }

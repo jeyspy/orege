@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <title>Tableaux de bord – Observatoire de l'Eau Grand Est</title>
+
+  <!-- Bunny Fonts: Cabinet Grotesk (headings) + Satoshi (body) — GDPR-compliant -->
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../css/fonts.css">
+
+  <!-- Bootstrap 5 CSS — grid and utility styles -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+  <!-- Phosphor Icons — loaded with defer to avoid render blocking -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+
+  <!-- OpenLayers 9 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@9.2.4/ol.css">
+
+  <!-- Observatory custom CSS files -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/nav.css">
+  <link rel="stylesheet" href="../css/tableau-de-bord.css">
+  <link rel="stylesheet" href="../css/tdb-v2.css">
+  <link rel="stylesheet" href="../css/a11y.css">
+  <style>
+    body { padding-top: 102px; }
+  </style>
+</head>
+
+<body class="nav-loading">
+
+  <!-- ── Liens d'évitement RGAA 12.1 ── -->
+  <div class="skip-links">
+    <a class="skip-link" href="#main-content">Aller au contenu principal</a>
+    <a class="skip-link" href="#tdb-select-territoire">Aller au sélecteur de territoire</a>
+  </div>
+
+  <!-- ================================================================
+       EN-TÊTE PRINCIPAL (injecté par nav.js)
+  ================================================================ -->
+  <header class="orege-header" id="site-header" role="banner">
+    <a href="../index.html" class="orege-header__logo" aria-label="Accueil – Observatoire de l'Eau Grand Est">
+      <img src="../images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true">
+      <span class="orege-header__logo-text">Observatoire de l'Eau <span>Grand Est</span></span>
+    </a>
+    <!-- Navigation bar injected by nav.js -->
+  </header>
+
+  <!-- ================================================================
+       EN-TÊTE H1 + CONTRÔLES (fusionnés en une seule barre)
+  ================================================================ -->
+  <div class="tdb-page-header" id="tdb-page-header">
+    <div class="tdb-page-header__inner">
+
+      <!-- H1 title on the left side of the toolbar -->
+      <div class="tdb-page-header__left">
+        <a href="tableaux-de-bord.html" class="tdb-page-header__back" title="Retour à la liste" aria-label="Retour à la liste des tableaux de bord">
+          <i class="ph ph-arrow-left" aria-hidden="true"></i>
+        </a>
+        <h1 class="tdb-page-header__title">
+          <i class="ph ph-chart-line" aria-hidden="true"></i>
+          Tableau de bord &ndash;
+          <span id="tdb-intro-territoire">Ardennes (08)</span>
+        </h1>
+      </div>
+
+      <!-- Controls on the right side of the toolbar (year selector, share, export) -->
+      <div class="tdb-page-header__controls">
+
+        <!-- Sélecteur Échelle territoriale -->
+        <div class="tdb-ctrl-groupe">
+          <span class="tdb-ctrl-label">
+            <i class="ph ph-layer-group" aria-hidden="true"></i> Échelle
+          </span>
+          <label for="tdb-select-echelle" class="sr-only">Filtre par échelle territoriale</label>
+          <select id="tdb-select-echelle" class="tdb-ctrl-select" style="min-width:130px;">
+            <!-- Rempli dynamiquement -->
+          </select>
+        </div>
+
+        <div class="tdb-ctrl-sep"></div>
+
+        <!-- Sélecteur Territoire avec recherche -->
+        <div class="tdb-ctrl-groupe tdb-territoire-groupe">
+          <span class="tdb-ctrl-label">
+            <i class="ph ph-map-pin" aria-hidden="true"></i> Territoire
+          </span>
+          <!-- Champ de recherche avec autocomplétion -->
+          <div class="tdb-search-territoire" id="tdb-search-wrap">
+            <div class="tdb-search-territoire__field">
+              <i class="ph ph-magnifying-glass tdb-search-territoire__icon" aria-hidden="true"></i>
+              <input
+                type="text"
+                id="tdb-territoire-search"
+                class="tdb-search-territoire__input"
+                placeholder="Rechercher un territoire…"
+                autocomplete="off"
+                aria-label="Rechercher un territoire"
+                aria-autocomplete="list"
+                aria-controls="tdb-territoire-suggestions"
+                aria-expanded="false"
+              >
+              <button class="tdb-search-territoire__clear" id="tdb-search-clear" type="button" aria-label="Effacer la recherche" style="display:none">
+                <i class="ph ph-x"></i>
+              </button>
+            </div>
+            <!-- Liste de suggestions -->
+            <ul class="tdb-territoire-suggestions" id="tdb-territoire-suggestions" role="listbox" aria-label="Suggestions de territoires"></ul>
+          </div>
+          <!-- Select caché utilisé par tableau-de-bord.js -->
+          <label for="tdb-select-territoire" class="sr-only">Filtre par territoire</label>
+          <select id="tdb-select-territoire" class="sr-only" aria-hidden="true">
+            <!-- Rempli dynamiquement -->
+          </select>
+        </div>
+
+        <div class="tdb-ctrl-sep"></div>
+
+        <!-- Sélecteur Année -->
+        <div class="tdb-ctrl-groupe">
+          <span class="tdb-ctrl-label">
+            <i class="ph ph-calendar" aria-hidden="true"></i> Année
+          </span>
+          <label for="tdb-select-annee" class="sr-only">Filtre par année</label>
+          <select id="tdb-select-annee" class="tdb-ctrl-select" style="min-width:80px;">
+            <!-- Rempli dynamiquement -->
+          </select>
+        </div>
+
+        <div class="tdb-ctrl-sep"></div>
+
+        <!-- Boutons action -->
+        <button class="tdb-ctrl-btn" aria-label="Exporter le tableau de bord en PDF">
+          <i class="ph ph-file-pdf" aria-hidden="true"></i> PDF
+        </button>
+        <button class="tdb-ctrl-btn" aria-label="Partager ce tableau de bord">
+          <i class="ph ph-share-network" aria-hidden="true"></i> Partager
+        </button>
+
+      </div><!-- /.tdb-page-header__controls -->
+    </div><!-- /.tdb-page-header__inner -->
+  </div><!-- /.tdb-page-header -->
+
+  <!-- ================================================================
+       BARRE D'ONGLETS THÉMATIQUES (4 thèmes élus)
+  ================================================================ -->
+  <div class="tdb-themes-bar" id="tdb-themes-bar" role="tablist" aria-label="Thèmes du tableau de bord">
+    <div class="tdb-themes-bar__inner">
+      <button class="tdb-theme-btn is-active" data-theme="gouvernance"
+              style="--theme-color:#1565C0" type="button" role="tab" aria-selected="true">
+        <i class="ph ph-gavel" aria-hidden="true"></i>
+        Gouvernance &amp; Actions menées
+        <span class="tdb-theme-btn__count" style="background:#1565C0">6</span>
+      </button>
+      <button class="tdb-theme-btn" data-theme="amenagement"
+              style="--theme-color:#6A1B9A" type="button" role="tab" aria-selected="false">
+        <i class="ph ph-buildings" aria-hidden="true"></i>
+        Aménagement &amp; Zonage
+        <span class="tdb-theme-btn__count" style="background:#6A1B9A">5</span>
+      </button>
+      <button class="tdb-theme-btn" data-theme="ressources"
+              style="--theme-color:#00796B" type="button" role="tab" aria-selected="false">
+        <i class="ph ph-drop" aria-hidden="true"></i>
+        Ressources &amp; Usages
+        <span class="tdb-theme-btn__count" style="background:#00796B">6</span>
+      </button>
+      <button class="tdb-theme-btn" data-theme="vulnerabilite"
+              style="--theme-color:#D84315" type="button" role="tab" aria-selected="false">
+        <i class="ph ph-cloud-lightning" aria-hidden="true"></i>
+        Vulnérabilité &amp; Adaptation
+        <span class="tdb-theme-btn__count" style="background:#D84315">5</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       CONTENU PRINCIPAL DU TABLEAU DE BORD
+  ================================================================ -->
+  <main class="dashboard-page" id="main-content">
+
+    <!-- GRILLE DES WIDGETS (remplie par JS selon l'onglet actif) -->
+    <div class="dashboard-grille" id="dashboard-grille">
+      <!-- 9 widgets générés dynamiquement par tableau-de-bord.js -->
+    </div>
+
+    <!-- ── PANNEAUX THÉMATIQUES ────────────────────────────────── -->
+    <div id="tdb-themes-content">
+
+      <!-- ── PANNEAU 1 : Gouvernance & Actions menées ─────────── -->
+      <div class="tdb-theme-panel is-active" id="panel-gouvernance" role="tabpanel">
+        <div class="tdb-theme-section">
+          <div class="tdb-theme-section__inner">
+            <div class="tdb-theme-header">
+              <div class="tdb-theme-header__icon" style="background:linear-gradient(135deg,#1565C0,#1976D2)">
+                <i class="ph ph-gavel"></i>
+              </div>
+              <div class="tdb-theme-header__text">
+                <h2>Gouvernance &amp; Actions menées</h2>
+                <p>Pilotage, décisions, budgets eau, concertation locale et engagements contractuels.</p>
+              </div>
+              <div class="tdb-theme-header__actions">
+                <span class="tdb-theme-header__territory">
+                  <i class="ph ph-map-marker-alt"></i>
+                  <span class="js-theme-territoire">Grand Est</span>
+                </span>
+              </div>
+            </div>
+            <div class="tdb-widgets-grid">
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#1565C0,#42A5F5)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#1565C0"><i class="ph ph-file-text"></i></div>
+                  <span class="tdb-kpi-card__label">Contrats de milieux actifs</span>
+                </div>
+                <div class="tdb-kpi-card__value">3 <span class="tdb-kpi-card__unit">contrats</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--up"><i class="ph ph-arrow-up-right"></i> +1 depuis 2022</div>
+                <p class="tdb-kpi-card__desc">SAGE, contrats de rivière, PAT — outils de planification concertée</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#0288D1,#29B6F6)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#0288D1"><i class="ph ph-currency-eur"></i></div>
+                  <span class="tdb-kpi-card__label">Budget eau investissement</span>
+                </div>
+                <div class="tdb-kpi-card__value">4,2 <span class="tdb-kpi-card__unit">M€</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--up"><i class="ph ph-arrow-up-right"></i> +8 % vs 2023</div>
+                <p class="tdb-kpi-card__desc">Investissements eau potable, assainissement, protection milieux</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#2E7D32,#66BB6A)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#2E7D32"><i class="ph ph-users"></i></div>
+                  <span class="tdb-kpi-card__label">Taux de couverture SAGE</span>
+                </div>
+                <div class="tdb-kpi-card__value">78 <span class="tdb-kpi-card__unit">%</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--flat"><i class="ph ph-minus"></i> Stable</div>
+                <p class="tdb-kpi-card__desc">Part du territoire couverte par un SAGE approuvé ou en cours</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#F57F17,#FFCA28)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#F57F17"><i class="ph ph-check-circle"></i></div>
+                  <span class="tdb-kpi-card__label">Actions eau réalisées</span>
+                </div>
+                <div class="tdb-kpi-card__value">14 <span class="tdb-kpi-card__unit">/ an</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--up"><i class="ph ph-arrow-up-right"></i> +3 vs 2022</div>
+                <p class="tdb-kpi-card__desc">Actions eau inscrites dans les bilans annuels</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#6A1B9A,#AB47BC)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#6A1B9A"><i class="ph ph-handshake"></i></div>
+                  <span class="tdb-kpi-card__label">Partenaires financeurs</span>
+                </div>
+                <div class="tdb-kpi-card__value">7 <span class="tdb-kpi-card__unit">acteurs</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--info"><i class="ph ph-info"></i> Agences, Région, UE</div>
+                <p class="tdb-kpi-card__desc">Agences de l'eau, Région, FEDER, FEADER, CD, État</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#00838F,#4DD0E1)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#00838F"><i class="ph ph-award"></i></div>
+                  <span class="tdb-kpi-card__label">Indice gouvernance eau</span>
+                </div>
+                <div class="tdb-kpi-card__value">B+ <span class="tdb-kpi-card__unit"></span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--up"><i class="ph ph-arrow-up-right"></i> Amélioré</div>
+                <p class="tdb-kpi-card__desc">Notation composite : engagement, concertation, suivi</p>
+              </div>
+            </div>
+            <div class="tdb-wide-card">
+              <div>
+                <div class="tdb-wide-card__title"><i class="ph ph-list-checks" style="color:#1565C0"></i> Actions prioritaires à mener</div>
+                <p class="tdb-wide-card__sub">Recommandations issues de l'observatoire pour 2025–2026</p>
+                <ul class="tdb-action-list">
+                  <li><i class="ph ph-circle-dot" style="color:#1565C0"></i> Initier ou réviser le SAGE local avant 2026 pour couvrir les zones non réglementées</li>
+                  <li><i class="ph ph-circle-dot" style="color:#1565C0"></i> Renforcer la concertation avec les acteurs agricoles sur les prélèvements estivaux</li>
+                  <li><i class="ph ph-circle-dot" style="color:#2E7D32"></i> Planifier un contrat de rivière sur les bassins prioritaires identifiés</li>
+                  <li><i class="ph ph-circle-dot" style="color:#2E7D32"></i> Intégrer les objectifs DCE 2027 dans le PLU / SCoT du territoire</li>
+                  <li><i class="ph ph-triangle-exclamation" style="color:#E65100"></i> Anticiper la transcription des zones de protection spéciale zones humides</li>
+                </ul>
+              </div>
+              <div>
+                <div class="tdb-wide-card__title"><i class="ph ph-chart-bar" style="color:#0288D1"></i> Avancement des engagements eau</div>
+                <p class="tdb-wide-card__sub">État de réalisation des engagements contractuels</p>
+                <ul class="tdb-progress-list">
+                  <li>
+                    <div class="tdb-progress-item__label"><span>SAGE approuvé</span><span style="color:#2E7D32">✓ Effectif</span></div>
+                    <div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:100%;background:#2E7D32"></div></div>
+                  </li>
+                  <li>
+                    <div class="tdb-progress-item__label"><span>Plan eau local adopté</span><span style="color:#F57F17">68 %</span></div>
+                    <div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:68%;background:#F57F17"></div></div>
+                  </li>
+                  <li>
+                    <div class="tdb-progress-item__label"><span>Contrat rivière signé</span><span style="color:#1565C0">45 %</span></div>
+                    <div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:45%;background:#1565C0"></div></div>
+                  </li>
+                  <li>
+                    <div class="tdb-progress-item__label"><span>PAT avec volet eau</span><span style="color:#6A1B9A">30 %</span></div>
+                    <div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:30%;background:#6A1B9A"></div></div>
+                  </li>
+                  <li>
+                    <div class="tdb-progress-item__label"><span>Intégration DCE dans SCoT</span><span style="color:#c62828">15 %</span></div>
+                    <div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:15%;background:#c62828"></div></div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /#panel-gouvernance -->
+
+      <!-- ── PANNEAU 2 : Aménagement & Zonage ─────────────────── -->
+      <div class="tdb-theme-panel" id="panel-amenagement" role="tabpanel">
+        <div class="tdb-theme-section">
+          <div class="tdb-theme-section__inner">
+            <div class="tdb-theme-header">
+              <div class="tdb-theme-header__icon" style="background:linear-gradient(135deg,#6A1B9A,#8E24AA)">
+                <i class="ph ph-buildings"></i>
+              </div>
+              <div class="tdb-theme-header__text">
+                <h2>Aménagement du territoire &amp; Zonage</h2>
+                <p>Zones humides, PPRI, TVB eau, occupation des sols et intégration dans les documents d'urbanisme.</p>
+              </div>
+              <div class="tdb-theme-header__actions">
+                <span class="tdb-theme-header__territory"><i class="ph ph-map-marker-alt"></i> <span class="js-theme-territoire">Grand Est</span></span>
+              </div>
+            </div>
+            <div class="tdb-widgets-grid">
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#6A1B9A,#CE93D8)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#6A1B9A"><i class="ph ph-map"></i></div>
+                  <span class="tdb-kpi-card__label">Zones humides protégées</span>
+                </div>
+                <div class="tdb-kpi-card__value">12 <span class="tdb-kpi-card__unit">% surf.</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--up"><i class="ph ph-arrow-up-right"></i> +1,2 pt 2024</div>
+                <p class="tdb-kpi-card__desc">Part du territoire classée zone humide à enjeu</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#37474F,#90A4AE)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#37474F"><i class="ph ph-house-flood-water"></i></div>
+                  <span class="tdb-kpi-card__label">Communes en zone inondable</span>
+                </div>
+                <div class="tdb-kpi-card__value">38 <span class="tdb-kpi-card__unit">communes</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--flat"><i class="ph ph-minus"></i> Stable</div>
+                <p class="tdb-kpi-card__desc">Communes concernées par un PPRI approuvé</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#4527A0,#9575CD)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#4527A0"><i class="ph ph-draw-polygon"></i></div>
+                  <span class="tdb-kpi-card__label">PLU avec trame bleue</span>
+                </div>
+                <div class="tdb-kpi-card__value">24 <span class="tdb-kpi-card__unit">% des PLU</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--up"><i class="ph ph-arrow-up-right"></i> +6 pt en 2 ans</div>
+                <p class="tdb-kpi-card__desc">Intégration TVB eau dans les documents d'urbanisme</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#BF360C,#FF8A65)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#BF360C"><i class="ph ph-industry"></i></div>
+                  <span class="tdb-kpi-card__label">Zones industrielles en PPRI</span>
+                </div>
+                <div class="tdb-kpi-card__value">5 <span class="tdb-kpi-card__unit">zones</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--down"><i class="ph ph-triangle-exclamation"></i> À surveiller</div>
+                <p class="tdb-kpi-card__desc">Zones d'activité économique exposées aux inondations</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#1B5E20,#81C784)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#1B5E20"><i class="ph ph-seedling"></i></div>
+                  <span class="tdb-kpi-card__label">Espaces naturels préservés</span>
+                </div>
+                <div class="tdb-kpi-card__value">29 <span class="tdb-kpi-card__unit">% surf.</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--up"><i class="ph ph-arrow-up-right"></i> Objectif 30 % 2030</div>
+                <p class="tdb-kpi-card__desc">ENS, Natura 2000, RNN, forêts protégées</p>
+              </div>
+            </div>
+            <div class="tdb-wide-card">
+              <div>
+                <div class="tdb-wide-card__title"><i class="ph ph-lightbulb" style="color:#6A1B9A"></i> Points d'attention aménagement</div>
+                <p class="tdb-wide-card__sub">Alertes issues de l'analyse spatiale eau / urbanisme</p>
+                <ul class="tdb-action-list">
+                  <li><i class="ph ph-triangle-exclamation" style="color:#E65100"></i> 5 nouvelles zones à urbaniser (AU) situées dans des zones humides inventoriées</li>
+                  <li><i class="ph ph-circle-dot" style="color:#6A1B9A"></i> Révision du SCoT à engager pour intégrer la directive inondations</li>
+                  <li><i class="ph ph-circle-dot" style="color:#6A1B9A"></i> Identifier les secteurs à imperméabilisation forte et promouvoir la désimperméabilisation</li>
+                  <li><i class="ph ph-check-circle" style="color:#2E7D32"></i> TVB eau intégrée dans 24 % des PLU — objectif 40 % d'ici 2026</li>
+                  <li><i class="ph ph-circle-dot" style="color:#1565C0"></i> Prioriser le renouvellement urbain sur les friches industrielles hors zone inondable</li>
+                </ul>
+              </div>
+              <div>
+                <div class="tdb-wide-card__title"><i class="ph ph-chart-pie" style="color:#6A1B9A"></i> Occupation des sols / eau</div>
+                <p class="tdb-wide-card__sub">Répartition des surfaces à enjeu eau</p>
+                <ul class="tdb-progress-list">
+                  <li><div class="tdb-progress-item__label"><span>Surfaces imperméabilisées</span><span style="color:#BF360C">18 %</span></div><div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:18%;background:#BF360C"></div></div></li>
+                  <li><div class="tdb-progress-item__label"><span>Zones humides cartographiées</span><span style="color:#1565C0">12 %</span></div><div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:12%;background:#1565C0"></div></div></li>
+                  <li><div class="tdb-progress-item__label"><span>Espaces naturels protégés</span><span style="color:#2E7D32">29 %</span></div><div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:29%;background:#2E7D32"></div></div></li>
+                  <li><div class="tdb-progress-item__label"><span>Zones agricoles (enjeu eau)</span><span style="color:#F57F17">41 %</span></div><div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:41%;background:#F57F17"></div></div></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /#panel-amenagement -->
+
+      <!-- ── PANNEAU 3 : Ressources & Usages ──────────────────── -->
+      <div class="tdb-theme-panel" id="panel-ressources" role="tabpanel">
+        <div class="tdb-theme-section">
+          <div class="tdb-theme-section__inner">
+            <div class="tdb-theme-header">
+              <div class="tdb-theme-header__icon" style="background:linear-gradient(135deg,#00796B,#00897B)">
+                <i class="ph ph-drop"></i>
+              </div>
+              <div class="tdb-theme-header__text">
+                <h2>Ressources &amp; Usages</h2>
+                <p>Prélèvements, consommation AEP, rendement réseau, assainissement et réutilisation des eaux.</p>
+              </div>
+              <div class="tdb-theme-header__actions">
+                <span class="tdb-theme-header__territory"><i class="ph ph-map-marker-alt"></i> <span class="js-theme-territoire">Grand Est</span></span>
+              </div>
+            </div>
+            <div class="tdb-widgets-grid">
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#00796B,#4DB6AC)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#00796B"><i class="ph ph-drop"></i></div>
+                  <span class="tdb-kpi-card__label">Consommation eau potable</span>
+                </div>
+                <div class="tdb-kpi-card__value">127 <span class="tdb-kpi-card__unit">L/j/hab</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--down"><i class="ph ph-arrow-down-right"></i> −4 L vs 2022</div>
+                <p class="tdb-kpi-card__desc">Consommation domestique moyenne — tendance nationale : 143 L</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#0277BD,#4FC3F7)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#0277BD"><i class="ph ph-drop"></i></div>
+                  <span class="tdb-kpi-card__label">Rendement réseau AEP</span>
+                </div>
+                <div class="tdb-kpi-card__value">81 <span class="tdb-kpi-card__unit">%</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--up"><i class="ph ph-arrow-up-right"></i> +2 pt 2024</div>
+                <p class="tdb-kpi-card__desc">Rapport eau distribuée / eau prélevée — seuil min. Grenelle : 80 %</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#2E7D32,#A5D6A7)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#2E7D32"><i class="ph ph-wheat-awn"></i></div>
+                  <span class="tdb-kpi-card__label">Prélèvements agricoles</span>
+                </div>
+                <div class="tdb-kpi-card__value">43 <span class="tdb-kpi-card__unit">% total</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--flat"><i class="ph ph-minus"></i> Stable</div>
+                <p class="tdb-kpi-card__desc">Part de l'agriculture dans les prélèvements totaux eau</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#00695C,#80CBC4)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#00695C"><i class="ph ph-recycle"></i></div>
+                  <span class="tdb-kpi-card__label">Taux dépollution eaux usées</span>
+                </div>
+                <div class="tdb-kpi-card__value">94 <span class="tdb-kpi-card__unit">%</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--up"><i class="ph ph-arrow-up-right"></i> +3 pt 2023</div>
+                <p class="tdb-kpi-card__desc">Collectes raccordées à une STEP conforme</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#01579B,#81D4FA)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#01579B"><i class="ph ph-industry"></i></div>
+                  <span class="tdb-kpi-card__label">Prélèvements industriels</span>
+                </div>
+                <div class="tdb-kpi-card__value">18 <span class="tdb-kpi-card__unit">% total</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--down"><i class="ph ph-arrow-down-right"></i> −5 % 2024</div>
+                <p class="tdb-kpi-card__desc">Part industrie dans les volumes prélevés — baisse continue</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#558B2F,#AED581)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#558B2F"><i class="ph ph-bolt"></i></div>
+                  <span class="tdb-kpi-card__label">Réutilisation eaux usées</span>
+                </div>
+                <div class="tdb-kpi-card__value">2,4 <span class="tdb-kpi-card__unit">% REUSE</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--info"><i class="ph ph-chart-line"></i> Objectif 10 % 2030</div>
+                <p class="tdb-kpi-card__desc">Part d'eaux usées traitées réutilisées — potentiel fort</p>
+              </div>
+            </div>
+            <div class="tdb-wide-card">
+              <div>
+                <div class="tdb-wide-card__title"><i class="ph ph-list-checks" style="color:#00796B"></i> Leviers prioritaires ressources</div>
+                <p class="tdb-wide-card__sub">Actions structurantes pour la gestion quantitative</p>
+                <ul class="tdb-action-list">
+                  <li><i class="ph ph-circle-dot" style="color:#00796B"></i> Programme de renouvellement des canalisations AEP les plus fuyardes (priorité &gt; 30 ans)</li>
+                  <li><i class="ph ph-circle-dot" style="color:#00796B"></i> Engager une démarche REUSE pour irrigation agricole (2 projets pilotes)</li>
+                  <li><i class="ph ph-triangle-exclamation" style="color:#E65100"></i> Déployer les compteurs intelligents sur les 500 plus gros préleveurs industriels</li>
+                  <li><i class="ph ph-check-circle" style="color:#2E7D32"></i> Rendement AEP &gt; 80 % atteint — maintenir par campagnes de détection de fuites</li>
+                  <li><i class="ph ph-circle-dot" style="color:#0288D1"></i> Réviser les autorisations de prélèvement estival en nappe phréatique</li>
+                </ul>
+              </div>
+              <div>
+                <div class="tdb-wide-card__title"><i class="ph ph-chart-bar" style="color:#00796B"></i> Répartition des prélèvements</div>
+                <p class="tdb-wide-card__sub">Par secteur d'usage (volumes 2024)</p>
+                <ul class="tdb-progress-list">
+                  <li><div class="tdb-progress-item__label"><span>Agriculture</span><span style="color:#2E7D32">43 %</span></div><div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:43%;background:#2E7D32"></div></div></li>
+                  <li><div class="tdb-progress-item__label"><span>Eau potable (AEP)</span><span style="color:#1565C0">39 %</span></div><div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:39%;background:#1565C0"></div></div></li>
+                  <li><div class="tdb-progress-item__label"><span>Industrie</span><span style="color:#37474F">18 %</span></div><div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:18%;background:#37474F"></div></div></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /#panel-ressources -->
+
+      <!-- ── PANNEAU 4 : Vulnérabilité & Adaptation climatique ─── -->
+      <div class="tdb-theme-panel" id="panel-vulnerabilite" role="tabpanel">
+        <div class="tdb-theme-section">
+          <div class="tdb-theme-section__inner">
+            <div class="tdb-theme-header">
+              <div class="tdb-theme-header__icon" style="background:linear-gradient(135deg,#D84315,#E64A19)">
+                <i class="ph ph-cloud-lightning"></i>
+              </div>
+              <div class="tdb-theme-header__text">
+                <h2>Vulnérabilité &amp; Adaptation climatique</h2>
+                <p>Sécheresse, étiages, inondations, hausse des températures et stratégies d'adaptation.</p>
+              </div>
+              <div class="tdb-theme-header__actions">
+                <span class="tdb-theme-header__territory"><i class="ph ph-map-marker-alt"></i> <span class="js-theme-territoire">Grand Est</span></span>
+              </div>
+            </div>
+            <div class="tdb-widgets-grid">
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#D84315,#FF8A65)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#D84315"><i class="ph ph-temperature-high"></i></div>
+                  <span class="tdb-kpi-card__label">Jours de sécheresse</span>
+                </div>
+                <div class="tdb-kpi-card__value">47 <span class="tdb-kpi-card__unit">jours/an</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--down"><i class="ph ph-arrow-up"></i> +12 j vs 2010</div>
+                <p class="tdb-kpi-card__desc">Jours avec déficit hydrique modéré à sévère — tendance haussière</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#E65100,#FFCC02)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#E65100"><i class="ph ph-arrow-trend-down"></i></div>
+                  <span class="tdb-kpi-card__label">Nappes sous le seuil d'alerte</span>
+                </div>
+                <div class="tdb-kpi-card__value">3 <span class="tdb-kpi-card__unit">/ 8 dpts</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--down"><i class="ph ph-triangle-exclamation"></i> Situation critique</div>
+                <p class="tdb-kpi-card__desc">Bas-Rhin, Marne, Ardennes — nappes sous le seuil d'alerte en 2024</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#37474F,#B0BEC5)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#37474F"><i class="ph ph-house-flood-water"></i></div>
+                  <span class="tdb-kpi-card__label">Personnes en zone inondable</span>
+                </div>
+                <div class="tdb-kpi-card__value">62 k <span class="tdb-kpi-card__unit">hab.</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--flat"><i class="ph ph-minus"></i> Stable (PPRI)</div>
+                <p class="tdb-kpi-card__desc">Population résidente en zone inondable — données PPRI</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#BF360C,#FFAB40)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#BF360C"><i class="ph ph-thermometer-three-quarters"></i></div>
+                  <span class="tdb-kpi-card__label">Hausse T° moyenne</span>
+                </div>
+                <div class="tdb-kpi-card__value">+1,8 <span class="tdb-kpi-card__unit">°C</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--down"><i class="ph ph-triangle-exclamation"></i> +2,4 °C scénario 2050</div>
+                <p class="tdb-kpi-card__desc">Hausse observée 1981–2024 — scénario RCP 4.5 : +2,4 °C à 2050</p>
+              </div>
+              <div class="tdb-kpi-card">
+                <div class="tdb-kpi-card__accent" style="background:linear-gradient(90deg,#1A237E,#7986CB)"></div>
+                <div class="tdb-kpi-card__header">
+                  <div class="tdb-kpi-card__icon-wrap" style="background:#1A237E"><i class="ph ph-snowflake"></i></div>
+                  <span class="tdb-kpi-card__label">Étiages sévères (été 2024)</span>
+                </div>
+                <div class="tdb-kpi-card__value">6 <span class="tdb-kpi-card__unit">cours d'eau</span></div>
+                <div class="tdb-kpi-card__trend tdb-kpi-card__trend--down"><i class="ph ph-arrow-up"></i> +2 vs 2023</div>
+                <p class="tdb-kpi-card__desc">Cours d'eau sous le QMNA5 cet été — seuil de référence étiage</p>
+              </div>
+            </div>
+            <div class="tdb-wide-card">
+              <div>
+                <div class="tdb-wide-card__title"><i class="ph ph-shield-halved" style="color:#D84315"></i> Plan d'adaptation prioritaire</div>
+                <p class="tdb-wide-card__sub">Actions structurelles pour réduire la vulnérabilité</p>
+                <ul class="tdb-action-list">
+                  <li><i class="ph ph-triangle-exclamation" style="color:#D84315"></i> Déclarer ZRE sur les bassins versants en tension</li>
+                  <li><i class="ph ph-circle-dot" style="color:#D84315"></i> Engager un PAPI (Programme Actions Prévention Inondations) dès 2025</li>
+                  <li><i class="ph ph-circle-dot" style="color:#E65100"></i> Développer les zones de rétention temporaire sur les communes à risque</li>
+                  <li><i class="ph ph-circle-dot" style="color:#1565C0"></i> Actualiser le Plan Communal de Sauvegarde avec le volet sécheresse</li>
+                  <li><i class="ph ph-check-circle" style="color:#2E7D32"></i> Lancer une étude de vulnérabilité AEP au changement climatique (Horizon 2030)</li>
+                </ul>
+              </div>
+              <div>
+                <div class="tdb-wide-card__title"><i class="ph ph-chart-line" style="color:#D84315"></i> Indicateurs de tendance climatique</div>
+                <p class="tdb-wide-card__sub">Évolution des indicateurs vulnérabilité eau</p>
+                <ul class="tdb-progress-list">
+                  <li><div class="tdb-progress-item__label"><span>Risque sécheresse (0-100)</span><span style="color:#D84315">72/100</span></div><div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:72%;background:#D84315"></div></div></li>
+                  <li><div class="tdb-progress-item__label"><span>Risque inondation</span><span style="color:#37474F">48/100</span></div><div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:48%;background:#37474F"></div></div></li>
+                  <li><div class="tdb-progress-item__label"><span>Stress hydrique estival</span><span style="color:#E65100">65/100</span></div><div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:65%;background:#E65100"></div></div></li>
+                  <li><div class="tdb-progress-item__label"><span>Engagement adaptation collectivité</span><span style="color:#2E7D32">35/100</span></div><div class="tdb-progress-item__bar"><div class="tdb-progress-item__fill" style="width:35%;background:#2E7D32"></div></div></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /#panel-vulnerabilite -->
+
+    </div><!-- /#tdb-themes-content -->
+
+  </main>
+
+  <!-- ================================================================
+       SCRIPTS
+  ================================================================ -->
+
+  <!-- jQuery 3 -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+  <!-- Bootstrap 5 Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Chart.js 4 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+  <!-- OpenLayers 9 -->
+  <script src="https://cdn.jsdelivr.net/npm/ol@9.2.4/dist/ol.js"></script>
+
+  <!-- SheetJS (nécessaire pour charger les communes depuis l'Excel) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Données des indicateurs -->
+  <script src="../js/data-indicateurs.js"></script>
+  <script src="../js/data-tdb-territoires.js"></script>
+
+  <!-- Chargement asynchrone des 5 115 communes depuis listing_territoires.xlsx -->
+  <script src="../js/data-communes.js"></script>
+
+  <!-- Injection des communes dans TERRITOIRES["Commune"] une fois chargées -->
+  <script>
+  document.addEventListener('communes:loaded', function(e) {
+    if (!e.detail || !e.detail.count) return;
+    // Construire la liste de noms depuis COMMUNES_TERRITOIRES
+    if (typeof COMMUNES_TERRITOIRES === 'undefined') return;
+    var noms = COMMUNES_TERRITOIRES.map(function(c) { return c.label; });
+    noms.sort(function(a,b){ return a.localeCompare(b, 'fr'); });
+    // Injecter dans TERRITOIRES
+    if (typeof TERRITOIRES !== 'undefined') {
+      TERRITOIRES['Commune'] = noms;
+    }
+    // Si l'échelle courante est "Commune", rafraîchir le sélecteur et le champ de recherche
+    var selEchelle = document.getElementById('tdb-select-echelle');
+    if (selEchelle && selEchelle.value === 'Commune') {
+      // Ajouter l'échelle au select si elle n'y est pas encore
+      var already = false;
+      for (var i = 0; i < selEchelle.options.length; i++) {
+        if (selEchelle.options[i].value === 'Commune') { already = true; break; }
+      }
+      if (!already) {
+        var opt = document.createElement('option');
+        opt.value = 'Commune'; opt.textContent = 'Commune';
+        selEchelle.appendChild(opt);
+      }
+      // Déclencher le changement pour rafraîchir la liste de territoires
+      selEchelle.dispatchEvent(new Event('change', { bubbles: true }));
+    } else if (selEchelle) {
+      // Ajouter l'option "Commune" au select d'échelle si absente
+      var hasCommune = false;
+      for (var j = 0; j < selEchelle.options.length; j++) {
+        if (selEchelle.options[j].value === 'Commune') { hasCommune = true; break; }
+      }
+      if (!hasCommune) {
+        var optC = document.createElement('option');
+        optC.value = 'Commune'; optC.textContent = 'Commune';
+        selEchelle.appendChild(optC);
+      }
+    }
+    console.log('[TDB] Communes injectées dans TERRITOIRES :', noms.length);
+  });
+  </script>
+
+  <!-- Lecture des paramètres URL pour pré-sélectionner territoire/année -->
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      window.__TDB_PARAMS = {
+        echelle:    params.get('echelle')    || null,
+        territoire: params.get('territoire') || null,
+        annee:      params.get('annee')      ? parseInt(params.get('annee'), 10) : null
+      };
+    })();
+  </script>
+
+  <!-- Logique tableau de bord -->
+  <script src="../js/tableau-de-bord.js"></script>
+
+  <!-- Onglets thématiques -->
+  <script>
+  (function() {
+    function activerThemeTdb(themeId) {
+      // Boutons
+      document.querySelectorAll('.tdb-theme-btn').forEach(function(btn) {
+        var active = btn.dataset.theme === themeId;
+        btn.classList.toggle('is-active', active);
+        btn.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      // Panneaux
+      document.querySelectorAll('.tdb-theme-panel').forEach(function(panel) {
+        panel.classList.toggle('is-active', panel.id === 'panel-' + themeId);
+      });
+      // Synchroniser le nom du territoire dans chaque panneau
+      var selTerr = document.getElementById('tdb-select-territoire');
+      var introTerr = document.getElementById('tdb-intro-territoire');
+      var nomTerr = '';
+      if (selTerr && selTerr.selectedIndex >= 0) {
+        nomTerr = selTerr.options[selTerr.selectedIndex].text;
+      } else if (introTerr) {
+        nomTerr = introTerr.textContent;
+      }
+      if (introTerr && nomTerr) introTerr.textContent = nomTerr;
+      document.querySelectorAll('.js-theme-territoire').forEach(function(el) {
+        el.textContent = nomTerr || 'Grand Est';
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Clic sur les onglets : UI + rechargement widgets
+      document.querySelectorAll('.tdb-theme-btn[data-theme]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var themeId = this.dataset.theme;
+          activerThemeTdb(themeId);
+          // Recharger la grille de widgets pour ce thème
+          if (typeof changerThemeTdb === 'function') {
+            changerThemeTdb(themeId);
+          }
+          // Remonter en haut de la page au changement d'onglet
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+
+      // Fonction centralisée de mise à jour du territoire affiché
+      function syncTerritoireLabels() {
+        var selTerritoire = document.getElementById('tdb-select-territoire');
+        var introTerritoire = document.getElementById('tdb-intro-territoire');
+        var nomTerritoire = '';
+        if (selTerritoire && selTerritoire.selectedIndex >= 0) {
+          nomTerritoire = selTerritoire.options[selTerritoire.selectedIndex].text;
+        } else if (introTerritoire) {
+          nomTerritoire = introTerritoire.textContent;
+        }
+        // Mettre à jour le H1
+        if (introTerritoire) introTerritoire.textContent = nomTerritoire;
+        // Mettre à jour les labels dans les panneaux thématiques
+        document.querySelectorAll('.js-theme-territoire').forEach(function(el) {
+          el.textContent = nomTerritoire;
+        });
+      }
+
+      // Quand le territoire change dans la toolbar, tout synchroniser
+      var selTerritoire = document.getElementById('tdb-select-territoire');
+      if (selTerritoire) {
+        selTerritoire.addEventListener('change', function() {
+          // Laisser tableau-de-bord.js mettre à jour #tdb-intro-territoire en premier
+          setTimeout(syncTerritoireLabels, 50);
+        });
+      }
+
+      // Activer Gouvernance par défaut
+      activerThemeTdb('gouvernance');
+
+      // Synchroniser au chargement (après que tableau-de-bord.js a initialisé le sélecteur)
+      setTimeout(syncTerritoireLabels, 300);
+    });
+  })();
+  </script>
+
+  <!-- ── Recherche territoire avec autocomplétion ── -->
+  <script>
+  (function() {
+
+    /* ── Seuil : au-delà de N entrées → mode recherche ────────── */
+    var SEUIL_RECHERCHE = 15;
+
+    /* ── Nombre de suggestions max affichées ──────────────────── */
+    var MAX_SUGGESTIONS = 10;
+
+    var input      = document.getElementById('tdb-territoire-search');
+    var clearBtn   = document.getElementById('tdb-search-clear');
+    var sugList    = document.getElementById('tdb-territoire-suggestions');
+    var hiddenSel  = document.getElementById('tdb-select-territoire');
+    var searchWrap = document.getElementById('tdb-search-wrap');
+
+    /* Tableau plat de tous les territoires de l'échelle courante */
+    var _allTerritoires = [];
+    var _activeIndex    = -1;
+
+    /* ── Met à jour le champ et les suggestions selon l'échelle ── */
+    function refreshSearchMode() {
+      var echelle = (document.getElementById('tdb-select-echelle') || {}).value || '';
+      var liste   = (typeof TERRITOIRES !== 'undefined' && TERRITOIRES[echelle]) ? TERRITOIRES[echelle] : [];
+      _allTerritoires = liste.slice(); // copie
+      _activeIndex    = -1;
+
+      if (liste.length > SEUIL_RECHERCHE) {
+        /* Mode recherche */
+        searchWrap.classList.add('is-search-mode');
+        /* Afficher le territoire courant dans le champ */
+        var curVal = hiddenSel.value || (liste[0] || '');
+        input.value = curVal;
+        clearBtn.style.display = curVal ? 'flex' : 'none';
+      } else {
+        /* Peu de choix → afficher directement les suggestions figées */
+        searchWrap.classList.remove('is-search-mode');
+        input.value = hiddenSel.value || (liste[0] || '');
+        clearBtn.style.display = 'none';
+        renderSuggestions(liste, false);
+      }
+    }
+
+    /* ── Filtre et affiche les suggestions ─────────────────────── */
+    function renderSuggestions(liste, highlight) {
+      sugList.innerHTML = '';
+      _activeIndex = -1;
+      if (!liste.length) {
+        var li = document.createElement('li');
+        li.className = 'tdb-territoire-suggestions__empty';
+        li.textContent = 'Aucun territoire trouvé';
+        sugList.appendChild(li);
+        openList();
+        return;
+      }
+      liste.slice(0, MAX_SUGGESTIONS).forEach(function(nom, idx) {
+        var li       = document.createElement('li');
+        li.className = 'tdb-territoire-suggestions__item';
+        li.setAttribute('role', 'option');
+        li.setAttribute('data-value', nom);
+        if (highlight && input.value.trim()) {
+          var re    = new RegExp('(' + escapeRe(input.value.trim()) + ')', 'gi');
+          li.innerHTML = nom.replace(re, '<mark>$1</mark>');
+        } else {
+          li.textContent = nom;
+        }
+        if (nom === hiddenSel.value) li.classList.add('is-selected');
+        li.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          selectTerritoire(nom);
+        });
+        sugList.appendChild(li);
+      });
+      if (liste.length > MAX_SUGGESTIONS) {
+        var more = document.createElement('li');
+        more.className = 'tdb-territoire-suggestions__more';
+        more.textContent = '+ ' + (liste.length - MAX_SUGGESTIONS) + ' autres — affinez votre recherche';
+        sugList.appendChild(more);
+      }
+      openList();
+    }
+
+    /* ── Ouvre / ferme la liste ────────────────────────────────── */
+    function openList()  { sugList.style.display = 'block'; input.setAttribute('aria-expanded','true'); }
+    function closeList() { sugList.style.display = 'none';  input.setAttribute('aria-expanded','false'); _activeIndex = -1; }
+
+    /* ── Sélectionne un territoire ─────────────────────────────── */
+    function selectTerritoire(nom) {
+      input.value          = nom;
+      clearBtn.style.display = 'flex';
+      hiddenSel.value      = nom;
+      /* Déclencher le change sur le select caché pour que tableau-de-bord.js réagisse */
+      var evt = new Event('change', { bubbles: true });
+      hiddenSel.dispatchEvent(evt);
+      closeList();
+    }
+
+    /* ── Saisie dans le champ ──────────────────────────────────── */
+    input.addEventListener('input', function() {
+      var q = this.value.trim().toLowerCase();
+      clearBtn.style.display = this.value ? 'flex' : 'none';
+      if (!q) {
+        var echelle = (document.getElementById('tdb-select-echelle') || {}).value || '';
+        var liste   = (typeof TERRITOIRES !== 'undefined' && TERRITOIRES[echelle]) ? TERRITOIRES[echelle] : [];
+        renderSuggestions(liste.slice(0, MAX_SUGGESTIONS), false);
+        return;
+      }
+      var filtered = _allTerritoires.filter(function(t) {
+        return t.toLowerCase().indexOf(q) !== -1;
+      });
+      renderSuggestions(filtered, true);
+    });
+
+    /* ── Focus → ouvrir ────────────────────────────────────────── */
+    input.addEventListener('focus', function() {
+      var q        = this.value.trim().toLowerCase();
+      var echelle  = (document.getElementById('tdb-select-echelle') || {}).value || '';
+      var liste    = (typeof TERRITOIRES !== 'undefined' && TERRITOIRES[echelle]) ? TERRITOIRES[echelle] : [];
+      var filtered = q
+        ? liste.filter(function(t) { return t.toLowerCase().indexOf(q) !== -1; })
+        : liste;
+      renderSuggestions(filtered.slice(0, MAX_SUGGESTIONS), !!q);
+    });
+
+    /* ── Clic sur croix ────────────────────────────────────────── */
+    clearBtn.addEventListener('click', function() {
+      input.value = '';
+      clearBtn.style.display = 'none';
+      input.focus();
+      var echelle  = (document.getElementById('tdb-select-echelle') || {}).value || '';
+      var liste    = (typeof TERRITOIRES !== 'undefined' && TERRITOIRES[echelle]) ? TERRITOIRES[echelle] : [];
+      renderSuggestions(liste.slice(0, MAX_SUGGESTIONS), false);
+    });
+
+    /* ── Navigation clavier ────────────────────────────────────── */
+    input.addEventListener('keydown', function(e) {
+      var items = sugList.querySelectorAll('.tdb-territoire-suggestions__item');
+      if (!items.length) return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        _activeIndex = Math.min(_activeIndex + 1, items.length - 1);
+        highlightItem(items);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        _activeIndex = Math.max(_activeIndex - 1, 0);
+        highlightItem(items);
+      } else if (e.key === 'Enter' && _activeIndex >= 0) {
+        e.preventDefault();
+        selectTerritoire(items[_activeIndex].dataset.value);
+      } else if (e.key === 'Escape') {
+        closeList();
+      }
+    });
+
+    function highlightItem(items) {
+      items.forEach(function(el, i) { el.classList.toggle('is-active', i === _activeIndex); });
+      if (_activeIndex >= 0) items[_activeIndex].scrollIntoView({ block: 'nearest' });
+    }
+
+    /* ── Clic hors du champ → fermer ───────────────────────────── */
+    document.addEventListener('click', function(e) {
+      if (!searchWrap.contains(e.target)) closeList();
+    });
+
+    /* ── Quand l'échelle change, rafraîchir ────────────────────── */
+    var selEchelle = document.getElementById('tdb-select-echelle');
+    if (selEchelle) {
+      selEchelle.addEventListener('change', function() {
+        setTimeout(refreshSearchMode, 20);
+      });
+    }
+
+    /* ── Initialisation après que tableau-de-bord.js a rempli le select ── */
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(refreshSearchMode, 400);
+    });
+
+    /* ── Quand les communes arrivent, rafraîchir si échelle = Commune ── */
+    document.addEventListener('communes:loaded', function() {
+      var selEchelle = document.getElementById('tdb-select-echelle');
+      if (selEchelle && selEchelle.value === 'Commune') {
+        refreshSearchMode();
+      }
+    });
+
+    /* ── Utilitaire : échapper les caractères regex ─────────────── */
+    function escapeRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  })();
+  </script>
+
+  <!-- Accessibilité RGAA 4.1 -->
+  <script src="../js/a11y.js"></script>
+  <!-- Navigation principale -->
+  <script src="../js/nav.js"></script>
+  <!-- Transition de page -->
+  <script src="../js/page-transition.js"></script>
+
+<div class="orege-footer-placeholder"></div>
+</body>
+</html>

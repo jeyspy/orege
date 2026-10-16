@@ -1,0 +1,62 @@
+/**
+ * ressources-dispositifs.css — Styles specific to the "Dispositifs d'action" page
+ * (ressources-dispositifs.html)
+ *
+ * NOTE: This file now serves only as a legacy/fallback.
+ * The page was refactored to use the profil-page layout (profil-page.css),
+ * so most styles here are no longer active. They are kept for reference in
+ * case the page is reverted to a simple scrollable article layout.
+ *
+ * Active overrides:
+ *   - overflow-x: clip on html/body to prevent horizontal scroll
+ *
+ * Unused legacy rules (profil-page.css now handles layout):
+ *   - .disp-wrap, .disp-intro, .disp-cta
+ */
+
+/* Prevent horizontal overflow (required by profil-page hero image) */
+html, body { overflow-x: clip; }
+
+.disp-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 64px 24px 96px;
+}
+
+.disp-intro {
+  font-size: 15px;
+  color: #3a4a6b;
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+.disp-intro p { margin-bottom: 20px; }
+.disp-intro p:last-child { margin-bottom: 0; }
+
+.disp-intro h2 {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+  color: #1a2233;
+  margin: 36px 0 10px;
+  border-bottom: 2.5px solid #7fddf0;
+  padding-bottom: 6px;
+  display: inline-block;
+}
+
+.disp-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 40px;
+  padding: 14px 28px;
+  background: #2a347d;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  text-decoration: none;
+  transition: background .18s;
+}
+.disp-cta:hover { background: #1a2355; color: #fff; }
+.disp-cta i { font-size: 12px; }

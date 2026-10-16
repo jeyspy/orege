@@ -1,0 +1,3763 @@
+/* ============================================================
+   tdb-elu-v2.css — Tableau de bord Élu V2
+   Layout Fiche d'identité basé sur le zoning Canva
+   Tuiles multi-indicateurs + carte interactive drill-down
+   ============================================================ */
+
+/* Fix: overflow-x:hidden sur html/body casse position:sticky.
+   On le remplace par clip qui bloque le débordement sans casser sticky. */
+html:has(.tdb-elu2-page),
+html:has(.tdb-elu2-page) body {
+  overflow-x: clip;
+}
+
+/* Masquer le bandeau "Tableau de bord Élu" au scroll */
+.tdb-elu2-page .tdb-page-header {
+  transition: transform 0.3s ease, opacity 0.25s ease;
+}
+.tdb-elu2-page .tdb-page-header.is-hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+/* Quand le page-header est masqué, la nav se colle sous le mini-hero */
+.tdb-elu2-page .tdb-page-header.is-hidden + .tdb-elu2-nav {
+  top: calc(var(--header-height, 68px) + 44px); /* header + mini-hero */
+}
+
+:root {
+  --elu2-bg: #F4F7FA;
+  --elu2-card: #ffffff;
+  --elu2-radius: 14px;
+  --elu2-shadow: 0 2px 12px rgba(0,0,0,.06);
+  --elu2-shadow-hover: 0 6px 24px rgba(0,0,0,.10);
+  --elu2-text: #1a2332;
+  --elu2-muted: #5A6779; /* RGAA 3.2 : ≥ 4,5:1 sur blanc et sur #F8F9FB */
+  --elu2-border: #E2E8F0;
+  --elu2-blue: #1565C0;
+  --elu2-blue-light: #E3F2FD;
+  --elu2-accent: #0277BD;
+}
+
+/* ── Page layout ─────────────────────────────────────────── */
+.tdb-elu2-page {
+  background: var(--elu2-bg);
+  min-height: 100vh;
+  padding-bottom: 40px;
+  padding-top: 0;
+}
+
+#main-content {
+  padding-top: 0;
+}
+.tdb-elu2-section {
+  padding: 90px 24px 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Section body (contenu sous le Hero, re-rendu au switch territoire) ── */
+#tdb-elu2-section-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Territoire dans le bandeau header ────────────────────── */
+.tdb-elu2-header-territory {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+}
+.tdb-elu2-header-territory__sep {
+  color: var(--elu2-border);
+  font-weight: 300;
+  font-size: 17px;
+}
+.tdb-elu2-header-territory__name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--elu2-blue);
+  background: var(--elu2-blue-light);
+  padding: 3px 12px;
+  border-radius: 6px;
+}
+
+/* ── Mini-bandeau territoire sticky (apparaît au scroll) ── */
+.tdb-elu2-mini-hero {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 72px; /* fallback, overridden by JS */
+  z-index: 1099; /* juste sous .orege-header (1100) */
+  background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%);
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  padding: 10px 24px;
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s ease, opacity 0.25s ease;
+}
+.tdb-elu2-mini-hero.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+.tdb-elu2-mini-hero__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  line-height: 1.3;
+}
+.tdb-elu2-mini-hero__left {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+.tdb-elu2-mini-hero__name {
+  font-family: 'Cabinet Grotesk', 'Satoshi', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tdb-elu2-mini-hero__type {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  white-space: nowrap;
+}
+.tdb-elu2-mini-hero__kpis {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.tdb-elu2-mini-hero__kpi {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+.tdb-elu2-mini-hero__kpi i {
+  font-size: 16px;
+  color: rgba(255,255,255,0.7);
+}
+.tdb-elu2-mini-hero__sep {
+  width: 1px;
+  height: 18px;
+  background: rgba(255,255,255,0.3);
+  flex-shrink: 0;
+}
+
+/* ── Nav tabs ────────────────────────────────────────────── */
+.tdb-elu2-nav {
+  display: flex;
+  gap: 6px;
+  padding: 20px 24px 14px;
+  max-width: 1400px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  overflow-x: auto;
+  background: var(--elu2-bg);
+  border-bottom: 1px solid var(--elu2-border);
+  position: sticky;
+  top: calc(var(--header-height, 68px) + 48px);
+  z-index: 100;
+  /* Fond étendu sur toute la largeur de l'écran (la barre fait 1400 px max) :
+     les tuiles, plus larges en comparaison, ne se voient plus défiler sur les côtés */
+  box-shadow: 0 0 0 100vmax var(--elu2-bg);
+  clip-path: inset(0 -100vmax);
+}
+.tdb-elu2-nav__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1 1 0%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--elu2-muted);
+  font-size: 15.5px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .2s;
+}
+.tdb-elu2-nav__btn i { font-size: 21px; }
+.tdb-elu2-nav__label-short { display: none; }
+.tdb-elu2-nav__btn:hover {
+  background: var(--elu2-blue-light);
+  color: var(--elu2-blue);
+}
+.tdb-elu2-nav__btn.is-active {
+  background: var(--elu2-blue);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(21,101,192,.3);
+}
+
+/* ── Section banner (Ressources en eau, Usages et pressions) ── */
+.tdb-elu2-banner {
+  background: var(--elu2-blue);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+.tdb-elu2-banner i { font-size: 25px; }
+
+/* ══════════════════════════════════════════════════════════════
+   CARD — Base style pour toutes les tuiles
+   ══════════════════════════════════════════════════════════════ */
+.tdb-elu2-card {
+  background: var(--elu2-card);
+  border-radius: var(--elu2-radius);
+  box-shadow: var(--elu2-shadow);
+  overflow: hidden;
+  transition: box-shadow .2s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.tdb-elu2-card:hover {
+  box-shadow: var(--elu2-shadow-hover);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HERO — Nom du territoire (pleine largeur)
+   ══════════════════════════════════════════════════════════════ */
+.tdb-elu2-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 320px;
+}
+.tdb-elu2-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #1565C0, #42A5F5);
+  border-radius: var(--elu2-radius) var(--elu2-radius) 0 0;
+}
+
+.tdb-elu2-hero__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 36px 40px;
+}
+
+.tdb-elu2-hero__title {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--elu2-text);
+  line-height: 1.15;
+  margin: 0;
+}
+.tdb-elu2-hero__type {
+  font-size: 15px;
+  color: var(--elu2-muted);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.tdb-elu2-hero__kpis {
+  display: flex;
+  gap: 36px;
+  margin-top: auto;
+  padding-top: 20px;
+}
+.tdb-elu2-hero__kpi {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tdb-elu2-hero__kpi-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--elu2-blue-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tdb-elu2-hero__kpi-icon i {
+  font-size: 20px;
+  color: var(--elu2-blue);
+}
+.tdb-elu2-hero__kpi-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--elu2-muted);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.tdb-elu2-hero__kpi-val {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  line-height: 1.2;
+}
+.tdb-elu2-hero__kpi-unit {
+  font-size: 13px;
+  color: var(--elu2-muted);
+  font-weight: 500;
+}
+
+/* ── Carte interactive (droite du hero) ─────────────────── */
+.tdb-elu2-hero__map {
+  position: relative;
+  min-height: 320px;
+  background: #EDF2F7;
+}
+.tdb-elu2-hero__map .ol-viewport {
+  border-radius: 0 var(--elu2-radius) var(--elu2-radius) 0;
+}
+.tdb-elu2-drillmap {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+}
+
+
+/* Breadcrumb de navigation carte */
+.tdb-elu2-drillmap__breadcrumb {
+  position: absolute;
+  top: 12px; left: 12px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(6px);
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  font-size: 13px;
+  font-weight: 600;
+}
+.tdb-elu2-drillmap__breadcrumb button {
+  background: none; border: none;
+  color: var(--elu2-blue);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background .15s;
+}
+.tdb-elu2-drillmap__breadcrumb button:hover {
+  background: var(--elu2-blue-light);
+}
+.tdb-elu2-drillmap__breadcrumb span {
+  color: var(--elu2-muted);
+}
+.tdb-elu2-drillmap__breadcrumb .current {
+  color: var(--elu2-text);
+}
+
+/* Tooltip carte au hover */
+.tdb-elu2-drillmap__tooltip {
+  position: absolute;
+  z-index: 20;
+  background: rgba(21,35,50,.9);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translate(-50%, -100%);
+  margin-top: -8px;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.tdb-elu2-drillmap__tooltip.is-visible { opacity: 1; }
+.tdb-elu2-drillmap__tooltip:empty { display: none; }
+
+/* ══════════════════════════════════════════════════════════════
+   DÉMOGRAPHIE (pleine largeur)
+   ══════════════════════════════════════════════════════════════ */
+.tdb-elu2-demo {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  min-height: 260px;
+  overflow: hidden;
+}
+
+.tdb-elu2-demo__kpis {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px 28px;
+  border-right: 1px solid var(--elu2-border);
+}
+.tdb-elu2-demo__kpi {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.tdb-elu2-demo__kpi-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: var(--elu2-blue-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.tdb-elu2-demo__kpi-icon i {
+  font-size: 22px;
+  color: var(--elu2-blue);
+}
+.tdb-elu2-demo__kpi-label {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--elu2-muted);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.tdb-elu2-demo__kpi-val {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--elu2-text);
+  line-height: 1.1;
+}
+.tdb-elu2-demo__kpi-unit {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--elu2-muted);
+}
+.tdb-elu2-demo__kpi-sub {
+  font-size: 12px;
+  color: var(--elu2-muted);
+  font-style: italic;
+  margin-top: 3px;
+}
+
+.tdb-elu2-demo__chart-wrap {
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.tdb-elu2-demo__chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.tdb-elu2-demo__chart-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--elu2-text);
+}
+.tdb-elu2-trend-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 16px;
+}
+/* Badge tendance grossi sur la démographie (Évolution population) */
+.tdb-elu2-demo__chart-header .tdb-elu2-trend-badge {
+  font-size: 17px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  gap: 5px;
+}
+.tdb-elu2-demo__chart-header .tdb-elu2-trend-badge i {
+  font-size: 18px;
+}
+.tdb-elu2-trend-badge--up {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+.tdb-elu2-trend-badge--down {
+  background: #FFEBEE;
+  color: #C62828;
+}
+.tdb-elu2-trend-badge--neutral {
+  background: #ECEFF1;
+  color: #607D8B;
+}
+.tdb-elu2-demo__chart-canvas {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+.tdb-elu2-demo__chart-canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESSOURCES EN EAU — 2 colonnes côte à côte
+   ══════════════════════════════════════════════════════════════ */
+.tdb-elu2-ressources-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.tdb-elu2-ressource-card__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  padding: 20px 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tdb-elu2-ressource-card__title i {
+  font-size: 20px;
+  color: var(--elu2-accent);
+}
+
+.tdb-elu2-ressource-card__list {
+  padding: 16px 24px 24px;
+}
+.tdb-elu2-ressource-card__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #F1F5F9;
+}
+.tdb-elu2-ressource-card__item:last-child { border-bottom: none; }
+
+.tdb-elu2-ressource-card__item-label {
+  font-size: 15px;
+  color: var(--elu2-text);
+  font-weight: 500;
+}
+.tdb-elu2-ressource-card__item-label.is-sub {
+  padding-left: 16px;
+  font-size: 14.5px;
+  position: relative;
+}
+.tdb-elu2-ressource-card__item-label.is-sub::before {
+  content: '•';
+  position: absolute;
+  left: 4px;
+  color: var(--elu2-accent);
+  font-weight: 700;
+}
+.tdb-elu2-ressource-card__item-val {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--elu2-blue);
+  white-space: nowrap;
+}
+
+/* Top colored accent on resource cards */
+.tdb-elu2-ressource-card--surface { border-top: 3px solid #0288D1; }
+.tdb-elu2-ressource-card--souterrain { border-top: 3px solid #00796B; }
+
+/* KPI grossis sur la tuile Eaux superficielles — même impact que les jauges */
+.tdb-elu2-ressource-card--surface .tdb-elu2-ressource-card__item-val {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--elu2-blue);
+}
+.tdb-elu2-ressource-card--surface .tdb-elu2-ressource-card__item-val small {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+}
+
+/* KPI grossis sur la tuile Eaux souterraines — même impact que les superficielles */
+.tdb-elu2-ressource-card--souterrain .tdb-elu2-ressource-card__item-val {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--elu2-blue);
+}
+.tdb-elu2-ressource-card--souterrain .tdb-elu2-ressource-card__item-val small {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+}
+
+/* ── État des masses d'eau — jauges dans cartes ressources (Fiche d'identité) ── */
+.tdb-elu2-ressource-card__etat {
+  padding: 0 24px 24px;
+  border-top: 1px solid #F1F5F9;
+  margin-top: 0;
+  overflow: visible;
+}
+.tdb-elu2-ressource-card__etat-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  padding: 16px 0 16px;
+}
+.tdb-elu2-ressource-card__etat-gauges {
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+/* ── Jauge semi-circulaire SVG ─────────────────────────────── */
+.tdb-elu2-gauge {
+  flex: 0 0 auto;
+  max-width: 200px;
+  min-width: 110px;
+  text-align: center;
+  margin: 0 auto;
+}
+.tdb-elu2-gauge__svg-wrap {
+  position: relative;
+  width: 145px;
+  height: 82px;
+  margin: 0 auto;
+}
+.tdb-elu2-gauge__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.tdb-elu2-gauge__value {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+}
+.tdb-elu2-gauge__pct {
+  font-size: 15px;
+  font-weight: 600;
+  color: inherit;
+  opacity: .7;
+}
+.tdb-elu2-gauge__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--elu2-text);
+  margin-top: 8px;
+  line-height: 1.3;
+}
+/* Jauge compacte pour contextes serrés (Aménagement, Actions menées, etc.) */
+.tdb-elu2-amenag-card .tdb-elu2-gauge,
+.tdb-elu2-zre__info .tdb-elu2-gauge,
+.tdb-elu2-gov-action-card .tdb-elu2-gauge,
+.tdb-elu2-gov-aac__kpi .tdb-elu2-gauge,
+.tdb-elu2-gov-agri-surf__kpi .tdb-elu2-gauge,
+.tdb-elu2-captages__item--gauge .tdb-elu2-gauge {
+  max-width: 140px;
+  min-width: 90px;
+  flex: 0 0 auto;
+}
+.tdb-elu2-amenag-card .tdb-elu2-gauge__svg-wrap,
+.tdb-elu2-zre__info .tdb-elu2-gauge__svg-wrap,
+.tdb-elu2-gov-action-card .tdb-elu2-gauge__svg-wrap,
+.tdb-elu2-gov-aac__kpi .tdb-elu2-gauge__svg-wrap,
+.tdb-elu2-gov-agri-surf__kpi .tdb-elu2-gauge__svg-wrap,
+.tdb-elu2-captages__item--gauge .tdb-elu2-gauge__svg-wrap {
+  width: 110px;
+  height: 64px;
+}
+.tdb-elu2-amenag-card .tdb-elu2-gauge__value,
+.tdb-elu2-zre__info .tdb-elu2-gauge__value,
+.tdb-elu2-gov-action-card .tdb-elu2-gauge__value,
+.tdb-elu2-gov-aac__kpi .tdb-elu2-gauge__value,
+.tdb-elu2-gov-agri-surf__kpi .tdb-elu2-gauge__value,
+.tdb-elu2-captages__item--gauge .tdb-elu2-gauge__value {
+  font-size: 20px;
+  bottom: 6px;
+}
+.tdb-elu2-amenag-card .tdb-elu2-gauge__pct,
+.tdb-elu2-zre__info .tdb-elu2-gauge__pct,
+.tdb-elu2-gov-action-card .tdb-elu2-gauge__pct,
+.tdb-elu2-gov-aac__kpi .tdb-elu2-gauge__pct,
+.tdb-elu2-gov-agri-surf__kpi .tdb-elu2-gauge__pct,
+.tdb-elu2-captages__item--gauge .tdb-elu2-gauge__pct {
+  font-size: 12px;
+}
+/* Track blanc pour jauges sur fond coloré (pastels Captages) */
+.tdb-elu2-captages__item--gauge .tdb-elu2-gauge__svg path:first-child {
+  stroke: #fff;
+}
+.tdb-elu2-amenag-card .tdb-elu2-gauge__label,
+.tdb-elu2-zre__info .tdb-elu2-gauge__label,
+.tdb-elu2-gov-action-card .tdb-elu2-gauge__label,
+.tdb-elu2-gov-aac__kpi .tdb-elu2-gauge__label,
+.tdb-elu2-gov-agri-surf__kpi .tdb-elu2-gauge__label,
+.tdb-elu2-captages__item--gauge .tdb-elu2-gauge__label {
+  font-size: 12px;
+  margin-top: 6px;
+}
+/* Jauge SAU agrandie +30% */
+.tdb-elu2-gov-agri-surf__kpi--big {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.tdb-elu2-gov-agri-surf__kpi--big .tdb-elu2-gauge {
+  max-width: 220px;
+  min-width: 140px;
+}
+.tdb-elu2-gov-agri-surf__kpi--big .tdb-elu2-gauge__svg-wrap {
+  width: 143px;
+  height: 83px;
+}
+.tdb-elu2-gov-agri-surf__kpi--big .tdb-elu2-gauge__value {
+  font-size: 26px;
+  bottom: 10px;
+}
+.tdb-elu2-gov-agri-surf__kpi--big .tdb-elu2-gauge__label {
+  font-size: 13px;
+  line-height: 1.35;
+  max-width: 180px;
+}
+
+/* ── Jauge SLGRI +30% (carte inondations) ──────────────────── */
+.tdb-elu2-gov-action-card--inondations .tdb-elu2-gauge__svg-wrap {
+  width: 143px;
+  height: 83px;
+}
+.tdb-elu2-gov-action-card--inondations .tdb-elu2-gauge__value {
+  font-size: 26px;
+  bottom: 10px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PRÉLÈVEMENTS — Pleine largeur
+   ══════════════════════════════════════════════════════════════ */
+.tdb-elu2-prelevements {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+.tdb-elu2-prelevements__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.tdb-elu2-prelevements__title i {
+  font-size: 20px;
+  color: var(--elu2-blue);
+}
+.tdb-elu2-prelevements__body {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.tdb-elu2-prelevements__chart {
+  height: 280px;
+  position: relative;
+}
+.tdb-elu2-prelevements__chart canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+.tdb-elu2-prelevements__scroll-hint {
+  display: none;
+}
+.tdb-elu2-prelevements__kpi {
+  text-align: center;
+  padding: 24px 16px;
+  background: #F8FAFC;
+  border-radius: 12px;
+  border: 1px solid #F1F5F9;
+}
+.tdb-elu2-prelevements__volume-val {
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--elu2-text);
+  line-height: 1.1;
+}
+.tdb-elu2-prelevements__volume-unit {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--elu2-blue);
+  margin-top: 4px;
+}
+.tdb-elu2-prelevements__volume-label {
+  font-size: 13px;
+  color: var(--elu2-muted);
+  font-weight: 500;
+  margin-top: 8px;
+  line-height: 1.3;
+}
+
+.tdb-elu2-prelevements__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #F1F5F9;
+  margin-top: 20px;
+  margin-bottom: 16px;
+  justify-content: center;
+}
+.tdb-elu2-prelevements__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--elu2-text);
+}
+.tdb-elu2-prelevements__legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.tdb-elu2-prelevements__legend-item i {
+  font-size: 22px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SERVICES + CAPTAGES — 2 colonnes
+   ══════════════════════════════════════════════════════════════ */
+.tdb-elu2-bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.tdb-elu2-services {
+  padding: 24px;
+}
+.tdb-elu2-services__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tdb-elu2-services__title i { font-size: 20px; color: var(--elu2-blue); }
+
+.tdb-elu2-services__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.tdb-elu2-services__item {
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+.tdb-elu2-services__item:nth-child(1) {
+  background: #E3F2FD;
+  border-left: 3px solid #1565C0;
+}
+.tdb-elu2-services__item:nth-child(2) {
+  background: #E0F2F1;
+  border-left: 3px solid #00897B;
+}
+.tdb-elu2-services__item-val {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--elu2-text);
+}
+.tdb-elu2-services__item-unit {
+  font-size: 14px;
+  color: var(--elu2-muted);
+  margin-top: 2px;
+}
+.tdb-elu2-services__item-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--elu2-text);
+  margin-top: 8px;
+}
+
+.tdb-elu2-captages {
+  padding: 24px;
+}
+.tdb-elu2-captages__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tdb-elu2-captages__title i { font-size: 20px; color: var(--elu2-blue); }
+
+.tdb-elu2-captages__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.tdb-elu2-captages__item {
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+.tdb-elu2-captages__item:nth-child(1) {
+  background: #FFF3E0;
+  border-left: 3px solid #EF6C00;
+}
+.tdb-elu2-captages__item:nth-child(2) {
+  background: #EDE7F6;
+  border-left: 3px solid #7B1FA2;
+}
+.tdb-elu2-captages__item-val {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--elu2-text);
+}
+.tdb-elu2-captages__item-unit {
+  font-size: 14px;
+  color: var(--elu2-muted);
+  margin-top: 2px;
+}
+.tdb-elu2-captages__item-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--elu2-text);
+  margin-top: 8px;
+}
+.tdb-elu2-captages__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  color: var(--elu2-blue);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color .2s;
+}
+.tdb-elu2-captages__link:hover {
+  color: #0D47A1;
+  text-decoration: underline;
+}
+.tdb-elu2-captages__link i { font-size: 15px; }
+
+/* ══════════════════════════════════════════════════════════════
+   AMÉNAGEMENT DU TERRITOIRE
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Row layouts ──────────────────────────────────────────── */
+.tdb-elu2-amenag-row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+  overflow: hidden;
+}
+.tdb-elu2-amenag-row3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* ── Card générique aménagement ───────────────────────────── */
+.tdb-elu2-amenag-card {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+.tdb-elu2-amenag-card__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  padding: 20px 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tdb-elu2-amenag-card__title i {
+  font-size: 20px;
+  color: var(--elu2-accent);
+}
+.tdb-elu2-amenag-card__body {
+  flex: 1;
+  padding: 16px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* En attente */
+.tdb-elu2-amenag-card__pending {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 180px;
+  color: var(--elu2-muted);
+  font-style: italic;
+  font-size: 15px;
+}
+.tdb-elu2-amenag-card__pending i {
+  font-size: 38px;
+  opacity: .4;
+}
+
+/* Minimap dans les cartes */
+.tdb-elu2-amenag-card__minimap-wrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+.tdb-elu2-amenag-card__minimap {
+  width: 100%;
+  height: 160px;
+  min-height: 160px;
+  border-radius: 8px;
+  background: #EDF2F7;
+  overflow: hidden;
+  flex: 1;
+}
+
+/* Tooltip rollover mini-cartes */
+.tdb-elu2-minimap-tooltip {
+  position: fixed;
+  z-index: 99999;
+  background: rgba(21,35,50,.92);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translate(-50%, -100%);
+  margin-top: -10px;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.tdb-elu2-minimap-tooltip.is-visible { opacity: 1; }
+
+/* KPIs */
+.tdb-elu2-amenag-kpi {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #F1F5F9;
+}
+.tdb-elu2-amenag-kpi:last-child { border-bottom: none; }
+.tdb-elu2-amenag-kpi__label {
+  font-size: 15px;
+  color: var(--elu2-text);
+  font-weight: 500;
+}
+.tdb-elu2-amenag-kpi__val {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--elu2-blue);
+}
+.tdb-elu2-amenag-kpi__val small {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--elu2-muted);
+}
+
+/* Site tags (RAMSAR) */
+.tdb-elu2-amenag-card__sites {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+.tdb-elu2-amenag-card__site-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--elu2-text);
+  background: #F8FAFC;
+  border: 1px solid var(--elu2-border);
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+.tdb-elu2-amenag-card__site-tag i {
+  color: #D84315;
+  font-size: 15px;
+}
+
+/* KPIs section dans card RAMSAR */
+.tdb-elu2-amenag-card__kpis {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── RAMSAR — carte carrée (hauteur forcée = largeur via JS) ── */
+#minimap-ramsar {
+  width: 100%;
+  min-height: 200px;
+}
+
+/* ── ZRE — Full width ─────────────────────────────────────── */
+.tdb-elu2-zre {
+  padding: 0;
+  overflow: hidden;
+}
+.tdb-elu2-zre__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 286px;
+}
+.tdb-elu2-zre__map {
+  min-height: 286px;
+  background: #EDF2F7;
+  border-radius: 0 var(--elu2-radius) var(--elu2-radius) 0;
+  overflow: hidden;
+}
+.tdb-elu2-zre__info {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+/* Jauge ZRE centrée verticalement dans l'espace restant */
+.tdb-elu2-zre__info > .tdb-elu2-gauge {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+/* Jauge ZRE grossie de 50% par rapport à la version compacte */
+.tdb-elu2-zre__info .tdb-elu2-gauge {
+  max-width: 210px;
+  min-width: 140px;
+}
+.tdb-elu2-zre__info .tdb-elu2-gauge__svg-wrap {
+  width: 165px;
+  height: 94px;
+}
+.tdb-elu2-zre__info .tdb-elu2-gauge__value {
+  font-size: 30px;
+  bottom: 8px;
+}
+.tdb-elu2-zre__info .tdb-elu2-gauge__pct {
+  font-size: 16px;
+}
+.tdb-elu2-zre__info .tdb-elu2-gauge__label {
+  font-size: 14px;
+  margin-top: 8px;
+}
+.tdb-elu2-zre__types {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.tdb-elu2-zre__type-tag {
+  color: var(--elu2-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border: 1.5px solid;
+  border-radius: 6px;
+  background: #fff;
+}
+
+/* ── Carte OCS (treemap bord-à-bord) ─────────────────────── */
+.tdb-elu2-amenag-card--ocs {
+  overflow: hidden;
+}
+.tdb-elu2-amenag-card--ocs .tdb-elu2-amenag-card__title {
+  padding-bottom: 14px;
+}
+.tdb-elu2-amenag-card--ocs > .tdb-elu2-treemap {
+  margin: 0;
+  gap: 2px;
+  background: #fff;
+}
+.tdb-elu2-amenag-card--ocs__footer {
+  padding: 12px 24px 16px;
+}
+
+/* ── Treemap OCS (rectangles proportionnels) ─────────────── */
+.tdb-elu2-treemap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-radius: 0;
+  overflow: hidden;
+  flex: 1;
+  min-height: 260px;
+}
+.tdb-elu2-amenag-card--ocs > .tdb-elu2-treemap {
+  border-radius: 0;
+}
+.tdb-elu2-treemap__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+.tdb-elu2-treemap__cell--top {
+  height: 100%;
+}
+.tdb-elu2-treemap__row {
+  display: flex;
+  gap: 3px;
+  min-height: 0;
+}
+.tdb-elu2-treemap__row .tdb-elu2-treemap__cell {
+  min-width: 0;
+  height: 100%;
+}
+.tdb-elu2-treemap__icon {
+  font-size: 22px;
+  opacity: .85;
+  margin-bottom: 2px;
+  flex-shrink: 0;
+}
+.tdb-elu2-treemap__cell--top .tdb-elu2-treemap__icon {
+  font-size: 28px;
+}
+.tdb-elu2-treemap__label {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.tdb-elu2-treemap__pct {
+  font-size: 15px;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+/* Tooltip treemap */
+.tdb-elu2-treemap {
+  position: relative;
+}
+.tdb-elu2-treemap__tooltip {
+  position: fixed;
+  z-index: 9999;
+  background: #fff;
+  color: #1a2332;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translate(-50%, -100%);
+  opacity: 0;
+  transition: opacity .15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.06);
+}
+.tdb-elu2-treemap__tooltip.is-visible {
+  opacity: 1;
+}
+.tdb-elu2-treemap__tooltip strong {
+  font-weight: 700;
+  color: #1a2332;
+}
+.tdb-elu2-treemap__tooltip-pct {
+  font-weight: 800;
+  font-size: 14px;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.tdb-elu2-treemap__cell {
+  cursor: default;
+}
+
+/* ── Big number (Obstacles) ───────────────────────────────── */
+.tdb-elu2-amenag-card__big-number {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.tdb-elu2-amenag-card__big-val {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--elu2-text);
+}
+.tdb-elu2-amenag-card__big-label {
+  font-size: 16px;
+  color: var(--elu2-muted);
+  font-weight: 500;
+}
+
+/* ── Chart dans cartes aménagement ────────────────────────── */
+.tdb-elu2-amenag-card__chart {
+  position: relative;
+  flex: 1;
+  min-height: 260px;
+  overflow: hidden;
+}
+.tdb-elu2-amenag-card__chart canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 300px;
+}
+
+/* ── Obstacles : liste typologies avec icônes + barres ────── */
+.tdb-elu2-obst-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+.tdb-elu2-obst-item__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.tdb-elu2-obst-item__icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+.tdb-elu2-obst-item__label {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--elu2-text);
+}
+.tdb-elu2-obst-item__val {
+  font-size: 16px;
+  font-weight: 800;
+  font-family: 'Cabinet Grotesk', 'Satoshi', sans-serif;
+  min-width: 28px;
+  text-align: right;
+}
+.tdb-elu2-obst-item__bar-track {
+  height: 6px;
+  background: #E2E8F0;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-left: 32px;
+}
+.tdb-elu2-obst-item__bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width .4s ease;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESSOURCE / USAGE / PRESSION
+   ══════════════════════════════════════════════════════════════ */
+
+/* Sous-bannière catégorie fille (Eaux superficielles / souterraines) */
+.tdb-elu2-ru-sub-banner {
+  background: rgba(2,119,189,0.08);
+  color: var(--elu2-blue);
+  border: 1.5px solid rgba(2,119,189,0.25);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Row 2 colonnes */
+.tdb-elu2-ru-row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* ── Hydrologie ─────────────────────────────────────────── */
+.tdb-elu2-ru-hydro {
+  padding: 0;
+}
+.tdb-elu2-ru-hydro__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.tdb-elu2-ru-hydro__block {
+  padding: 16px 24px 24px;
+  display: flex;
+  flex-direction: column;
+}
+.tdb-elu2-ru-hydro__block:first-child {
+  border-right: 1px solid var(--elu2-border);
+}
+
+/* Header titre + badge état */
+.tdb-elu2-ru-hydro__block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.tdb-elu2-ru-hydro__block-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--elu2-blue);
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  margin-bottom: 0;
+}
+
+/* Badge état global (TB, B, Moyen…) */
+.tdb-elu2-hydro-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+.tdb-elu2-hydro-badge--tb {
+  background: #7B1FA2;
+  color: #fff;
+}
+.tdb-elu2-hydro-badge--b {
+  background: #4CAF50;
+  color: #fff;
+}
+.tdb-elu2-hydro-badge--moyen {
+  background: #FFC107;
+  color: #1a2332;
+}
+.tdb-elu2-hydro-badge--mediocre {
+  background: #FF9800;
+  color: #fff;
+}
+.tdb-elu2-hydro-badge--mauvais {
+  background: #F44336;
+  color: #fff;
+}
+
+/* Conteneur carte + tooltip */
+.tdb-elu2-ru-hydro__map-wrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+.tdb-elu2-ru-hydro__map {
+  width: 100%;
+  height: 360px;
+  max-height: 360px;
+  border-radius: 8px;
+  background: #EDF2F7;
+  overflow: hidden;
+}
+/* Fond de carte N&B via filtre CSS */
+.ol-layer-greyscale {
+  filter: grayscale(1) contrast(1.05);
+}
+
+/* Mode interactif : curseur grab + contrôles zoom */
+.tdb-elu2-ru-hydro__map--interactive {
+  cursor: grab;
+}
+.tdb-elu2-ru-hydro__map--interactive:active {
+  cursor: grabbing;
+}
+/* ── Boutons zoom + / − : style unique pour TOUTES les cartes OL de la page ── */
+.tdb-elu2-page .ol-zoom {
+  top: 8px;
+  left: auto;
+  right: 8px;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tdb-elu2-page .ol-zoom:hover {
+  background: transparent;
+}
+.tdb-elu2-page .ol-zoom button,
+.tdb-elu2-page .ol-zoom .ol-zoom-in,
+.tdb-elu2-page .ol-zoom .ol-zoom-out {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  font-family: 'Satoshi', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--elu2-text);
+  background: rgba(255,255,255,.95);
+  border: 1px solid var(--elu2-border);
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.12);
+  cursor: pointer;
+  outline: none;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.tdb-elu2-page .ol-zoom button:hover,
+.tdb-elu2-page .ol-zoom button:focus {
+  background: #fff;
+  color: var(--elu2-blue);
+  border-color: var(--elu2-blue);
+  outline: none;
+}
+.tdb-elu2-page .ol-zoom button:focus-visible {
+  outline: 2px solid var(--elu2-blue);
+  outline-offset: 2px;
+}
+
+/* ── Tooltip riche pour stations hydro ─────────────────── */
+.tdb-elu2-hydro-tooltip {
+  position: fixed;
+  z-index: 99999;
+  background: #fff;
+  color: var(--elu2-text);
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translate(-50%, -100%);
+  margin-top: -14px;
+  opacity: 0;
+  transition: opacity .15s;
+  box-shadow: 0 4px 20px rgba(0,0,0,.18);
+  min-width: 210px;
+  border: 1px solid var(--elu2-border);
+}
+.tdb-elu2-hydro-tooltip.is-visible { opacity: 1; }
+/* Bascule : quand le tooltip ne tient pas au-dessus, on l'affiche en dessous */
+.tdb-elu2-hydro-tooltip--below {
+  transform: translate(-50%, 14px);
+  margin-top: 0;
+}
+.tdb-elu2-hydro-tooltip--piezo {
+  pointer-events: auto;
+  white-space: normal;
+  /* Largeur explicite : image 520 px + padding (18 px × 2) + bordures */
+  width: 558px;
+  max-width: 92vw;
+  box-sizing: border-box;
+}
+/* Tooltip masqué = jamais cliquable : sinon, invisible, il capte la souris
+   et bloque le survol des points situés dessous */
+.tdb-elu2-hydro-tooltip--piezo:not(.is-visible) {
+  pointer-events: none;
+  visibility: hidden;
+}
+.tdb-elu2-hydro-tooltip--dark {
+  background: rgba(21,35,50,.92);
+  color: #fff;
+  border-color: rgba(255,255,255,.15);
+}
+.tdb-elu2-hydro-tooltip strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--elu2-border);
+}
+.tdb-elu2-hydro-tooltip__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 14px;
+}
+.tdb-elu2-hydro-tooltip__row span:first-child {
+  color: var(--elu2-muted);
+}
+.tdb-elu2-hydro-tooltip__row strong {
+  display: inline;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.tdb-elu2-hydro-tooltip__link-hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--elu2-border);
+  color: var(--elu2-blue);
+  font-size: 12.5px;
+  font-weight: 600;
+  font-style: italic;
+}
+.tdb-elu2-hydro-tooltip__link-hint i {
+  font-size: 13px;
+}
+.tdb-elu2-hydro-tooltip__badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+/* ── Piézomètre tooltip : graphique + lien cliquable ── */
+.tdb-elu2-hydro-tooltip__graph {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--elu2-border);
+  white-space: normal;
+}
+.tdb-elu2-hydro-tooltip__graph-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--elu2-muted);
+  margin-bottom: 6px;
+}
+.tdb-elu2-hydro-tooltip__graph-img {
+  display: block;
+  /* Largeur doublée (260 → 520 px), hauteur divisée par deux (~500 → 250 px).
+     Hauteur fixe : la position du tooltip est juste dès le 1er calcul. */
+  width: 520px;
+  max-width: 100%;
+  height: 250px;
+  box-sizing: border-box;
+  padding: 6px;
+  position: relative;
+  border-radius: 6px;
+  border: 1px solid #E2E8F0;
+  background: #F1F5F9;
+}
+.tdb-elu2-hydro-tooltip__link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--elu2-border);
+  color: var(--elu2-blue);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: normal;
+}
+.tdb-elu2-hydro-tooltip__link:hover {
+  text-decoration: underline;
+}
+.tdb-elu2-hydro-tooltip__link i {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.tdb-elu2-hydro-tooltip__trend--up {
+  color: #2E7D32;
+  font-weight: 700;
+}
+.tdb-elu2-hydro-tooltip__trend--down {
+  color: #C62828;
+  font-weight: 700;
+}
+.tdb-elu2-hydro-tooltip__trend--neutral {
+  color: #78909C;
+  font-weight: 700;
+}
+/* Source + méthodologie dans les sous-blocs hydro */
+.tdb-elu2-source--hydro-block {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #E2E8F0;
+  font-size: 11px;
+}
+.tdb-elu2-ru-hydro__kpis {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tdb-elu2-ru-hydro__kpi {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #F1F5F9;
+}
+.tdb-elu2-ru-hydro__kpi:last-child { border-bottom: none; }
+.tdb-elu2-ru-hydro__kpi-label {
+  font-size: 14px;
+  color: var(--elu2-text);
+  font-weight: 500;
+}
+.tdb-elu2-ru-hydro__kpi-val {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--elu2-blue);
+}
+.tdb-elu2-ru-hydro__kpi-val small {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--elu2-muted);
+}
+
+/* ── Caractéristiques eaux superficielles ────────────────── */
+.tdb-elu2-ru-caract {
+  padding: 0;
+}
+.tdb-elu2-ru-caract__body {
+  padding: 16px 24px 24px;
+}
+.tdb-elu2-ru-caract__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #F1F5F9;
+}
+.tdb-elu2-ru-caract__item:last-child { border-bottom: none; }
+.tdb-elu2-ru-caract__item-label {
+  font-size: 15px;
+  color: var(--elu2-text);
+  font-weight: 500;
+}
+.tdb-elu2-ru-caract__item-val {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--elu2-blue);
+  white-space: nowrap;
+}
+.tdb-elu2-ru-caract__item-val small {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--elu2-muted);
+}
+
+/* ── État des ressources (pie charts) ────────────────────── */
+.tdb-elu2-ru-etat {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.tdb-elu2-ru-etat__sub {
+  font-size: 14px;
+  color: var(--elu2-muted);
+  font-style: italic;
+  padding: 4px 24px 0;
+}
+.tdb-elu2-ru-etat__charts {
+  padding: 16px 24px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+  flex: 1 1 0%;
+  align-content: center;
+}
+.tdb-elu2-ru-etat__chart-block {
+  flex: 1 1 0%;
+  min-width: 0;
+  text-align: center;
+}
+.tdb-elu2-ru-etat__chart-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  margin-bottom: 8px;
+}
+.tdb-elu2-ru-etat__chart-wrap {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+.tdb-elu2-ru-etat__chart-wrap canvas {
+  width: 200px !important;
+  height: 200px !important;
+}
+
+/* Légende pie charts */
+.tdb-elu2-ru-etat__legend {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #F1F5F9;
+  align-items: center;
+}
+/* Légende inline sous chaque chart */
+.tdb-elu2-ru-etat__legend--inline {
+  width: auto;
+  border-top: none;
+  padding-top: 8px;
+  gap: 6px;
+  justify-content: center;
+}
+.tdb-elu2-ru-etat__legend-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  margin-right: 4px;
+}
+.tdb-elu2-ru-etat__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--elu2-text);
+}
+.tdb-elu2-ru-etat__legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ── Row 3 colonnes (eaux souterraines) ────────────────────── */
+.tdb-elu2-ru-row3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* ── Caractéristiques eaux superficielles (2 blocs verticaux) ── */
+.tdb-elu2-ru-caract-surf {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.tdb-elu2-ru-caract-surf__body {
+  padding: 16px 24px 20px;
+  display: flex;
+  gap: 16px;
+  flex: 1;
+}
+.tdb-elu2-ru-caract-surf__block {
+  flex: 1;
+  text-align: center;
+  padding: 20px 16px;
+  background: #F8FAFC;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.tdb-elu2-ru-caract-surf__icon {
+  font-size: 24px;
+  color: var(--elu2-accent);
+  margin-bottom: 6px;
+}
+.tdb-elu2-ru-caract-surf__val {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--elu2-text);
+  line-height: 1.1;
+}
+.tdb-elu2-ru-caract-surf__sub-val {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--elu2-blue);
+  line-height: 1.1;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--elu2-border);
+  width: 100%;
+}
+.tdb-elu2-ru-caract-surf__unit {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--elu2-muted);
+}
+.tdb-elu2-ru-caract-surf__label {
+  font-size: 12px;
+  color: var(--elu2-muted);
+  font-weight: 600;
+  margin-top: 4px;
+}
+.tdb-elu2-ru-caract-surf__label--sub {
+  margin-top: 2px;
+}
+
+/* ── Caractéristiques eaux souterraines ──────────────────── */
+.tdb-elu2-ru-caract-sout {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.tdb-elu2-ru-caract-sout__body {
+  padding: 16px 24px 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  flex: 1;
+}
+.tdb-elu2-ru-caract-sout__kpi {
+  flex: 0 0 auto;
+  text-align: center;
+  padding: 16px 20px;
+  background: #F8FAFC;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+}
+.tdb-elu2-ru-caract-sout__kpi-val {
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--elu2-blue);
+  line-height: 1.1;
+}
+.tdb-elu2-ru-caract-sout__kpi-label {
+  font-size: 12px;
+  color: var(--elu2-muted);
+  font-weight: 600;
+  margin-top: 4px;
+}
+.tdb-elu2-ru-caract-sout__names {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}
+.tdb-elu2-ru-caract-sout__names-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  margin-bottom: 8px;
+}
+.tdb-elu2-ru-caract-sout__names-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tdb-elu2-ru-caract-sout__name-tag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--elu2-text);
+  background: #F8FAFC;
+  border: 1px solid var(--elu2-border);
+  border-radius: 6px;
+  padding: 5px 10px;
+}
+.tdb-elu2-ru-caract-sout__name-tag i {
+  color: #00796B;
+  font-size: 14px;
+}
+
+/* ── Piézométrie ─────────────────────────────────────────── */
+.tdb-elu2-ru-piezo {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.tdb-elu2-ru-piezo__body {
+  padding: 16px 24px 24px;
+}
+.tdb-elu2-ru-piezo__map-wrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+.tdb-elu2-ru-piezo__map {
+  width: 100%;
+  height: 240px;
+  max-height: 240px;
+  border-radius: 8px;
+  background: #EDF2F7;
+  overflow: hidden;
+}
+.tdb-elu2-ru-piezo__map--interactive {
+  cursor: grab;
+}
+.tdb-elu2-ru-piezo__map--interactive:active {
+  cursor: grabbing;
+}
+.tdb-elu2-ru-piezo__trend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+.tdb-elu2-ru-piezo__trend-label {
+  font-size: 15px;
+  color: var(--elu2-text);
+  font-weight: 500;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GOUVERNANCE — Sous-onglets filles + tuiles
+   ══════════════════════════════════════════════════════════════ */
+
+/* Barre de sous-onglets (Eau potable, Assainissement, Agriculture…) */
+.tdb-elu2-gov-tabs {
+  display: flex;
+  gap: 0;
+  border: 1.5px solid var(--elu2-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--elu2-card);
+  box-shadow: var(--elu2-shadow);
+}
+.tdb-elu2-gov-tabs__btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 16px;
+  border: none;
+  border-right: 1px solid var(--elu2-border);
+  background: transparent;
+  color: var(--elu2-muted);
+  font-size: 15.5px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .2s;
+}
+.tdb-elu2-gov-tabs__btn:last-child { border-right: none; }
+.tdb-elu2-gov-tabs__btn i { font-size: 18px; }
+.tdb-elu2-gov-tabs__btn:hover {
+  background: var(--elu2-blue-light);
+  color: var(--elu2-blue);
+}
+.tdb-elu2-gov-tabs__btn.is-active {
+  background: var(--elu2-blue);
+  color: #fff;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+}
+
+/* ── Contenu sous-onglets gouvernance ─────────────────────── */
+#tdb-elu2-gov-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* ── Row layouts gouvernance ─────────────────────────────── */
+.tdb-elu2-gov-row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+.tdb-elu2-gov-row2--1x2 {
+  grid-template-columns: 1fr 2fr;
+}
+
+/* ── Prix de l'eau / assainissement ──────────────────────── */
+.tdb-elu2-gov-prix {
+  padding: 0;
+}
+.tdb-elu2-gov-prix__body {
+  padding: 16px 24px 24px;
+}
+.tdb-elu2-gov-prix__main {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.tdb-elu2-gov-prix__val {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--elu2-text);
+}
+.tdb-elu2-gov-prix__unit {
+  font-size: 16px;
+  color: var(--elu2-muted);
+  font-weight: 500;
+}
+.tdb-elu2-gov-prix__desc {
+  font-size: 13px;
+  color: var(--elu2-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+/* Barre de progression prix */
+.tdb-elu2-gov-prix__bar-wrap {
+  margin-bottom: 16px;
+}
+.tdb-elu2-gov-prix__bar {
+  position: relative;
+  height: 10px;
+  background: linear-gradient(90deg, #4FC3F7, #1565C0, #0D47A1);
+  border-radius: 5px;
+  overflow: visible;
+}
+.tdb-elu2-gov-prix__bar-fill {
+  height: 100%;
+  border-radius: 5px 0 0 5px;
+}
+.tdb-elu2-gov-prix__bar-marker {
+  position: absolute;
+  top: -3px;
+  width: 4px;
+  height: 16px;
+  background: var(--elu2-text);
+  border-radius: 2px;
+  transform: translateX(-2px);
+}
+.tdb-elu2-gov-prix__bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--elu2-muted);
+  margin-top: 4px;
+}
+
+/* Comparatifs moyennes */
+.tdb-elu2-gov-prix__comparatifs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  border-top: 1px solid #F1F5F9;
+  padding-top: 12px;
+}
+.tdb-elu2-gov-prix__comp {
+  text-align: center;
+}
+.tdb-elu2-gov-prix__comp-label {
+  display: block;
+  font-size: 11px;
+  color: var(--elu2-muted);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.tdb-elu2-gov-prix__comp-val {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--elu2-text);
+}
+
+/* ── Rendement réseau ────────────────────────────────────── */
+.tdb-elu2-gov-rendement {
+  padding: 0;
+}
+.tdb-elu2-gov-rendement__body {
+  padding: 16px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 1 0%;
+  min-height: 0;
+}
+.tdb-elu2-gov-rendement__inner {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+}
+.tdb-elu2-gov-rendement__map-col {
+  flex: 0 0 auto;
+  width: 390px;
+  height: 390px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.tdb-elu2-gov-rendement__map-col .tdb-elu2-amenag-card__minimap {
+  height: 100% !important;
+  max-height: none !important;
+}
+.tdb-elu2-gov-rendement__kpis {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 0 0 160px;
+  justify-content: center;
+}
+/* 2 jauges côte à côte pour le rendement réseau */
+.tdb-elu2-gov-rendement__kpis--gauges {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 32px;
+  flex: 0 0 auto;
+  justify-items: center;
+  align-items: start;
+}
+.tdb-elu2-gov-rendement__gauge-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+/* Jauge grisée (Grand Est / pas de territoire sélectionné) */
+/* RGAA 3.2 : on ne baisse plus l'opacité du texte (contraste) — seule la jauge est désaturée */
+.tdb-elu2-gov-rendement__gauge-col--disabled .tdb-elu2-gauge__svg {
+  opacity: 0.75;
+  filter: grayscale(1);
+}
+.tdb-elu2-gov-rendement__gauge-col--disabled .tdb-elu2-gauge__value {
+  color: #5A6779 !important;
+}
+.tdb-elu2-gov-rendement__disabled-hint {
+  font-size: 12px;
+  color: #5A6779; /* RGAA 3.2 */
+  font-style: italic;
+  margin-top: 2px;
+  text-align: center;
+}
+.tdb-elu2-gov-rendement__kpi {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 10px;
+  background: #F8FAFC;
+  border-radius: 8px;
+  border: 1px solid #F1F5F9;
+}
+.tdb-elu2-gov-rendement__kpi-label {
+  font-size: 13px;
+  color: var(--elu2-muted);
+  font-weight: 600;
+}
+.tdb-elu2-gov-rendement__kpi-val {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--elu2-blue);
+}
+.tdb-elu2-gov-rendement__kpi-val small {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--elu2-muted);
+}
+.tdb-elu2-gov-rendement__kpi-val--highlight {
+  color: #2E7D32;
+  font-size: 22px;
+}
+
+/* ── AAC (carte + KPI) ───────────────────────────────────── */
+.tdb-elu2-gov-aac {
+  padding: 0;
+}
+.tdb-elu2-gov-aac__body {
+  padding: 16px 24px 24px;
+}
+.tdb-elu2-gov-aac__inner {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+.tdb-elu2-gov-aac__map-wrap {
+  flex: 1;
+  min-width: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.tdb-elu2-gov-aac__map-wrap .tdb-elu2-amenag-card__minimap {
+  height: 220px !important;
+  max-height: none !important;
+}
+.tdb-elu2-gov-aac__kpi {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 20px;
+  background: #F8FAFC;
+  border-radius: 10px;
+  min-width: 120px;
+}
+.tdb-elu2-gov-aac__kpi-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--elu2-text);
+  margin-bottom: 8px;
+}
+.tdb-elu2-gov-aac__kpi-val {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--elu2-blue);
+  line-height: 1.1;
+}
+.tdb-elu2-gov-aac__kpi-val small {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ── Captages dégradés ───────────────────────────────────── */
+.tdb-elu2-gov-captdeg {
+  padding: 0;
+}
+/* KPI à gauche, camembert à droite */
+.tdb-elu2-gov-captdeg__body {
+  padding: 16px 24px 24px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+/* KPI nombre de captages dégradés */
+.tdb-elu2-gov-captdeg__kpi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  flex: 0 0 160px;
+  align-self: stretch;
+  box-sizing: border-box;
+  padding: 18px 14px;
+  background: #F8FAFC;
+  border-radius: 10px;
+}
+.tdb-elu2-gov-captdeg__kpi-icon {
+  font-size: 34px;
+  color: #D84315;
+  flex-shrink: 0;
+}
+.tdb-elu2-gov-captdeg__kpi-val {
+  font-family: 'Cabinet Grotesk', 'Satoshi', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.05;
+  color: var(--elu2-blue);
+}
+.tdb-elu2-gov-captdeg__kpi-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--elu2-text);
+}
+.tdb-elu2-gov-captdeg__pie {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+/* Écran étroit : KPI au-dessus du camembert */
+@media (max-width: 600px) {
+  .tdb-elu2-gov-captdeg__body { flex-direction: column; }
+  .tdb-elu2-gov-captdeg__kpi { flex: none; width: 100%; align-self: auto; }
+}
+.tdb-elu2-gov-captdeg__pie-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  text-align: center;
+}
+.tdb-elu2-gov-captdeg__chart-wrap {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.tdb-elu2-gov-captdeg__chart-wrap canvas {
+  max-width: 200px;
+  max-height: 200px;
+}
+
+/* ── Prélèvements gouvernance ────────────────────────────── */
+.tdb-elu2-gov-prel {
+  padding: 24px;
+}
+.tdb-elu2-gov-prel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.tdb-elu2-gov-prel__volume {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.tdb-elu2-gov-prel__volume-val {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--elu2-text);
+}
+.tdb-elu2-gov-prel__volume-label {
+  font-size: 14px;
+  color: var(--elu2-muted);
+  font-weight: 500;
+}
+.tdb-elu2-gov-prel__chart {
+  height: 260px;
+  position: relative;
+}
+.tdb-elu2-gov-prel__chart canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ── Stations d'épuration ────────────────────────────────── */
+.tdb-elu2-gov-step {
+  padding: 0;
+}
+.tdb-elu2-gov-step__body {
+  padding: 16px 24px 24px;
+}
+.tdb-elu2-gov-step__map-wrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+.tdb-elu2-gov-step__kpis {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Surfaces agricoles (3 colonnes) ─────────────────────── */
+.tdb-elu2-gov-agri-surf {
+  padding: 0;
+}
+.tdb-elu2-gov-agri-surf__body {
+  padding: 16px 24px 24px;
+}
+.tdb-elu2-gov-agri-surf__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 20px;
+  align-items: center;
+}
+.tdb-elu2-gov-agri-surf__col--map {
+  min-width: 0;
+}
+.tdb-elu2-gov-agri-surf__map-label,
+.tdb-elu2-gov-agri-surf__pie-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--elu2-text);
+  margin-bottom: 8px;
+  text-align: center;
+}
+.tdb-elu2-gov-agri-surf__pie-wrap {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+.tdb-elu2-gov-agri-surf__pie-wrap canvas {
+  max-width: 200px;
+  max-height: 200px;
+}
+.tdb-elu2-gov-agri-surf__kpi {
+  text-align: center;
+  padding: 20px;
+  background: #F8FAFC;
+  border-radius: 10px;
+  min-width: 110px;
+}
+.tdb-elu2-gov-agri-surf__kpi-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--elu2-text);
+  margin-bottom: 8px;
+}
+.tdb-elu2-gov-agri-surf__kpi-val {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--elu2-blue);
+  line-height: 1.1;
+}
+.tdb-elu2-gov-agri-surf__kpi-val small {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GOUVERNANCE — Arborescence interactive 4 niveaux
+   ══════════════════════════════════════════════════════════════ */
+
+/* Carte arbre */
+.tdb-elu2-gov-tree {
+  background: var(--elu2-card);
+  border-radius: var(--elu2-radius);
+  box-shadow: var(--elu2-shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.tdb-elu2-gov-tree__body {
+  padding: 20px 24px 28px;
+}
+
+/* 2 colonnes Grand cycle / Petit cycle avec filet séparateur */
+.tdb-elu2-gov-tree__cols {
+  display: flex;
+  gap: 0;
+  margin-top: 8px;
+}
+.tdb-elu2-gov-tree__col {
+  flex: 1;
+  min-width: 0;
+}
+.tdb-elu2-gov-tree__col:first-child {
+  padding-right: 20px;
+  border-right: 1px solid var(--elu2-border);
+}
+.tdb-elu2-gov-tree__col:last-child {
+  padding-left: 20px;
+}
+/* Indentation réduite dans les colonnes */
+.tdb-elu2-gov-tree__col .tdb-elu2-gov-tree__node > .tdb-elu2-gov-tree__list {
+  padding-left: 20px;
+}
+
+/* Reset listes */
+.tdb-elu2-gov-tree__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Nœuds — les enfants sont cachés par défaut */
+.tdb-elu2-gov-tree__node > .tdb-elu2-gov-tree__list {
+  display: none;
+  padding-left: 28px;
+  margin-top: 4px;
+}
+.tdb-elu2-gov-tree__node.is-open > .tdb-elu2-gov-tree__list {
+  display: block;
+}
+
+/* Flèche de toggle */
+.tdb-elu2-gov-tree__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 14px;
+  color: var(--elu2-muted);
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+.tdb-elu2-gov-tree__node.is-open > .tdb-elu2-gov-tree__toggle > .tdb-elu2-gov-tree__arrow {
+  transform: rotate(90deg);
+}
+.tdb-elu2-gov-tree__arrow-spacer {
+  display: inline-block;
+  width: 22px;
+  flex-shrink: 0;
+}
+
+/* Toggle row */
+.tdb-elu2-gov-tree__toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.18s;
+}
+.tdb-elu2-gov-tree__toggle:hover {
+  background: var(--elu2-blue-light);
+}
+
+/* Labels par niveau */
+.tdb-elu2-gov-tree__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Satoshi', sans-serif;
+  line-height: 1.35;
+}
+.tdb-elu2-gov-tree__label i {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* Niveau 1 : Territoire */
+.tdb-elu2-gov-tree__label--n1 {
+  font-family: 'Cabinet Grotesk', 'Satoshi', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--elu2-text);
+}
+.tdb-elu2-gov-tree__label--n1 i {
+  font-size: 26px;
+  color: var(--elu2-blue);
+}
+
+/* Niveau 2 : Grand cycle / Petit cycle */
+.tdb-elu2-gov-tree__label--n2 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  background: #0D47A1;
+  padding: 6px 16px;
+  border-radius: 8px;
+}
+.tdb-elu2-gov-tree__label--n2 i {
+  font-size: 22px;
+  color: #fff;
+}
+.tdb-elu2-gov-tree__label--petit-cycle {
+  background: #00838F;
+}
+
+/* Niveau 3 : Types de structures */
+.tdb-elu2-gov-tree__label--n3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--elu2-text);
+}
+.tdb-elu2-gov-tree__label--n3 i {
+  font-size: 18px;
+  color: var(--elu2-accent);
+}
+
+/* Badge count */
+.tdb-elu2-gov-tree__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 24px;
+  padding: 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--elu2-blue);
+  background: var(--elu2-blue-light);
+  border-radius: 12px;
+  line-height: 1;
+}
+
+/* Niveau 4 : structures (feuilles) */
+.tdb-elu2-gov-tree__leaf {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 8px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.tdb-elu2-gov-tree__leaf:hover {
+  background: #F8FAFC;
+}
+.tdb-elu2-gov-tree__dot {
+  font-size: 16px;
+  color: var(--elu2-blue);
+  flex-shrink: 0;
+}
+.tdb-elu2-gov-tree__leaf-name {
+  font-size: 14px;
+  color: var(--elu2-text);
+  flex: 1;
+}
+.tdb-elu2-gov-tree__carto-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--elu2-blue);
+  text-decoration: none;
+  background: var(--elu2-blue-light);
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: background 0.18s, color 0.18s;
+}
+.tdb-elu2-gov-tree__carto-link:hover {
+  background: var(--elu2-blue);
+  color: #fff;
+}
+.tdb-elu2-gov-tree__carto-link i {
+  font-size: 14px;
+}
+
+/* Bouton "Voir plus" dans les listes de structures */
+.tdb-elu2-gov-tree__more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--elu2-blue);
+  background: var(--elu2-blue-light);
+  border: 1px solid var(--elu2-blue);
+  padding: 5px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .18s, color .18s;
+  margin-left: 18px;
+  margin-top: 2px;
+}
+.tdb-elu2-gov-tree__more-btn:hover {
+  background: var(--elu2-blue);
+  color: #fff;
+}
+.tdb-elu2-gov-tree__more-btn i {
+  font-size: 13px;
+}
+
+/* Lignes de connexion verticales (tree lines) */
+.tdb-elu2-gov-tree__list--n2 > li,
+.tdb-elu2-gov-tree__list--n3 > li,
+.tdb-elu2-gov-tree__list--n3sub > li,
+.tdb-elu2-gov-tree__list--n4 > li {
+  position: relative;
+}
+.tdb-elu2-gov-tree__list--n3 > li::before,
+.tdb-elu2-gov-tree__list--n3sub > li::before,
+.tdb-elu2-gov-tree__list--n4 > li::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 0;
+  width: 14px;
+  height: 22px;
+  border-left: 2px solid var(--elu2-border);
+  border-bottom: 2px solid var(--elu2-border);
+  border-radius: 0 0 0 6px;
+}
+.tdb-elu2-gov-tree__list--n3 > li:not(:last-child)::after,
+.tdb-elu2-gov-tree__list--n3sub > li:not(:last-child)::after,
+.tdb-elu2-gov-tree__list--n4 > li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 22px;
+  bottom: 0;
+  width: 2px;
+  background: var(--elu2-border);
+}
+
+/* Animation déploiement */
+.tdb-elu2-gov-tree__node > .tdb-elu2-gov-tree__list {
+  animation: govTreeSlideDown 0.25s ease;
+}
+@keyframes govTreeSlideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GOUVERNANCE — Tuile État d'avancement des SAGE
+   ══════════════════════════════════════════════════════════════ */
+
+.tdb-elu2-sage-card {
+  background: var(--elu2-card);
+  border-radius: var(--elu2-radius);
+  box-shadow: var(--elu2-shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.tdb-elu2-sage-card__body {
+  padding: 8px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.tdb-elu2-sage-card__row {
+  display: grid;
+  grid-template-columns: 28px 200px 1fr 50px;
+  align-items: center;
+  gap: 10px;
+}
+.tdb-elu2-sage-card__row--sub {
+  padding-left: 20px;
+  grid-template-columns: 28px 180px 1fr 50px;
+}
+.tdb-elu2-sage-card__row--sub .tdb-elu2-sage-card__label {
+  font-weight: 500;
+  font-style: italic;
+  font-size: 13px;
+}
+.tdb-elu2-sage-card__icon {
+  font-size: 20px;
+  text-align: center;
+}
+.tdb-elu2-sage-card__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--elu2-text);
+}
+.tdb-elu2-sage-card__bar-wrap {
+  height: 24px;
+  background: #F1F5F9;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.tdb-elu2-sage-card__bar {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.6s ease;
+  min-width: 4px;
+}
+.tdb-elu2-sage-card__val {
+  font-size: 20px;
+  font-weight: 800;
+  font-family: 'Cabinet Grotesk', 'Satoshi', sans-serif;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ── Industrie — cartes ICPE + Sites pollués ──────────────── */
+.tdb-elu2-gov-industrie-card__body {
+  padding: 16px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.tdb-elu2-gov-industrie-card__chart-wrap {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+.tdb-elu2-gov-industrie-card__map-wrap {
+  position: relative;
+  width: 100%;
+}
+
+/* ── Loisirs — carte Baignades ────────────────────────────── */
+.tdb-elu2-gov-baignade {
+  display: flex;
+  flex-direction: column;
+}
+.tdb-elu2-gov-baignade__body {
+  display: flex;
+  flex: 1;
+  min-height: 360px;
+}
+.tdb-elu2-gov-baignade__left {
+  flex: 1;
+  padding: 20px 24px 24px;
+  border-right: 1px solid var(--elu2-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.tdb-elu2-gov-baignade__kpi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--elu2-border);
+}
+.tdb-elu2-gov-baignade__kpi-icon {
+  font-size: 38px;
+  color: var(--elu2-blue);
+}
+.tdb-elu2-gov-baignade__kpi-val {
+  display: block;
+  font-size: 44px;
+  font-weight: 800;
+  font-family: 'Cabinet Grotesk', 'Satoshi', sans-serif;
+  color: var(--elu2-blue);
+  line-height: 1;
+  text-align: center;
+}
+.tdb-elu2-gov-baignade__kpi-label {
+  display: block;
+  font-size: 15px;
+  color: var(--elu2-text);
+  font-weight: 600;
+  margin-top: 2px;
+  text-align: center;
+}
+.tdb-elu2-gov-baignade__pie-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  margin-bottom: 6px;
+  text-align: center;
+  width: 100%;
+}
+.tdb-elu2-gov-baignade__chart-wrap {
+  width: 260px;
+  height: 260px;
+}
+.tdb-elu2-gov-baignade__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  justify-content: center;
+  margin-top: 8px;
+}
+.tdb-elu2-gov-baignade__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--elu2-text);
+  font-weight: 500;
+}
+.tdb-elu2-gov-baignade__legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.tdb-elu2-gov-baignade__map {
+  flex: 1;
+  position: relative;
+}
+.tdb-elu2-gov-baignade__map .tdb-elu2-ru-hydro__map {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  /* Remplit toute la hauteur de la tuile (annule le max-height générique) */
+  height: auto !important;
+  max-height: none !important;
+  border-radius: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GOUVERNANCE — Actions menées (3 cartes côte à côte)
+   ══════════════════════════════════════════════════════════════ */
+
+.tdb-elu2-gov-actions__row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.tdb-elu2-gov-action-card {
+  background: var(--elu2-card);
+  border-radius: var(--elu2-radius);
+  box-shadow: var(--elu2-shadow);
+  border: 2px solid var(--elu2-blue);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.tdb-elu2-gov-action-card:hover {
+  box-shadow: var(--elu2-shadow-hover);
+}
+
+.tdb-elu2-gov-action-card__header {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--elu2-border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.3;
+}
+.tdb-elu2-gov-action-card__header i {
+  font-size: 22px;
+  color: var(--elu2-accent);
+  flex-shrink: 0;
+}
+
+.tdb-elu2-gov-action-card__body {
+  padding: 16px 20px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Filet séparateur entre jauge et camembert */
+.tdb-elu2-gov-action-card__separator {
+  border-top: 1px solid var(--elu2-border);
+  margin: 0 -20px 16px;
+}
+
+/* KPIs liste */
+.tdb-elu2-gov-action-card__kpis {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tdb-elu2-gov-action-card__kpis li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--elu2-border);
+}
+.tdb-elu2-gov-action-card__kpis li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.tdb-elu2-gov-action-card__kpi-label {
+  font-size: 13px;
+  color: var(--elu2-muted);
+  font-weight: 500;
+}
+.tdb-elu2-gov-action-card__kpi-val {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Chart avancement (réutilise les classes .tdb-elu2-ru-etat__* de Ressource/usage) */
+
+/* Gestion des inondations — big KPIs */
+.tdb-elu2-gov-action-card__big-kpis {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  padding: 12px 0;
+}
+.tdb-elu2-gov-action-card__big-kpi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+.tdb-elu2-gov-action-card__big-val {
+  font-family: 'Cabinet Grotesk', 'Satoshi', sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--elu2-blue);
+  line-height: 1;
+}
+.tdb-elu2-gov-action-card__big-val small {
+  font-size: 22px;
+  font-weight: 600;
+}
+.tdb-elu2-gov-action-card__big-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--elu2-muted);
+  line-height: 1.35;
+  max-width: 220px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INFOBULLE — Rond avec "i" + tooltip rollover
+   ══════════════════════════════════════════════════════════════ */
+.tdb-elu2-info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--elu2-blue-light);
+  color: var(--elu2-blue);
+  font-size: 10px !important;
+  font-weight: 700;
+  font-style: normal;
+  font-family: 'Satoshi', Arial, sans-serif;
+  cursor: help;
+  position: relative;
+  flex-shrink: 0;
+  margin-left: 5px;
+  vertical-align: middle;
+  line-height: 1;
+  transition: background .2s, color .2s;
+  user-select: none;
+}
+.tdb-elu2-info,
+.tdb-elu2-info i {
+  /* Ne jamais hériter d'un libellé en majuscules (sinon « I ») */
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+.tdb-elu2-info i {
+  font-style: normal !important;
+  font-size: 10px !important;
+  font-family: 'Satoshi', Arial, sans-serif !important;
+  line-height: 1;
+}
+.tdb-elu2-info:hover,
+.tdb-elu2-info:focus-visible,
+.tdb-elu2-info[aria-expanded="true"] {
+  background: var(--elu2-blue);
+  color: #fff;
+}
+/* RGAA 10.7 : focus clavier visible */
+.tdb-elu2-info:focus-visible {
+  outline: 2px solid var(--elu2-blue);
+  outline-offset: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ACCESSIBILITÉ (RGAA) — focus et alternatives aux cartes
+   ══════════════════════════════════════════════════════════════ */
+.tdb-elu2-page .tdb-elu2-nav__btn:focus-visible,
+.tdb-elu2-page .tdb-elu2-gov-tabs__btn:focus-visible,
+.tdb-elu2-page .tdb-elu2-vuln-toggle__btn:focus-visible,
+.tdb-elu2-page .tdb-elu2-drillmap__breadcrumb button:focus-visible,
+.tdb-elu2-page .tdb-elu2-methodo-link:focus-visible,
+.tdb-elu2-a11y-alt summary:focus-visible,
+.tdb-elu2-a11y-alt__btn:focus-visible {
+  outline: 3px solid #0D47A1;
+  outline-offset: 2px;
+}
+
+/* Liste alternative aux cartes : repliée sous la carte */
+.tdb-elu2-a11y-alt {
+  margin: 8px 16px 12px;
+  font-size: 13px;
+  color: var(--elu2-text);
+}
+.tdb-elu2-a11y-alt summary {
+  cursor: pointer;
+  color: var(--elu2-blue);
+  font-weight: 600;
+  padding: 4px 0;
+  width: fit-content;
+}
+.tdb-elu2-a11y-alt summary:hover { text-decoration: underline; }
+.tdb-elu2-a11y-alt__body {
+  margin-top: 6px;
+  padding: 10px 14px;
+  background: #F8FAFC;
+  border: 1px solid var(--elu2-border);
+  border-radius: 8px;
+  max-height: 260px;
+  overflow: auto;
+}
+.tdb-elu2-a11y-alt__body p { margin: 0 0 6px; }
+.tdb-elu2-a11y-alt__list {
+  margin: 0 0 6px;
+  padding-left: 18px;
+  line-height: 1.5;
+}
+.tdb-elu2-a11y-alt__list--btns {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tdb-elu2-a11y-alt__btn {
+  font: inherit;
+  font-weight: 600;
+  padding: 4px 10px;
+  border: 1px solid var(--elu2-blue);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--elu2-blue);
+  cursor: pointer;
+}
+.tdb-elu2-a11y-alt__btn:hover { background: var(--elu2-blue-light); }
+/* Carte principale (hero) : la liste se place sous la carte, dans la colonne de gauche */
+.tdb-elu2-hero > .tdb-elu2-a11y-alt { grid-column: 1 / -1; margin: 0 24px 16px; }
+/* Lien méthodologie en attente de fiche */
+.tdb-elu2-methodo-link.is-pending { opacity: 1; color: var(--elu2-muted); cursor: default; text-decoration: none; }
+/* Le tooltip est un élément global fixed, positionné par JS */
+.tdb-elu2-info-tooltip {
+  display: none;
+  position: fixed;
+  background: rgba(21,35,50,.94);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 400;
+  font-family: 'Satoshi', sans-serif;
+  line-height: 1.5;
+  padding: 10px 14px;
+  border-radius: 8px;
+  white-space: normal;
+  width: max-content;
+  max-width: 320px;
+  min-width: 160px;
+  z-index: 99999;
+  pointer-events: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,.22);
+  text-align: left;
+}
+.tdb-elu2-info-tooltip.is-visible {
+  display: block;
+}
+.tdb-elu2-info-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: var(--arrow-left, 50%);
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(21,35,50,.94);
+}
+
+/* ── Source en bas de tuile / sous indicateur ─────────────── */
+.tdb-elu2-source {
+  font-size: 11px;
+  color: var(--elu2-muted);
+  font-style: italic;
+  line-height: 1.3;
+}
+.tdb-elu2-source--tuile {
+  padding: 8px 20px 10px;
+  text-align: left;
+  border-top: 1px solid var(--elu2-border);
+  margin-top: auto;             /* pousse le bloc tout en bas de la card flex-column */
+  margin-left: -20px;           /* filet bord à bord même si le parent a du padding */
+  margin-right: -20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;        /* source + méthodologie sur la même ligne */
+  gap: 2px 16px;
+}
+/* Quand la card parente n'a pas de padding, annuler les marges négatives */
+.tdb-elu2-card > .tdb-elu2-source--tuile,
+.tdb-elu2-gov-tree > .tdb-elu2-source--tuile,
+.tdb-elu2-sage-card > .tdb-elu2-source--tuile,
+.tdb-elu2-gov-baignade > .tdb-elu2-source--tuile,
+.tdb-elu2-vuln-surplus-card > .tdb-elu2-source--tuile,
+.tdb-elu2-vuln-mensuel-card > .tdb-elu2-source--tuile,
+.tdb-elu2-vuln-risque-card > .tdb-elu2-source--tuile {
+  margin-left: 0;
+  margin-right: 0;
+}
+/* Cards avec padding propre : le filet doit déborder */
+.tdb-elu2-prelevements > .tdb-elu2-source--tuile {
+  margin-left: -24px;
+  margin-right: -24px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.tdb-elu2-source__label {
+  white-space: nowrap;
+}
+/* ── Liens méthodologie (icône PDF + nom indicateur) ── */
+.tdb-elu2-methodo-links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+}
+.tdb-elu2-methodo-links__title {
+  font-weight: 600;
+  color: var(--elu2-muted);
+  white-space: nowrap;
+}
+.tdb-elu2-methodo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--elu2-accent, #1565C0);
+  text-decoration: none;
+  font-style: normal;
+  font-size: 11px;
+  white-space: nowrap;
+  transition: color .15s;
+}
+.tdb-elu2-methodo-link:hover {
+  color: #0D47A1;
+  text-decoration: underline;
+}
+.tdb-elu2-methodo-link .ph-file-pdf {
+  font-size: 13px;
+  color: #C62828;
+  flex-shrink: 0;
+}
+.tdb-elu2-source--indic {
+  text-align: center;
+  margin-top: 4px;
+  font-size: 10px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION 5 : VULNÉRABILITÉ ET RISQUES
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Bloc climat englobant ─────────────────────────────────── */
+.tdb-elu2-vuln-climat {
+  background: var(--elu2-card);
+  border-radius: var(--elu2-radius);
+  box-shadow: var(--elu2-shadow);
+  padding: 20px 24px 24px;
+  position: relative;
+}
+
+/* ── Toggle Annuel / Mensuel ──────────────────────────────── */
+.tdb-elu2-vuln-toggle {
+  display: flex;
+  gap: 0;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+.tdb-elu2-vuln-toggle__btn {
+  padding: 7px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Satoshi', sans-serif;
+  border: 2px solid var(--elu2-blue);
+  background: #fff;
+  color: var(--elu2-blue);
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.tdb-elu2-vuln-toggle__btn:first-child {
+  border-radius: 8px 0 0 8px;
+}
+.tdb-elu2-vuln-toggle__btn:last-child {
+  border-radius: 0 8px 8px 0;
+  border-left: none;
+}
+.tdb-elu2-vuln-toggle__btn.is-active {
+  background: var(--elu2-blue);
+  color: #fff;
+}
+.tdb-elu2-vuln-toggle__btn:hover:not(.is-active) {
+  background: var(--elu2-blue-light);
+}
+
+/* ── Panneaux annuel / mensuel ────────────────────────────── */
+.tdb-elu2-vuln-view {
+  display: none;
+}
+.tdb-elu2-vuln-view.is-active {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── Row layout (température ou précipitation) ───────────── */
+.tdb-elu2-vuln-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Carte Surplus/Déficit ────────────────────────────────── */
+.tdb-elu2-vuln-surplus-card {
+  padding: 0;
+  box-shadow: none;
+  border: 1px solid var(--elu2-border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.tdb-elu2-vuln-surplus-card__header {
+  padding: 14px 20px;
+  background: #f8f9fb;
+  border-bottom: 1px solid var(--elu2-border);
+}
+.tdb-elu2-vuln-surplus-card__title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--elu2-text);
+}
+.tdb-elu2-vuln-surplus-card__body {
+  display: flex;
+  align-items: stretch;
+  min-height: 240px;
+}
+.tdb-elu2-vuln-surplus-card__kpi {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px 24px;
+  min-width: 180px;
+  max-width: 220px;
+  border-right: 1px solid var(--elu2-border);
+}
+.tdb-elu2-vuln-surplus-card__chart {
+  flex: 1;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ── KPI Vulnérabilité ────────────────────────────────────── */
+.tdb-elu2-vuln-kpi {
+  text-align: center;
+}
+.tdb-elu2-vuln-kpi__heading {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  margin-bottom: 12px;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+.tdb-elu2-vuln-kpi__val {
+  display: block;
+  font-size: 30px;
+  font-weight: 800;
+  font-family: 'Cabinet Grotesk', 'Satoshi', sans-serif;
+  color: var(--elu2-blue);
+  line-height: 1.1;
+}
+.tdb-elu2-vuln-kpi__val-inline {
+  display: block;
+  font-size: 28px;
+  font-weight: 800;
+  font-family: 'Cabinet Grotesk', 'Satoshi', sans-serif;
+  color: var(--elu2-blue);
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.tdb-elu2-vuln-kpi__unit {
+  font-size: 16px;
+  color: var(--elu2-muted);
+  font-weight: 500;
+}
+.tdb-elu2-vuln-kpi__label {
+  display: block;
+  font-size: 13px;
+  color: var(--elu2-muted);
+  margin-top: 4px;
+  font-weight: 500;
+}
+.tdb-elu2-vuln-kpi--ref .tdb-elu2-vuln-kpi__val {
+  color: #455A64;
+  font-size: 24px;
+}
+.tdb-elu2-vuln-kpi--ref .tdb-elu2-vuln-kpi__val-inline {
+  color: #455A64;
+  font-size: 22px;
+}
+
+/* ── Carte Mensuelle (barres + ligne) ─────────────────────── */
+.tdb-elu2-vuln-mensuel-card {
+  padding: 0;
+  box-shadow: none;
+  border: 1px solid var(--elu2-border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.tdb-elu2-vuln-mensuel-card__header {
+  padding: 14px 20px;
+  background: #f8f9fb;
+  border-bottom: 1px solid var(--elu2-border);
+}
+.tdb-elu2-vuln-mensuel-card__title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--elu2-text);
+}
+.tdb-elu2-vuln-mensuel-card__body {
+  display: flex;
+  align-items: stretch;
+  min-height: 240px;
+}
+.tdb-elu2-vuln-mensuel-card__kpi {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 24px;
+  min-width: 140px;
+  border-right: 1px solid var(--elu2-border);
+}
+.tdb-elu2-vuln-mensuel-card__chart {
+  flex: 1;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ── Carte Risque (sécheresse / étiages) ──────────────────── */
+.tdb-elu2-vuln-risque-card {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.tdb-elu2-vuln-risque-card__title {
+  font-size: 18px;
+  font-weight: 700;
+  padding: 16px 24px;
+  margin: 0;
+  color: var(--elu2-text);
+  border-bottom: 1px solid var(--elu2-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tdb-elu2-vuln-risque-card__title i {
+  color: var(--elu2-accent);
+  font-size: 22px;
+}
+.tdb-elu2-vuln-risque-card__body {
+  display: flex;
+  gap: 0;
+  min-height: 280px;
+}
+.tdb-elu2-vuln-risque-card__col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 20px;
+  flex: 1;
+  border-right: 1px solid var(--elu2-border);
+}
+.tdb-elu2-vuln-risque-card__col--wide {
+  flex: 2;
+  border-right: none;
+}
+.tdb-elu2-vuln-risque-card__subtitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--elu2-text);
+  margin: 0 0 12px;
+  text-align: center;
+}
+.tdb-elu2-vuln-risque-card__chart-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.tdb-elu2-vuln-risque-card__source {
+  font-size: 12px;
+  color: var(--elu2-muted);
+  font-style: italic;
+  margin-top: 8px;
+}
+.tdb-elu2-vuln-risque-card__link {
+  padding: 10px 24px;
+  text-align: center;
+  border-top: 1px solid var(--elu2-border);
+}
+.tdb-elu2-vuln-risque-card__link a {
+  color: var(--elu2-blue);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color .2s;
+}
+.tdb-elu2-vuln-risque-card__link a:hover {
+  color: #0D47A1;
+  text-decoration: underline;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .tdb-elu2-nav__label-full { display: none; }
+  .tdb-elu2-nav__label-short { display: inline; }
+  .tdb-elu2-nav__btn {
+    flex: 1 1 0%;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  .tdb-elu2-nav__btn i { font-size: 19px; }
+}
+@media (max-width: 900px) {
+  .tdb-elu2-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .tdb-elu2-hero__map {
+    min-height: 250px;
+  }
+  .tdb-elu2-hero__map .ol-viewport {
+    border-radius: 0 0 var(--elu2-radius) var(--elu2-radius);
+  }
+  .tdb-elu2-hero__title { font-size: 26px; }
+  .tdb-elu2-hero__kpis { flex-direction: column; gap: 12px; }
+
+  .tdb-elu2-demo {
+    grid-template-columns: 1fr;
+  }
+  .tdb-elu2-demo__kpis {
+    border-right: none;
+    border-bottom: 1px solid var(--elu2-border);
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .tdb-elu2-ressources-row {
+    grid-template-columns: 1fr;
+  }
+  .tdb-elu2-ressource-card__etat-gauges {
+    gap: 8px;
+  }
+  .tdb-elu2-ressource-card__etat-gauges { gap: 16px; }
+  .tdb-elu2-gauge__svg-wrap {
+    width: 120px;
+    height: 70px;
+  }
+  .tdb-elu2-gauge__value { font-size: 26px; }
+  .tdb-elu2-gauge__label { font-size: 12px; }
+  .tdb-elu2-gauge { min-width: 100px; }
+  .tdb-elu2-bottom-row {
+    grid-template-columns: 1fr;
+  }
+  .tdb-elu2-prelevements__body { grid-template-columns: 1fr; }
+  .tdb-elu2-prelevements__kpi { order: -1; }
+  .tdb-elu2-prelevements__chart {
+    height: 280px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+  }
+  .tdb-elu2-prelevements__chart::-webkit-scrollbar {
+    height: 6px;
+  }
+  .tdb-elu2-prelevements__chart::-webkit-scrollbar-track {
+    background: #E2E8F0;
+    border-radius: 3px;
+  }
+  .tdb-elu2-prelevements__chart::-webkit-scrollbar-thumb {
+    background: #94A3B8;
+    border-radius: 3px;
+  }
+  .tdb-elu2-prelevements__chart canvas {
+    width: 750px !important;
+    min-width: 750px !important;
+    height: 250px !important;
+  }
+  .tdb-elu2-prelevements__scroll-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--elu2-muted);
+    font-style: italic;
+    padding: 6px 0 0;
+    position: sticky;
+    left: 0;
+  }
+
+  .tdb-elu2-amenag-row2 { grid-template-columns: 1fr; }
+  .tdb-elu2-amenag-row3 { grid-template-columns: 1fr; }
+  .tdb-elu2-zre__inner { grid-template-columns: 1fr; }
+  .tdb-elu2-zre__map { border-radius: 0 0 var(--elu2-radius) var(--elu2-radius); min-height: 180px; order: 2; }
+
+  /* Ressource / usage / pression */
+  .tdb-elu2-ru-row2 { grid-template-columns: 1fr; }
+  .tdb-elu2-ru-row3 { grid-template-columns: 1fr; }
+  .tdb-elu2-ru-hydro__inner { grid-template-columns: 1fr; }
+  .tdb-elu2-ru-hydro__block:first-child { border-right: none; border-bottom: 1px solid var(--elu2-border); }
+  .tdb-elu2-ru-hydro__map { height: 220px; max-height: 220px; }
+  .tdb-elu2-hydro-tooltip { min-width: 160px; }
+  .tdb-elu2-ru-caract-sout__body { flex-direction: column; }
+
+  /* Gouvernance */
+  .tdb-elu2-gov-tabs { flex-wrap: wrap; }
+  .tdb-elu2-gov-tabs__btn { font-size: 14px; padding: 10px 12px; }
+  .tdb-elu2-gov-row2 { grid-template-columns: 1fr; }
+  .tdb-elu2-gov-aac__inner { flex-direction: column; }
+  .tdb-elu2-gov-agri-surf__inner { grid-template-columns: 1fr; }
+  .tdb-elu2-gov-prix__comparatifs { grid-template-columns: 1fr; gap: 6px; }
+  .tdb-elu2-gov-rendement__kpis { grid-template-columns: 1fr; }
+  .tdb-elu2-gov-prel__chart { height: 200px; }
+
+  /* Gouvernance arbre */
+  .tdb-elu2-gov-tree__body { padding: 12px 10px 20px; }
+  .tdb-elu2-gov-tree__node > .tdb-elu2-gov-tree__list { padding-left: 16px; }
+  .tdb-elu2-gov-tree__label--n1 { font-size: 18px; }
+  .tdb-elu2-gov-tree__label--n2 { font-size: 14px; padding: 5px 12px; }
+  .tdb-elu2-gov-tree__label--n3 { font-size: 13px; }
+  .tdb-elu2-gov-tree__leaf { flex-wrap: wrap; }
+  .tdb-elu2-gov-tree__carto-link { margin-left: auto; }
+  .tdb-elu2-gov-tree__toggle { padding: 6px 8px; }
+
+  /* SAGE */
+  .tdb-elu2-sage-card__row { grid-template-columns: 1fr; gap: 4px; }
+  .tdb-elu2-sage-card__val { text-align: left; }
+
+  /* Actions menées */
+  .tdb-elu2-gov-actions__row { grid-template-columns: 1fr; }
+  .tdb-elu2-gov-action-card__big-val { font-size: 30px; }
+
+  /* Arborescence gouvernance responsive */
+  .tdb-elu2-gov-tree__cols { flex-direction: column; }
+  .tdb-elu2-gov-tree__col:first-child { padding-right: 0; border-right: none; border-bottom: 1px solid var(--elu2-border); padding-bottom: 16px; margin-bottom: 16px; }
+  .tdb-elu2-gov-tree__col:last-child { padding-left: 0; }
+
+  /* Vulnérabilité responsive */
+  .tdb-elu2-vuln-surplus-card__body { flex-direction: column; }
+  .tdb-elu2-vuln-surplus-card__kpi { flex-direction: row; justify-content: center; gap: 24px; border-right: none; border-bottom: 1px solid var(--elu2-border); padding: 12px 0; max-width: none; }
+  .tdb-elu2-vuln-mensuel-card__body { flex-direction: column; }
+  .tdb-elu2-vuln-mensuel-card__kpi { border-right: none; border-bottom: 1px solid var(--elu2-border); padding: 0 0 12px; }
+  .tdb-elu2-vuln-risque-card__body { flex-direction: column; }
+  .tdb-elu2-vuln-risque-card__col--wide { flex: 1; }
+
+  /* Mini-bandeau sticky */
+  .tdb-elu2-mini-hero { padding: 8px 16px; }
+  .tdb-elu2-mini-hero__inner { flex-wrap: wrap; gap: 4px 16px; }
+  .tdb-elu2-mini-hero__name { font-size: 16px; }
+  .tdb-elu2-mini-hero__kpi { font-size: 12px; }
+
+}

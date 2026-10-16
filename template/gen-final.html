@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<title>Générateur final</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+<div id="status">Chargement...</div>
+<script>
+// Coordonnées des centres de chaque département GE
+const DEPT_CENTERS = {
+  '08': [4.75, 49.60], // Ardennes
+  '10': [4.10, 48.30], // Aube
+  '51': [4.35, 49.00], // Marne
+  '52': [5.15, 48.10], // Haute-Marne
+  '54': [6.20, 48.70], // Meurthe-et-Moselle
+  '55': [5.35, 49.00], // Meuse
+  '57': [6.65, 49.10], // Moselle
+  '67': [7.55, 48.55], // Bas-Rhin
+  '68': [7.35, 47.85], // Haut-Rhin
+  '88': [6.45, 48.20]  // Vosges
+};
+// Taille de dispersion par département
+const DEPT_SPREAD = {
+  '08': [1.0, 0.75], '10': [0.9, 0.65], '51': [1.1, 0.85], '52': [0.95, 0.80],
+  '54': [0.80, 0.70], '55': [0.90, 0.80], '57': [0.95, 0.80], '67': [0.65, 1.00],
+  '68': [0.60, 0.85], '88': [0.72, 0.88]
+};
+
+function communeCoords(nom, seed) {
+  const m = nom.match(/\((\d{5})\)/);
+  const dept = m ? m[1].substring(0, 2) : '51';
+  const [cx, cy] = DEPT_CENTERS[dept] || [6.0, 48.5];
+  const [sw, sh] = DEPT_SPREAD[dept]  || [0.8, 0.7];
+  // Pseudo-aléatoire déterministe
+  const a = (seed * 137.508) % (2 * Math.PI);
+  const r = 0.05 + ((seed * 31 + 7) % 90) / 100 * 0.95;
+  return [
+    Math.round((cx + sw * 0.5 * r * Math.cos(a)) * 10000) / 10000,
+    Math.round((cy + sh * 0.5 * r * Math.sin(a)) * 10000) / 10000
+  ];
+}
+
+(async function() {
+  const status = document.getElementById('status');
+  try {
+    status.textContent = 'Lecture Excel...';
+    const resp = await fetch('../data/listing_territoires.xlsx');
+    const buf  = await resp.arrayBuffer();
+    const wb   = XLSX.read(buf, { type: 'array' });
+    const ws   = wb.Sheets['Feuil1'];
+    const data = XLSX.utils.sheet_to_json(ws, { defval: '' });
+
+    // Grouper toutes les typologies
+    const groups = {};
+    data.forEach(row => {
+      const typ = (row['Typologie territoire'] || '').trim();
+      const nom = (row['Nom territoire'] || '').trim();
+      if (!typ || !nom) return;
+      if (!groups[typ]) groups[typ] = [];
+      groups[typ].push(nom);
+    });
+
+    // Stats
+    const stats = Object.entries(groups).map(([k,v]) => k + ': ' + v.length).join('\n');
+    console.log('=== STATS FINALES ===\n' + stats);
+
+    // Communes avec coordonnées (juste les noms + coords calculées)
+    const communes = (groups['Commune'] || []).map((nom, i) => {
+      const c = communeCoords(nom, i + 1);
+      return { id: 'com-' + (i + 1), label: nom, coords: c };
+    });
+    console.log('Communes générées:', communes.length);
+
+    // Afficher blocs de 500 pour vérif sampling
+    [0, 500, 1000, 2000, 3000, 4000, 5000].forEach(i => {
+      if (communes[i]) console.log('SAMPLE[' + i + ']: ' + communes[i].label + ' -> ' + communes[i].coords);
+    });
+
+    // Générer le JS complet
+    status.textContent = 'Génération JS...';
+
+    let js = '/* ============================================================\n';
+    js += ' *  data-communes.js\n';
+    js += ' *  5 115 communes Grand Est extraites de listing_territoires.xlsx\n';
+    js += ' *  Coordonnées générées par fonction déterministe seed-based\n';
+    js += ' * ============================================================ */\n\n';
+
+    // Centres et spreads (repris dans cartographie.js si besoin)
+    js += 'var COMMUNES_DEPT_CENTERS = ' + JSON.stringify(DEPT_CENTERS) + ';\n';
+    js += 'var COMMUNES_DEPT_SPREAD  = ' + JSON.stringify(DEPT_SPREAD)  + ';\n\n';
+
+    // Tableau compact des communes : [id, label, lon, lat]
+    js += '/* Format : [id_string, "NOM (code)", lon, lat] */\n';
+    js += 'var COMMUNES_RAW = [\n';
+    communes.forEach((c, i) => {
+      js += '["' + c.id + '",' + JSON.stringify(c.label) + ',' + c.coords[0] + ',' + c.coords[1] + ']';
+      if (i < communes.length - 1) js += ',\n';
+    });
+    js += '\n];\n\n';
+
+    // Convertir en format DONNEES_TERRITOIRES.territoires
+    js += '/* Entrées formatées pour Panel 2 */\n';
+    js += 'var COMMUNES_TERRITOIRES = COMMUNES_RAW.map(function(c) {\n';
+    js += '  return { id: c[0], label: c[1], geometrie: "point", coords: [c[2], c[3]] };\n';
+    js += '});\n\n';
+
+    js += 'console.log("[data-communes] Chargé –", COMMUNES_TERRITOIRES.length, "communes");\n';
+
+    console.log('JS généré:', js.length, 'chars =', Math.round(js.length/1024), 'Ko');
+    window._COMMUNES_JS = js;
+    window._communes_count = communes.length;
+
+    // Vérifier les 5 dernières communes
+    communes.slice(-5).forEach(c => console.log('LAST: ' + c.label + ' -> ' + c.coords));
+
+    status.textContent = 'JS généré : ' + communes.length + ' communes, ' + Math.round(js.length/1024) + ' Ko. Voir console.';
+
+  } catch(e) {
+    console.error('ERREUR:', e.message);
+    status.textContent = 'ERREUR: ' + e.message;
+  }
+})();
+</script>
+</body>
+</html>

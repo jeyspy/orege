@@ -1,0 +1,290 @@
+/* ============================================================
+   css/en-construction.css
+   Page-specific styles for en-construction.html
+   ("Feature under construction" / coming-soon page)
+
+   This page has no external JS — nav.js + a11y.js + page-transition.js
+   are sufficient. The animated spinning icon is CSS-only.
+
+   Sections:
+     1. PAGE BODY — background, font, base padding
+     2. CENTERED LAYOUT — .wip-page full-viewport centering
+     3. CARD — .wip-card white card with top border
+     4. ANIMATED ICON — .wip-icon-wrap + spinning dashed ring
+     5. BADGE — .wip-badge yellow status pill
+     6. TYPOGRAPHY — title, description
+     7. PROFILE TAGS — audience chips
+     8. FEATURE GRID — upcoming features list
+     9. SEPARATOR & ACTIONS — hr + navigation buttons
+    10. RESPONSIVE OVERRIDES
+============================================================ */
+
+/* ── 1. PAGE BODY ── */
+/* Full-page light-grey background; Satoshi as the body font */
+body {
+  padding-top: 102px; /* offset for the fixed header */
+  font-family: 'Satoshi', 'Source Sans 3', system-ui, sans-serif;
+  background: #f4f7fb;
+  color: #1d1d1b;
+}
+
+/* ── 2. CENTERED LAYOUT ── */
+/* Full-viewport flex container that centers the card vertically & horizontally */
+.wip-page {
+  min-height: calc(100vh - 102px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px 80px;
+}
+
+/* ── 3. CARD ── */
+.wip-card {
+  background: #fff;
+  border-radius: 0;
+  box-shadow: 0 4px 32px rgba(42,52,125,.10);
+  max-width: 680px;
+  width: 100%;
+  padding: 56px 48px 48px;
+  border-top: 4px solid #2a347d; /* primary blue top border */
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle radial gradient overlay behind the card content */
+.wip-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 90% 10%, rgba(127,221,240,.12) 0%, transparent 55%),
+    radial-gradient(circle at 10% 90%, rgba(42,52,125,.07)   0%, transparent 55%);
+  pointer-events: none;
+}
+
+/* ── 4. ANIMATED ICON ── */
+/* Circular icon container with gradient background */
+.wip-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, rgba(42,52,125,.10) 0%, rgba(127,221,240,.20) 100%);
+  border-radius: 50%;
+  margin-bottom: 28px;
+}
+
+/* Icon size and color */
+.wip-icon-wrap i {
+  font-size: 32px;
+  color: #2a347d;
+}
+
+/* Dashed ring that spins indefinitely around the icon */
+.wip-icon-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px dashed rgba(42,52,125,.25);
+  animation: wip-spin 12s linear infinite;
+}
+
+/* Full 360° rotation keyframes used by both the ring and the gear icon */
+@keyframes wip-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Faster spin for the small gear icon inside the badge */
+.wip-gear-spin {
+  display: inline-block;
+  animation: wip-spin 3s linear infinite;
+}
+
+/* ── 5. BADGE ── */
+/* Yellow "under construction" status pill */
+.wip-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fbd020;    /* yellow — design token --color-comp-2 */
+  color: #2a347d;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 14px;
+  border-radius: 0;
+  margin-bottom: 20px;
+}
+
+/* ── 6. TYPOGRAPHY ── */
+/* Main card title — Cabinet Grotesk headline */
+.wip-title {
+  font-family: 'Cabinet Grotesk', 'Satoshi', system-ui, sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: #12193a;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+/* Blue accent span within the title */
+.wip-title span { color: #2a347d; }
+
+/* Descriptive paragraph */
+.wip-desc {
+  font-size: 16px;
+  color: #3a4a6b;
+  line-height: 1.75;
+  margin-bottom: 32px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── 7. PROFILE TAGS ── */
+/* Audience pills shown above the feature list */
+.wip-profiles {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+/* Base profile tag */
+.wip-profile-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(42,52,125,.07);
+  border: 1px solid rgba(42,52,125,.15);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #2a347d;
+}
+
+/* Technician / specialist profile variant (violet) */
+.wip-profile-tag--tech {
+  background: rgba(115,30,140,.07);
+  border-color: rgba(115,30,140,.18);
+  color: #731e8c;
+}
+
+/* ── 8. FEATURE GRID ── */
+/* 2-column grid listing upcoming features */
+.wip-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 36px;
+  text-align: left;
+}
+
+/* Individual feature item */
+.wip-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #f4f7fb;
+  border-radius: 0;
+  padding: 14px 16px;
+  border-left: 3px solid #2a347d; /* left accent line */
+}
+
+/* Feature icon */
+.wip-feature i {
+  font-size: 14px;
+  color: #2a347d;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* Feature text block */
+.wip-feature__text {
+  font-size: 13px;
+  color: #3a4a6b;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* Bold category label inside each feature text */
+.wip-feature__text strong {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: #2a347d;
+  margin-bottom: 3px;
+}
+
+/* ── 9. SEPARATOR & ACTIONS ── */
+/* Horizontal rule between features and action buttons */
+.wip-sep {
+  border: none;
+  border-top: 1px solid #e4e8f0;
+  margin: 0 0 28px;
+}
+
+/* Button row */
+.wip-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Base button */
+.wip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background .18s, color .18s, transform .15s;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+/* Primary — solid dark blue */
+.wip-btn--primary { background: #2a347d; color: #fff; }
+.wip-btn--primary:hover {
+  background: #1e276b;
+  color: #7fddf0;
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+/* Outline — transparent fill, blue border */
+.wip-btn--outline {
+  background: transparent;
+  color: #2a347d;
+  border-color: #2a347d;
+}
+.wip-btn--outline:hover {
+  background: #2a347d;
+  color: #fff;
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+/* ── 10. RESPONSIVE OVERRIDES ── */
+@media (max-width: 600px) {
+  .wip-card { padding: 36px 24px 32px; }
+  .wip-title { font-size: 24px; }
+  /* Single-column feature list on small screens */
+  .wip-features { grid-template-columns: 1fr; }
+  /* Stack buttons vertically */
+  .wip-actions { flex-direction: column; align-items: stretch; }
+  .wip-btn { justify-content: center; }
+}

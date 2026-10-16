@@ -1,0 +1,1644 @@
+/**
+ * nav.css — Main navigation bar + full-width mega-menus
+ * Observatoire de l'Eau Grand Est
+ *
+ * This file is the CSS companion to js/nav.js.
+ * It styles all navigation components injected by that script:
+ *
+ *   - Anti-FOUC body visibility guard
+ *   - .orege-header           Header bar
+ *   - .orege-nav              Main navigation list
+ *   - .orege-nav__link        Individual nav items / buttons
+ *   - .orege-megamenu         Base mega-menu container
+ *   - .orege-megamenu--*      Variant layouts (territoires, actu, je-suis…)
+ *   - .orege-search-overlay   Full-screen territory search modal
+ *   - .orege-footer           Site footer
+ *   - Mobile: hamburger toggle + responsive nav panel
+ *
+ * TABLE OF CONTENTS (search for these markers):
+ *   ANTI-FOUC
+ *   SEARCH BUTTON
+ *   HEADER
+ *   NAVIGATION BAR
+ *   MEGA-MENU BASE
+ *   MEGA-MENU VARIANTS
+ *   SEARCH OVERLAY
+ *   FOOTER
+ *   MOBILE RESPONSIVE
+ */
+
+/* ============================================================
+   ANTI-FOUC
+   The <body> starts with class `nav-loading` (set in HTML).
+   This hides the page until nav.js has injected the navigation
+   HTML, then performs a fast fade-in (≤ 120 ms) to avoid layout
+   flicker (Flash Of Unstyled Content).
+   ============================================================ */
+body.nav-loading {
+  visibility: hidden;
+  opacity: 0;
+}
+body.nav-ready {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.12s ease;
+}
+
+/* ============================================================
+   SEARCH BUTTON (magnifying glass)
+   Positioned after the nav items, before the hamburger toggle.
+   ============================================================ */
+/* Desktop layout: magnifying glass sits right of all nav items */
+.orege-header {
+  flex-wrap: nowrap;
+}
+/* Visual order: logo(auto) | nav(flex:1, items left) | magnifying glass | hamburger */
+.orege-nav__search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin-left: auto;
+  margin-right: 8px;
+  border: 2px solid #2a347d;
+  border-radius: 50%;
+  background: #2a347d;
+  color: #fff;
+  font-size: 15px;
+  font-family: 'Satoshi', system-ui, sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .18s, border-color .18s, transform .15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+  order: 10; /* toujours après les items de nav */
+}
+.orege-nav__search-btn::after {
+  content: none;
+}
+.orege-nav__search-btn:hover {
+  background: #1e276b;
+  border-color: #1e276b;
+  transform: translateY(-1px);
+}
+.orege-nav__search-btn:active {
+  transform: translateY(0);
+}
+
+/* Annuler le margin-left:auto sur la nav puisque la loupe s'en charge */
+.orege-nav__search-btn + .orege-nav__toggle + .orege-nav,
+.orege-nav__search-btn ~ .orege-nav {
+  margin-left: 0;
+}
+
+/* ============================================================
+   SEARCH OVERLAY — full-screen territory search modal
+   Triggered by the magnifying glass button or / / Ctrl+K shortcuts.
+   ============================================================ */
+.orege-search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99990;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 80px;
+  opacity: 0;
+  transition: opacity .22s ease;
+  pointer-events: none;
+}
+.orege-search-overlay.is-open {
+  opacity: 1;
+  pointer-events: all;
+}
+.orege-search-overlay[hidden] {
+  display: none !important;
+}
+
+/* Fond flouté sombre */
+.orege-search-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 20, 60, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+
+/* Panneau central */
+.orege-search-overlay__panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 16px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 24px 80px rgba(5,20,60,.45), 0 4px 20px rgba(5,20,60,.2);
+  overflow: hidden;
+  transform: translateY(-12px) scale(.98);
+  transition: transform .22s cubic-bezier(.34,1.56,.64,1);
+}
+.orege-search-overlay.is-open .orege-search-overlay__panel {
+  transform: translateY(0) scale(1);
+}
+
+/* En-tête du panneau */
+.orege-search-overlay__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid rgba(42,52,125,.10);
+  background: #2a347d;
+}
+.orege-search-overlay__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: .2px;
+}
+.orege-search-overlay__close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,.18);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.orege-search-overlay__close:hover { background: rgba(255,255,255,.35); }
+
+/* Zone de saisie */
+.orege-search-overlay__field-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(42,52,125,.10);
+  background: #ffffff;
+}
+.orege-search-overlay__field-icon {
+  font-size: 18px;
+  color: #2a347d;
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+.orege-search-overlay__input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 18px;
+  font-family: inherit;
+  color: #1d1d1b;
+  min-width: 0;
+}
+.orege-search-overlay__input::placeholder {
+  color: rgba(42,52,125,.4);
+  font-weight: 400;
+}
+.orege-search-overlay__clear {
+  border: none;
+  background: none;
+  color: rgba(42,52,125,.4);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: 6px;
+  flex-shrink: 0;
+  transition: color .15s;
+}
+.orege-search-overlay__clear:hover { color: #fbd020; }
+
+/* Hint clavier */
+.orege-search-overlay__hint {
+  font-size: 11.5px;
+  color: rgba(42,52,125,.45);
+  padding: 7px 20px 6px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(42,52,125,.08);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.orege-search-overlay__hint kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid rgba(42,52,125,.18);
+  border-radius: 4px;
+  background: #fff;
+  font-size: 10.5px;
+  font-family: inherit;
+  color: #2a347d;
+  line-height: 1.6;
+}
+
+/* Liste de résultats */
+.orege-search-overlay__results {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+  max-height: 360px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(42,52,125,.2) transparent;
+}
+.orege-search-overlay__results::-webkit-scrollbar { width: 5px; }
+.orege-search-overlay__results::-webkit-scrollbar-thumb { background: rgba(42,52,125,.2); border-radius: 4px; }
+
+.orege-search-overlay__result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: background .12s;
+  border-left: 3px solid transparent;
+  text-decoration: none;
+}
+.orege-search-overlay__result:hover,
+.orege-search-overlay__result.is-active {
+  background: rgba(127,221,240,.15);
+  border-left-color: #2a347d;
+}
+.orege-search-overlay__result:hover .orege-search-overlay__result-arrow,
+.orege-search-overlay__result.is-active .orege-search-overlay__result-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.orege-search-overlay__result-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #7fddf0;
+  color: #2a347d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.orege-search-overlay__result:hover .orege-search-overlay__result-icon,
+.orege-search-overlay__result.is-active .orege-search-overlay__result-icon {
+  background: #2a347d;
+  color: #fff;
+}
+.orege-search-overlay__result-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.orege-search-overlay__result-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1d1d1b;
+  line-height: 1.3;
+}
+.orege-search-overlay__result-label mark {
+  background: #fbd020;
+  color: #2a347d;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+.orege-search-overlay__result-echelle {
+  font-size: 11.5px;
+  color: rgba(42,52,125,.4);
+  font-weight: 500;
+}
+.orege-search-overlay__result-arrow {
+  font-size: 12px;
+  color: #2a347d;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity .15s, transform .15s;
+  flex-shrink: 0;
+}
+
+/* Message aucun résultat */
+.orege-search-overlay__empty {
+  padding: 28px 20px;
+  text-align: center;
+  color: rgba(42,52,125,.4);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Section accueil — territoires rapides */
+.orege-search-overlay__welcome {
+  padding: 14px 18px 18px;
+}
+.orege-search-overlay__welcome::before {
+  content: 'Territoires populaires';
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  color: rgba(42,52,125,.45);
+  margin-bottom: 10px;
+}
+.orege-search-overlay__welcome-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.orege-search-overlay__quick {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1.5px solid rgba(42,52,125,.2);
+  border-radius: 20px;
+  background: #7fddf0;
+  color: #2a347d;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .14s, border-color .14s, color .14s, transform .12s;
+}
+.orege-search-overlay__quick:hover {
+  background: #2a347d;
+  border-color: #2a347d;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ── Responsive loupe ── */
+@media (max-width: 1100px) {
+  .orege-nav__search-btn::after { display: none; }
+  .orege-nav__search-btn { padding: 0; width: 36px; height: 36px; margin-right: 6px; }
+  .orege-search-overlay { padding-top: 20px; align-items: flex-start; }
+  .orege-search-overlay__panel { margin: 0; border-radius: 0 0 16px 16px; }
+  .orege-search-overlay__results { max-height: 55vh; }
+}
+
+/* ============================================================
+   HEADER BAR — fixed top navigation bar
+   Light grey background following the Grand Est design system.
+   ============================================================ */
+.orege-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1100;
+  height: 72px;
+  background: #f8f8f8;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.09);
+}
+
+/* Angled landscape decorative image on the right side of the header */
+.orege-header::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 420px;                  /* largeur du bandeau photo */
+  background:
+    url('../images/hero-paysage-2.jpg') center 35% / cover no-repeat;
+  /* coupe angulée côté gauche ~10°, miroir de l’angle du hero */
+  clip-path: polygon(48px 0, 100% 0, 100% 100%, 0 100%);
+  opacity: .75;
+  pointer-events: none;
+  z-index: 0;
+  display: none;
+}
+/* Fondu noir sur le bord gauche du visuel pour la transition */
+.orege-header::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 460px;
+  background: linear-gradient(to right, #f8f8f8 0%, transparent 60px);
+  z-index: 1;
+  pointer-events: none;
+  display: none;
+}
+
+.orege-header__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+  margin-right: 28px;
+}
+.orege-header__logo-img { height: 50px; width: auto; max-width: 280px; object-fit: contain; }
+.orege-header__logo-text {
+  display: none;
+}
+
+/* ── Nav principale ── */
+/* Nav desktop : pas de margin-left auto, elle commence juste après le logo */
+.orege-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 0;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+  order: 5;
+  flex: 1; /* prend l'espace disponible */
+  justify-content: center; /* centre les items dans l'espace disponible */
+}
+
+.orege-nav__item {
+  position: static; /* megamenu pleine largeur */
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.orege-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 100%;
+  padding: 0 11px;
+  color: #1d1d1b;          /* texte foncé sur fond gris clair */
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Satoshi', system-ui, sans-serif;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  background: none;
+  border-radius: 0;
+  outline: none;
+  transition: color .15s, border-color .15s, background .15s;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+/* Masquer les icônes thématiques dans les liens de la nav principale (pas le chevron) */
+.orege-nav__link > i:not(.orege-nav__chevron),
+.orege-nav__link > .fa:not(.orege-nav__chevron) {
+  display: none;
+}
+.orege-nav__link:hover,
+.orege-nav__link[aria-expanded="true"] {
+  color: #2a347d;
+  background: rgba(42,52,125,.06);
+  border-bottom-color: #2a347d;
+  text-decoration: none;
+}
+.orege-nav__link.is-active {
+  color: #2a347d;
+  font-weight: 700;
+  border-bottom-color: #2a347d;
+}
+.orege-nav__link i { font-size: 11px; opacity: .8; }
+.orege-nav__chevron {
+  font-size: 9px;
+  opacity: .6;
+  margin-left: 2px;
+  transition: transform .2s;
+}
+.orege-nav__link[aria-expanded="true"] .orege-nav__chevron {
+  transform: rotate(180deg);
+}
+
+/* Le toggle hamburger : toujours après la loupe */
+.orege-nav__toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #1d1d1b;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 6px 8px;
+  margin-left: 0;
+  position: relative;
+  z-index: 2;
+  order: 11;
+}
+
+/* ── Icône hamburger 3 lignes ── */
+.orege-nav__toggle-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+.orege-nav__toggle-icon span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 2px;
+  transition: transform .22s ease, opacity .18s ease, width .18s ease;
+  transform-origin: center;
+}
+/* État ouvert : croix */
+.orege-nav__toggle.is-open .orege-nav__toggle-icon span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.orege-nav__toggle.is-open .orege-nav__toggle-icon span:nth-child(2) {
+  opacity: 0;
+  width: 0;
+}
+.orege-nav__toggle.is-open .orege-nav__toggle-icon span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ============================================================
+   MEGA-MENU BASE — full-browser-width panel
+   Shared base styles used by all mega-menu variants.
+   ============================================================ */
+.orege-megamenu {
+  position: fixed;
+  top: 72px;
+  z-index: 1099;
+  background: #ffffff;
+  box-shadow: 0 12px 40px rgba(42,52,125,.18);
+  border-top: 3px solid #2a347d;
+  display: none;
+  animation: mmFadeIn .20s cubic-bezier(.4,0,.2,1);
+  border-bottom: 1px solid rgba(42,52,125,.10);
+  border-radius: 0;
+  font-family: 'Satoshi', system-ui, sans-serif;
+}
+.orege-megamenu.is-open { display: block; }
+
+@keyframes mmFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Bande colorée en tête du megamenu */
+.orege-megamenu::before {
+  content: none;
+}
+
+/* Wrapper centré mais avec fond pleine largeur */
+.orege-megamenu__inner {
+  width: 100%;
+  max-width: 100%;          /* pas de contrainte — on utilise le padding */
+  padding: 32px min(5vw, 64px) 28px;
+  display: grid;
+  gap: 0 0;                 /* pas d'espace entre colonnes, géré par les séparateurs */
+  align-items: start;
+}
+
+/* Grilles selon nb de colonnes — répartition équitable */
+.orege-megamenu__inner--1col { grid-template-columns: repeat(1, 1fr); }
+.orege-megamenu__inner--2col { grid-template-columns: repeat(2, 1fr); }
+.orege-megamenu__inner--3col { grid-template-columns: repeat(3, 1fr); }
+.orege-megamenu__inner--4col { grid-template-columns: repeat(4, 1fr); }
+.orege-megamenu__inner--5col { grid-template-columns: repeat(5, 1fr); }
+
+.orege-megamenu__col {
+  padding: 0 32px 12px 0;
+  border-right: 1px solid rgba(42,52,125,.20);
+  margin-right: 0;
+}
+.orege-megamenu__col:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+.orege-megamenu__col:not(:first-child) {
+  padding-left: 32px;
+}
+
+.orege-megamenu__col-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .9px;
+  text-transform: uppercase;
+  color: #2a347d;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(42,52,125,.30);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.orege-megamenu__col-title i {
+  width: 22px;
+  text-align: center;
+  font-size: 14px;
+  color: #2a347d;
+  background: rgba(42,52,125,.15);
+  border-radius: 0;
+  padding: 3px 0;
+}
+
+.orege-megamenu__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.orege-megamenu__link {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 0;
+  text-decoration: none;
+  color: #2a347d;
+  font-size: 13.5px;
+  font-family: 'Satoshi', system-ui, sans-serif;
+  transition: background .15s, color .15s, transform .1s;
+}
+.orege-megamenu__link:hover {
+  background: rgba(42,52,125,.12);
+  color: #2a347d;
+  text-decoration: none;
+  transform: translateX(3px);
+}
+.orege-megamenu__link i {
+  font-size: 14px;
+  margin-top: 2px;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+  color: #2a347d;
+  opacity: .85;
+}
+.orege-megamenu__link:hover i { opacity: 1; }
+.orege-megamenu__link-body { flex: 1; min-width: 0; }
+.orege-megamenu__link-label {
+  display: block;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.orege-megamenu__link-desc {
+  display: block;
+  font-size: 11.5px;
+  color: rgba(42,52,125,.65);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+/* Fond overlay pour fermeture au clic extérieur */
+.orege-megamenu-overlay {
+  display: none;
+  position: fixed;
+  inset: 72px 0 0 0;
+  z-index: 1098;
+  background: rgba(10,35,66,.12);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.orege-megamenu-overlay.is-open { display: block; }
+
+/* ── Footer du mégamenu (optionnel) ── */
+.orege-megamenu__footer {
+  border-top: 1px solid rgba(42,52,125,.20);
+  margin-top: 16px;
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.orege-megamenu__footer-link {
+  font-size: 12px;
+  color: #2a347d;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.orege-megamenu__footer-link:hover { text-decoration: underline; }
+
+/* ── Badge ── */
+.orege-mm-badge {
+  display: inline-block;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 0;
+  margin-left: 6px;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+.orege-mm-badge--elu  { background: #2a347d; color: #fff; border: 1px solid #2a347d; }
+.orege-mm-badge--tech { background: #009fa4; color: #fff; border: 1px solid #009fa4; }
+.orege-mm-badge--new  { background: #fbd020; color: #2a347d; border: 1px solid rgba(42,52,125,.2); }
+
+/* ============================================================
+   MEGA-MENU VARIANT: TERRITORIES
+   5-column grid: Région | Départements | EPCI | PNR | Explorer
+   ============================================================ */
+.orege-megamenu--territoires .orege-megamenu__inner--territoires {
+  grid-template-columns: 0.7fr 1.6fr 1.4fr 1.3fr 1fr !important;
+  gap: 0 !important;
+  padding: 28px min(4vw, 48px) 24px !important;
+}
+
+/* Lien territoire : compact, sans icône FA, juste le nom */
+.orege-mm-territoire-link {
+  padding: 5px 8px !important;
+}
+.orege-mm-territoire-link .orege-megamenu__link-label {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+.orege-mm-territoire-link:hover .orege-megamenu__link-label {
+  color: #2a347d;
+}
+
+/* Colonne "Explorer" (dernière) : style distinct */
+.orege-mm-territoire-all-col {
+  background: rgba(42,52,125,.10);
+  border-radius: 0;
+  padding: 0 !important;
+}
+.orege-mm-territoire-all-col .orege-megamenu__col-title {
+  padding: 16px 16px 8px !important;
+  border-bottom: 1px solid rgba(42,52,125,.20) !important;
+}
+.orege-mm-territoire-all-col .orege-megamenu__links {
+  padding: 4px 8px 12px !important;
+}
+.orege-mm-territoire-all-col .orege-megamenu__link {
+  border-radius: 0 !important;
+  padding: 10px 12px !important;
+}
+
+/* ============================================================
+   MEGA-MENU VARIANT: NEWS (Actualités)
+   Special two-column layout: featured article + recent list.
+   ============================================================ */
+
+/* Centre the news mega-menu within the full-width strip */
+/* Le display:flex n'est actif QUE quand le menu est ouvert (.is-open),
+   sinon .orege-megamenu { display:none } prend le dessus */
+.orege-megamenu--actu.is-open {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Override du grid pour le layout 2 colonnes asymétriques */
+.orege-megamenu--actu .orege-megamenu__inner--actu {
+  grid-template-columns: 0.6fr 1fr !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  border-bottom: 1px solid rgba(42,52,125,.10);
+  width: 100%;
+  max-width: 860px;
+}
+
+/* Colonne gauche : article à la une */
+.orege-mm-actu-une {
+  padding: 16px 18px 16px 18px;
+  border-right: 1px solid rgba(42,52,125,.10);
+}
+
+/* Titre de colonne — réutilise .orege-megamenu__col-title déjà défini */
+.orege-mm-actu-une .orege-megamenu__col-title,
+.orege-mm-actu-liste .orege-megamenu__col-title {
+  margin-bottom: 16px;
+}
+
+/* Carte article à la une */
+.orege-mm-actu-une__card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 0;
+  overflow: hidden;
+  border: 1px solid rgba(42,52,125,.20);
+  box-shadow: 0 2px 10px rgba(42,52,125,.10);
+  transition: box-shadow .2s, transform .2s;
+  background: rgba(255,255,255,.15);
+}
+.orege-mm-actu-une__card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(13,71,161,.16);
+}
+
+/* Bandeau image */
+.orege-mm-actu-une__img-wrap {
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg,#1a2660,#2a347d);
+}
+.orege-mm-actu-une__img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .4s;
+}
+.orege-mm-actu-une__card:hover .orege-mm-actu-une__img-wrap img { transform: scale(1.04); }
+.orege-mm-actu-une__img-fallback {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; color: rgba(255,255,255,.35);
+  pointer-events: none;
+}
+
+/* Corps de la carte */
+.orege-mm-actu-une__body {
+  padding: 10px 12px 12px;
+}
+.orege-mm-actu-une__cat {
+  display: inline-block;
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px;
+  padding: 2px 9px; border-radius: 10px;
+  margin-bottom: 9px;
+}
+.orege-mm-actu-une__title {
+  font-size: 12px; font-weight: 700; color: #2a347d; line-height: 1.4;
+  margin: 0 0 6px;
+}
+.orege-mm-actu-une__excerpt {
+  font-size: 11.5px; color: rgba(42,52,125,.6); line-height: 1.55;
+  margin: 0 0 6px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.orege-mm-actu-une__meta {
+  font-size: 11px; color: rgba(42,52,125,.4); margin: 0 0 10px;
+}
+.orege-mm-actu-une__cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 700; color: #2a347d;
+  padding: 6px 13px; border-radius: 0;
+  background: rgba(42,52,125,.15);
+  transition: background .15s, color .15s;
+}
+.orege-mm-actu-une__card:hover .orege-mm-actu-une__cta {
+  background: #2a347d; color: #7fddf0;
+}
+
+/* Colonne droite : liste articles récents */
+.orege-mm-actu-liste {
+  padding: 24px 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+}
+.orege-mm-actu-articles {
+  list-style: none; margin: 0; padding: 0;
+  flex: 1;
+}
+.orege-mm-actu-article {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 8px;
+  border-radius: 0;
+  text-decoration: none;
+  color: inherit;
+  transition: background .15s;
+  border-bottom: 1px solid rgba(42,52,125,.12);
+}
+.orege-mm-actu-article:last-child { border-bottom: none; }
+.orege-mm-actu-article:hover { background: rgba(42,52,125,.12); }
+.orege-mm-actu-article__cat {
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+}
+.orege-mm-actu-article__title {
+  font-size: 13px; font-weight: 600; color: #1d1d1b; line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.orege-mm-actu-article__date {
+  font-size: 10.5px; color: rgba(42,52,125,.4);
+}
+
+/* Pied du megamenu actualités */
+.orege-mm-actu-footer {
+  padding: 12px 24px;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(42,52,125,.08);
+  border-top: 1px solid rgba(42,52,125,.15);
+  border-radius: 0;
+  width: 100%;
+  max-width: 860px;
+  box-sizing: border-box;
+}
+
+/* Lien "voir toutes les actualités" */
+.orege-mm-actu-liste__all {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 12px; font-weight: 700; color: #2a347d;
+  padding: 7px 16px; border-radius: 2px;
+  border: 2px solid #2a347d;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+.orege-mm-actu-liste__all:hover { background: #2a347d; color: #7fddf0; }
+
+/* ============================================================
+   SITE FOOTER
+   Injected by nav.js into .orege-footer-placeholder elements.
+   ============================================================ */
+.orege-footer {
+  background: #2a347d;
+  color: rgba(255,255,255,.75);
+  padding: 48px 0 0;
+  margin-top: 80px;
+  position: relative;
+  /* Bord supérieur incliné ~1,5° — style charte Grand Est
+     Coin haut-gauche décalé vers le bas de 56px, coin haut-droit à 0 */
+  clip-path: polygon(0 56px, 100% 0, 100% 100%, 0 100%);
+  padding-top: calc(48px + 56px);   /* compense la découpe pour le contenu */
+}
+.orege-footer__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 32px;
+}
+.orege-footer__brand {}
+.orege-footer__brand-logo {
+  display: inline-block;
+  text-decoration: none;
+  margin-bottom: 16px;
+}
+.orege-footer__brand-img {
+  height: 60px;
+  width: auto;
+  max-width: 360px;
+  object-fit: contain;
+  display: block;
+}
+.orege-footer__brand-desc {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: rgba(255,255,255,.6);
+  margin-bottom: 16px;
+}
+.orege-footer__brand-partners {
+  font-size: 11px;
+  color: rgba(255,255,255,.4);
+}
+
+.orege-footer__col-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .7px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  margin-bottom: 14px;
+}
+.orege-footer__links {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.orege-footer__links a {
+  font-size: 13px;
+  color: rgba(255,255,255,.7);
+  text-decoration: none;
+  transition: color .15s;
+}
+.orege-footer__links a:hover { color: #fff; }
+
+.orege-footer__bottom {
+  margin-top: 36px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding: 16px 32px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 11.5px;
+  color: rgba(255,255,255,.35);
+}
+.orege-footer__bottom a {
+  color: rgba(255,255,255,.45);
+  text-decoration: none;
+}
+.orege-footer__bottom a:hover { color: rgba(255,255,255,.8); }
+.orege-footer__bottom-links {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   MEGA-MENU VARIANT: RESOURCES
+   Vertical list with icon, label and description per entry.
+   ============================================================ */
+
+.orege-megamenu--ressources {
+  width: auto !important;
+  min-width: 340px;
+  max-width: 420px;
+  padding: 0;
+  border-top: 3px solid #2a347d;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.orege-mm-res__header {
+  padding: 12px 20px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #2a347d;
+  background: rgba(42,52,125,.12);
+  border-bottom: 1px solid rgba(42,52,125,.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.orege-mm-res__list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.orege-mm-res__list li + li {
+  border-top: 1px solid rgba(42,52,125,.08);
+}
+
+.orege-mm-res__link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 18px;
+  text-decoration: none;
+  color: #2a347d;
+  transition: background .15s, color .15s;
+  border-left: 3px solid transparent;
+}
+.orege-mm-res__link:hover {
+  background: rgba(42,52,125,.12);
+  color: #2a347d;
+  border-left-color: #2a347d;
+  text-decoration: none;
+}
+
+.orege-mm-res__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 0;
+  background: rgba(42,52,125,.12);
+  color: #2a347d;
+  font-size: 15px;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+}
+.orege-mm-res__link:hover .orege-mm-res__icon {
+  background: #2a347d;
+  color: #fff;
+}
+  color: #fff;
+}
+
+.orege-mm-res__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.orege-mm-res__label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.orege-mm-res__desc {
+  display: block;
+  font-size: 11.5px;
+  color: rgba(42,52,125,.5);
+  line-height: 1.4;
+  margin-top: 3px;
+}
+.orege-mm-res__link:hover .orege-mm-res__desc {
+  color: #2a347d;
+}
+
+.orege-mm-res__arrow {
+  font-size: 10px;
+  color: rgba(42,52,125,.45);
+  flex-shrink: 0;
+  transition: transform .15s, color .15s;
+}
+.orege-mm-res__link:hover .orege-mm-res__arrow {
+  color: #2a347d;
+  transform: translateX(3px);
+}
+
+/* ============================================================
+   MEGA-MENU VARIANT: L'OBSERVATOIRE
+   Compact vertical list, aligned below the trigger button.
+   ============================================================ */
+
+/* Compact container aligned below the trigger button */
+.orege-megamenu--observatoire {
+  width: auto !important;
+  min-width: 300px;
+  max-width: 380px;
+  padding: 0;
+  border-top: 3px solid #2a347d;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+/* En-tête titre du menu */
+.orege-mm-obs__header {
+  padding: 12px 20px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #2a347d;
+  background: rgba(42,52,125,.12);
+  border-bottom: 1px solid rgba(42,52,125,.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Liste verticale */
+.orege-mm-obs__list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+}
+
+/* Séparateur fin entre entrées */
+.orege-mm-obs__list li + li {
+  border-top: 1px solid rgba(42,52,125,.08);
+}
+
+/* Lien de chaque entrée */
+.orege-mm-obs__link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  text-decoration: none;
+  color: #2a347d;
+  transition: background .15s, color .15s;
+  border-left: 3px solid transparent;
+}
+.orege-mm-obs__link:hover {
+  background: rgba(42,52,125,.12);
+  color: #2a347d;
+  border-left-color: #2a347d;
+  text-decoration: none;
+}
+
+/* Icône ronde */
+.orege-mm-obs__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 0;
+  background: rgba(42,52,125,.12);
+  color: #2a347d;
+  font-size: 15px;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+}
+.orege-mm-obs__link:hover .orege-mm-obs__icon {
+  background: #2a347d;
+  color: #ffffff;
+}
+
+/* Corps texte (label + description) */
+.orege-mm-obs__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.orege-mm-obs__label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.orege-mm-obs__desc {
+  display: block;
+  font-size: 11.5px;
+  color: rgba(42,52,125,.45);
+  line-height: 1.4;
+  margin-top: 3px;
+}
+.orege-mm-obs__link:hover .orege-mm-obs__desc {
+  color: #2a347d;
+}
+
+/* Chevron droit */
+.orege-mm-obs__arrow {
+  font-size: 10px;
+  color: rgba(42,52,125,.45);
+  flex-shrink: 0;
+  transition: transform .15s, color .15s;
+}
+.orege-mm-obs__link:hover .orege-mm-obs__arrow {
+  color: #2a347d;
+  transform: translateX(3px);
+}
+
+/* ============================================================
+   MÉGAMENU "JE SUIS" — liste verticale compacte
+   ============================================================ */
+
+/* Conteneur du mégamenu : largeur auto, aligné sous le bouton */
+.orege-megamenu--je-suis {
+  width: auto !important;  /* écrase le 100vw de .orege-megamenu */
+  min-width: 260px;
+  max-width: 320px;
+  padding: 0;
+  border-top: 3px solid #2a347d;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+/* En-tête "Je suis…" — même style que observatoire et ressources */
+.orege-mm-jesuis__header {
+  padding: 12px 20px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #2a347d;
+  background: rgba(42,52,125,.12);
+  border-bottom: 1px solid rgba(42,52,125,.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Liste verticale sans puce */
+.orege-mm-jesuis__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Chaque entrée */
+.orege-mm-jesuis__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 20px;
+  text-decoration: none;
+  color: #2a347d;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background .15s, color .15s;
+  border-left: 3px solid transparent;
+}
+.orege-mm-jesuis__link:hover {
+  background: rgba(42,52,125,.08);
+  color: #2a347d;
+  text-decoration: none;
+}
+/* Élu : hover bleu */
+.orege-mm-jesuis__link--elu:hover   { border-left-color: #2a347d; background: rgba(42,52,125,.10); }
+/* Technicien : hover violet */
+.orege-mm-jesuis__link--tech:hover  { border-left-color: #009fa4; background: rgba(0,159,164,.08); }
+/* Habitant : hover orange */
+.orege-mm-jesuis__link--hab:hover   { border-left-color: #b9e100; background: rgba(185,225,0,.10); }
+
+/* Icône gauche dans un carré coloré */
+.orege-mm-jesuis__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 0;
+  font-size: 15px;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+}
+/* Couleurs par profil */
+.orege-mm-jesuis__link--elu  .orege-mm-jesuis__icon { background: rgba(42,52,125,.12);  color: #2a347d; }
+.orege-mm-jesuis__link--tech .orege-mm-jesuis__icon { background: rgba(0,159,164,.12); color: #009fa4; }
+.orege-mm-jesuis__link--hab  .orege-mm-jesuis__icon { background: rgba(185,225,0,.15); color: #7a9600; }
+/* Hover : fond plein */
+.orege-mm-jesuis__link--elu:hover  .orege-mm-jesuis__icon { background: #2a347d;  color: #fff; }
+.orege-mm-jesuis__link--tech:hover .orege-mm-jesuis__icon { background: #009fa4; color: #fff; }
+.orege-mm-jesuis__link--hab:hover  .orege-mm-jesuis__icon { background: #b9e100; color: #1a2233; }
+
+/* Label */
+.orege-mm-jesuis__label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Chevron droit */
+.orege-mm-jesuis__arrow {
+  font-size: 10px;
+  color: rgba(42,52,125,.45);
+  transition: transform .15s, color .15s;
+}
+.orege-mm-jesuis__link:hover .orege-mm-jesuis__arrow {
+  color: #2a347d;
+  transform: translateX(3px);
+}
+
+/* Séparateur fin entre entrées */
+.orege-mm-jesuis__list li + li {
+  border-top: 1px solid rgba(42,52,125,.08);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+/* supprimé : fusionné dans le bloc ≤ 1100px ci-dessous */
+
+/* ============================================================
+   RESPONSIVE MOBILE / TABLETTE — ≤ 1100px
+   ============================================================ */
+@media (max-width: 1100px) {
+
+  /* ── Header mobile ── */
+  .orege-header {
+    padding: 0 16px;
+    height: 60px;
+  }
+  .orege-header__logo-img { height: 40px; }
+
+  /* ── Bouton hamburger : fond bleu plein, bien visible ── */
+  .orege-nav__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    margin-left: 0;
+    border: 2px solid #2a347d;
+    border-radius: 4px;
+    background: #2a347d;
+    color: #ffffff;
+    font-size: 0; /* neutralise font-size pour les spans */
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+  .orege-nav__toggle:hover {
+    background: #1e276b;
+    border-color: #1e276b;
+  }
+  .orege-nav__toggle[aria-expanded="true"] {
+    background: #1a2260;
+    border-color: #1a2260;
+  }
+
+  /* ── Loupe : margin-left auto pour pousser loupe+hamburger à droite ── */
+  .orege-nav__search-btn {
+    margin-left: auto;
+    margin-right: 8px;
+    width: 36px;
+    height: 36px;
+  }
+
+  /* ── Nav : cachée par défaut, panneau coulissant quand ouverte ── */
+  .orege-nav {
+    display: none;
+    padding-right: 0;
+  }
+  .orege-nav.is-open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ffffff;
+    padding: 0;
+    gap: 0;
+    z-index: 1099;
+    height: auto;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    align-items: stretch;
+    justify-content: flex-start; /* items alignés en haut */
+    box-shadow: 0 8px 32px rgba(0,0,0,.18);
+    border-top: 3px solid #2a347d;
+  }
+
+  /* ── Items de nav ── */
+  .orege-nav > ul {
+    display: flex !important;
+    flex-direction: column;
+    width: 100%;
+    align-self: flex-start; /* colle la liste en haut */
+  }
+  .orege-nav__item {
+    height: auto;
+    width: 100%;
+    border-bottom: 1px solid rgba(42,52,125,.07);
+  }
+  .orege-nav__link {
+    height: auto;
+    width: 100%;
+    padding: 13px 20px;
+    border-bottom: none;
+    color: #1d1d1b;
+    font-size: 13.5px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    box-sizing: border-box;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+  }
+  /* Icônes thématiques à gauche, taille fixe */
+  .orege-nav__link > i:not(.orege-nav__chevron) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #2a347d;
+    opacity: .8;
+    flex-shrink: 0;
+    width: 20px;
+  }
+  /* Badge collé au label */
+  .orege-mm-badge { flex-shrink: 0; }
+  /* Chevron toujours poussé à droite */
+  .orege-nav__chevron {
+    margin-left: auto !important;
+    font-size: 11px;
+    opacity: .45;
+    flex-shrink: 0;
+  }
+  .orege-nav__link[aria-expanded="true"] {
+    background: rgba(42,52,125,.06);
+    color: #2a347d;
+    border-bottom: 2px solid rgba(42,52,125,.15);
+  }
+  .orege-nav__link.is-active {
+    color: #2a347d;
+    background: rgba(42,52,125,.04);
+  }
+
+  /* ── Sous-menus inline dans la nav mobile ── */
+  .orege-megamenu {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #f4f6fb;
+    box-shadow: none;
+    border-top: none;
+    border-left: 4px solid #2a347d;
+    border-radius: 0;
+    display: none;
+    animation: none;
+    margin: 0;
+  }
+  .orege-megamenu.is-open {
+    display: block;
+  }
+
+  /* Tous les menus compacts : pleine largeur en mobile */
+  .orege-megamenu--je-suis,
+  .orege-megamenu--observatoire,
+  .orege-megamenu--ressources {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    border-top: none !important;
+  }
+
+  /* Grille en colonne unique */
+  .orege-megamenu__inner {
+    grid-template-columns: 1fr !important;
+    padding: 12px 16px 16px !important;
+    gap: 0 !important;
+  }
+  .orege-megamenu__col {
+    border-right: none;
+    border-bottom: 1px solid rgba(42,52,125,.10);
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+  }
+  .orege-megamenu__col:last-child { border-bottom: none; }
+
+  /* Liens mégamenu territoires en colonne */
+  .orege-megamenu--territoires .orege-megamenu__inner--territoires {
+    grid-template-columns: 1fr !important;
+    padding: 8px 12px 12px !important;
+  }
+
+  /* Menu actualités en colonne */
+  .orege-megamenu--actu .orege-megamenu__inner--actu {
+    grid-template-columns: 1fr !important;
+    padding: 0 !important;
+  }
+  .orege-mm-actu-une { border-right: none; border-bottom: 1px solid rgba(42,52,125,.10); }
+  .orege-mm-actu-liste { padding: 12px 16px; }
+  .orege-mm-actu-footer { max-width: 100%; }
+
+  /* Liens des sous-menus : cohérence visuelle */
+  .orege-mm-jesuis__link { padding: 12px 16px; font-size: 13.5px; }
+  .orege-mm-obs__link    { padding: 11px 16px; }
+  .orege-mm-res__link    { padding: 11px 16px; }
+
+  /* Overlay mégamenu désactivé en mobile */
+  .orege-megamenu-overlay { display: none !important; }
+
+  /* ── Footer : 2 colonnes ── */
+  .orege-footer__inner { grid-template-columns: 1fr 1fr; }
+
+  /* ── Padding-top body adapté ── */
+  body { padding-top: 60px !important; }
+}
+
+/* ── Très petits écrans ── */
+@media (max-width: 480px) {
+  .orege-header { padding: 0 12px; height: 56px; }
+  .orege-header__logo-img { height: 36px; }
+  .orege-nav.is-open { top: 56px; max-height: calc(100vh - 56px); }
+  body { padding-top: 56px !important; }
+
+  .orege-footer__inner { grid-template-columns: 1fr; }
+  .orege-megamenu__inner { padding: 10px 12px 14px !important; }
+
+  .orege-mm-jesuis__link,
+  .orege-mm-obs__link,
+  .orege-mm-res__link { padding: 10px 14px; font-size: 13px; }
+  .orege-mm-jesuis__icon,
+  .orege-mm-obs__icon,
+  .orege-mm-res__icon { width: 30px; height: 30px; font-size: 13px; }
+
+  .orege-footer { margin-top: 40px; }
+}
+
+/* ── Accent de couleur sur l'item actif du méga-menu (desktop uniquement) ── */
+@media (min-width: 1101px) {
+  .orege-nav__link[aria-expanded="true"] {
+    background: rgba(42,52,125,.06);
+    border-bottom-color: #2a347d;
+  }
+}
+
+/* ── Séparateur visuel entre les groupes de nav ── */
+.orege-nav__item + .orege-nav__item::before {
+  content: '';
+  display: none; /* retiré — séparation par espacement */
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<title>Extrait communes JSON</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+<script>
+// On veut juste la liste brute des noms de communes dans l'ordre du fichier
+(async function() {
+  const resp = await fetch('../data/listing_territoires.xlsx');
+  const buf  = await resp.arrayBuffer();
+  const wb   = XLSX.read(buf, { type: 'array' });
+  const ws   = wb.Sheets['Feuil1'];
+  const data = XLSX.utils.sheet_to_json(ws, { defval: '' });
+
+  const communes = data
+    .filter(r => r['Typologie territoire'] === 'Commune')
+    .map(r => r['Nom territoire']);
+
+  // Afficher sous forme de tableau JS compact
+  // Groupés par département pour vérification
+  const byDept = {};
+  communes.forEach((nom, i) => {
+    const m = nom.match(/\((\d{2})/);
+    const d = m ? m[1] : '00';
+    if (!byDept[d]) byDept[d] = 0;
+    byDept[d]++;
+  });
+  console.log('Total communes:', communes.length);
+  console.log('Par dept:', JSON.stringify(byDept));
+
+  // Afficher les 5 premières et 5 dernières
+  communes.slice(0, 5).forEach((n,i) => console.log('FIRST['+i+']: '+n));
+  communes.slice(-5).forEach((n,i) => console.log('LAST['+(communes.length-5+i)+']: '+n));
+
+  // Taille si on encode juste les noms
+  const namesOnly = JSON.stringify(communes);
+  console.log('Taille noms JSON:', namesOnly.length, 'chars ~', Math.round(namesOnly.length/1024), 'Ko');
+
+  // Stocker pour inspection
+  window._communes = communes;
+})();
+</script>
+</body>
+</html>

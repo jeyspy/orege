@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>FAQ – Observatoire de l'Eau Grand Est</title>
+  <meta name="description" content="Foire aux questions sur la plateforme Observatoire de l'Eau Grand Est : utilisation, données, accès, indicateurs.">
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="css/fonts.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/a11y.css">
+  <!-- Page-specific styles for the FAQ page -->
+  <link rel="stylesheet" href="css/faq.css">
+</head>
+<body class="nav-loading">
+<a href="#main-content" class="sr-only focusable">Aller au contenu principal</a>
+
+<header class="orege-header" role="banner">
+  <a href="index.html" class="orege-header__logo" aria-label="Observatoire de l'Eau Grand Est – Accueil">
+    <img src="images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true" width="44" height="44" loading="eager">
+    <span class="orege-header__logo-text">Observatoire de l'Eau<br><span>Grand Est</span></span>
+  </a>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero__inner">
+    <nav class="page-hero__eyebrow" aria-label="Fil d'ariane">
+      <ol>
+        <li><a href="index.html"><i class="ph ph-house" aria-hidden="true"></i> Accueil</a></li>
+        <li><i class="ph ph-caret-right" aria-hidden="true"></i></li>
+        <li><span aria-current="page">FAQ</span></li>
+      </ol>
+    </nav>
+    <h1 class="page-hero__title">Questions fréquentes</h1>
+    <p class="page-hero__sub">Tout ce que vous souhaitez savoir sur la plateforme Observatoire de l'Eau Grand Est.</p>
+  </div>
+</div>
+
+<main id="main-content">
+<div class="article-body-wrap">
+
+  <!-- ── Corps ── -->
+  <div class="article-content">
+
+  <!-- ── Corps ── -->
+  <div class="article-content">
+
+    <!-- Search bar + category filter chips -->
+    <div class="faq-search" style="margin-bottom:16px;">
+      <input type="search" id="faq-search-input" class="faq-search__input"
+             placeholder="Rechercher dans la FAQ…"
+             aria-label="Rechercher dans les questions fréquentes"
+             autocomplete="off">
+      <i class="ph ph-magnifying-glass faq-search__icon" aria-hidden="true"></i>
+    </div>
+
+    <div class="faq-filters" role="group" aria-label="Filtrer par catégorie">
+      <button class="faq-filter-btn is-active" data-filter="all" aria-pressed="true">
+        <i class="ph ph-list" aria-hidden="true"></i> Toutes les catégories
+      </button>
+      <button class="faq-filter-btn" data-filter="general" aria-pressed="false">
+        <i class="ph ph-info" aria-hidden="true"></i> La plateforme
+      </button>
+      <button class="faq-filter-btn" data-filter="donnees" aria-pressed="false">
+        <i class="ph ph-database" aria-hidden="true"></i> Les données
+      </button>
+      <button class="faq-filter-btn" data-filter="navigation" aria-pressed="false">
+        <i class="ph ph-compass" aria-hidden="true"></i> Navigation
+      </button>
+      <button class="faq-filter-btn" data-filter="accessibilite" aria-pressed="false">
+        <i class="ph ph-person" aria-hidden="true"></i> Accessibilité
+      </button>
+    </div>
+
+    <div id="faq-no-results" class="faq-no-results">
+      <i class="ph ph-warning-circle" aria-hidden="true"></i>
+      Aucune question ne correspond à votre recherche.
+    </div>
+
+    <!-- FAQ SECTION 1: General questions -->
+    <section class="faq-section-wrap" id="faq-general" data-category="general">
+      <div class="section-heading">
+        <div class="section-heading__icon"><i class="ph ph-info" aria-hidden="true"></i></div>
+        <div class="section-heading__inner">
+          <div class="section-heading__tag">À propos</div>
+          <h2 class="section-heading__title">La plateforme</h2>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="observatoire eau grand est plateforme">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a1">
+          Qu'est-ce que l'Observatoire de l'Eau Grand Est ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a1" role="region">
+          <p>L'Observatoire de l'Eau Grand Est est une plateforme régionale de centralisation, d'harmonisation et de diffusion des données relatives à l'eau sur le territoire Grand Est. Elle est portée par la Région Grand Est, en partenariat avec les agences de l'eau Rhin-Meuse et Seine-Normandie, la DREAL Grand Est et d'autres acteurs institutionnels.</p>
+          <p>Elle met à disposition des indicateurs territoriaux, des cartes thématiques, des retours d'expérience et une base documentaire pour accompagner les élus, techniciens et citoyens dans la compréhension et la gestion des enjeux de l'eau.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="accès gratuit connexion inscription compte">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a2">
+          L'accès à la plateforme est-il gratuit ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a2" role="region">
+          <p>Oui, l'accès à la totalité de la plateforme est <strong>entièrement gratuit et sans inscription</strong>. Toutes les données, cartes, indicateurs et ressources documentaires sont librement accessibles sans création de compte.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="prototype version finale mise à jour production">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a3">
+          La plateforme est-elle en version définitive ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a3" role="region">
+          <p>La version actuelle est un <strong>prototype UX</strong> qui permet de valider les fonctionnalités et les parcours utilisateurs. Les données affichées sont <strong>indicatives</strong> (valeurs simulées cohérentes) et ne constituent pas des données officielles.</p>
+          <p>La version de production, avec alimentation automatisée via les API nationales (SANDRE, Hub Eau) et les producteurs locaux, est prévue pour une mise en ligne progressive à partir de 2026.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="contact signaler erreur bug problème">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a4">
+          Comment signaler une erreur ou un problème sur la plateforme ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a4" role="region">
+          <p>Pour signaler une anomalie, une erreur de données ou tout problème technique, vous pouvez nous contacter via l'adresse indiquée dans les <a href="mentions-legales.html#contact">mentions légales</a>. Merci de préciser la page concernée, le type d'erreur observé et si possible une capture d'écran.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION 2: Data & indicators -->
+    <section class="faq-section-wrap" id="faq-donnees" data-category="donnees">
+      <div class="section-heading">
+        <div class="section-heading__icon"><i class="ph ph-database" aria-hidden="true"></i></div>
+        <div class="section-heading__inner">
+          <div class="section-heading__tag">Sources &amp; mise à jour</div>
+          <h2 class="section-heading__title">Les données</h2>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="source données fiabilité officielle">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a5">
+          D'où proviennent les données affichées sur la plateforme ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a5" role="region">
+          <p>Les indicateurs de la plateforme sont construits à partir de multiples sources :</p>
+          <ul>
+            <li><strong>Sources nationales</strong> : SANDRE, Hub'Eau, BRGM, Météo-France, BDCA.</li>
+            <li><strong>Agences de l'eau</strong> : Rhin-Meuse et Seine-Normandie (données DCE, redevances, PDM).</li>
+            <li><strong>Producteurs locaux</strong> : collectivités, syndicats de rivières, EPTB, services de l'État.</li>
+          </ul>
+          <p>Chaque indicateur dispose d'une fiche méthodologique précisant sa source, son unité et sa méthode de calcul.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="télécharger exporter données open data csv excel">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a6">
+          Puis-je télécharger les données ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a6" role="region">
+          <p>Dans la version prototype actuelle, le téléchargement direct des données n'est pas encore disponible. La mise en place d'un accès Open Data (formats CSV, GeoJSON, Excel) est prévue dans la feuille de route de la version de production.</p>
+          <p>En attendant, pour les besoins spécifiques de données, vous pouvez contacter les sources primaires directement (SANDRE, Hub'Eau, agences de l'eau).</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="mise à jour fréquence actualisation données temps réel">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a7">
+          À quelle fréquence les données sont-elles mises à jour ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a7" role="region">
+          <p>La fréquence de mise à jour varie selon l'indicateur et la source :</p>
+          <ul>
+            <li><strong>Données temps réel</strong> : niveaux de nappes, débits des cours d'eau — actualisation pluriquotidienne.</li>
+            <li><strong>Données annuelles</strong> : qualité des eaux distribuées, prélèvements sectoriels — actualisation annuelle.</li>
+            <li><strong>Données pluriannuelles</strong> : état des masses d'eau, zones humides — actualisation par cycle DCE (6 ans).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="territoire commune disponible couverture geographic">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a8">
+          Quels territoires sont couverts par la plateforme ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a8" role="region">
+          <p>La plateforme couvre l'ensemble du <strong>territoire Grand Est</strong>, soit :</p>
+          <ul>
+            <li>La <strong>Région Grand Est</strong> dans son ensemble</li>
+            <li>Les <strong>10 départements</strong> : Ardennes, Aube, Bas-Rhin, Haut-Rhin, Haute-Marne, Marne, Meurthe-et-Moselle, Meuse, Moselle, Vosges</li>
+            <li>Les principales <strong>agglomérations et intercommunalités</strong> (EPCI)</li>
+            <li>Les <strong>5 115 communes</strong> du Grand Est</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION 3: Navigation & features -->
+    <section class="faq-section-wrap" id="faq-navigation" data-category="navigation">
+      <div class="section-heading">
+        <div class="section-heading__icon"><i class="ph ph-compass" aria-hidden="true"></i></div>
+        <div class="section-heading__inner">
+          <div class="section-heading__tag">Utilisation</div>
+          <h2 class="section-heading__title">Navigation &amp; fonctionnalités</h2>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="tableau de bord indicateur territoire commune recherche">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a9">
+          Comment accéder aux données de ma commune ou de mon territoire ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a9" role="region">
+          <p>Deux parcours sont disponibles selon votre profil :</p>
+          <ul>
+            <li><strong>Pour les élus et décideurs</strong> : rendez-vous sur <a href="template/decouvrir-mon-territoire.html">Découvrir mon territoire</a>. Vous y trouverez des indicateurs simplifiés pour votre territoire.</li>
+            <li><strong>Pour les techniciens et spécialistes</strong> : rendez-vous sur <a href="template/tableaux-de-bord.html">Les Indicateurs</a>. Vous y trouverez les 94 indicateurs techniques classés par thème.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="cartographie carte couche filtre légende">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a10">
+          Comment utiliser la cartographie interactive ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a10" role="region">
+          <p>La <a href="template/cartographie.html">page Cartographie</a> dispose de deux panneaux latéraux :</p>
+          <ul>
+            <li><strong>Panneau Données</strong> (gauche) : sélectionnez une ou plusieurs couches thématiques à afficher. Chaque couche peut être activée/désactivée individuellement.</li>
+            <li><strong>Panneau Territoires</strong> (droit) : sélectionnez un territoire de référence pour centrer la carte.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="mon tableau de bord personnel favori personnaliser indicateur">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a11">
+          À quoi sert la fonctionnalité « Mon tableau de bord » ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a11" role="region">
+          <p><a href="template/mon-tableau-de-bord.html">Mon tableau de bord</a> vous permet de <strong>personnaliser votre espace de suivi</strong> en choisissant jusqu'à 9 indicateurs parmi les 94 disponibles. Votre configuration est sauvegardée localement dans votre navigateur.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="retex retour expérience déposer contribuer projet">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a12">
+          Comment contribuer en déposant un retour d'expérience ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a12" role="region">
+          <p>Le formulaire de <a href="ressources-depot.html">dépôt de retour d'expérience</a> vous permet de partager un projet inspirant. Après validation par l'équipe de l'observatoire, votre projet sera intégré à la <a href="ressources-retex.html">bibliothèque de retours d'expérience</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION 4: Accessibility -->
+    <section class="faq-section-wrap" id="faq-accessibilite" data-category="accessibilite">
+      <div class="section-heading">
+        <div class="section-heading__icon"><i class="ph ph-person" aria-hidden="true"></i></div>
+        <div class="section-heading__inner">
+          <div class="section-heading__tag">RGAA &amp; technique</div>
+          <h2 class="section-heading__title">Accessibilité &amp; technique</h2>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="accessibilité RGAA handicap daltonien clavier lecteur écran">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a13">
+          La plateforme est-elle accessible aux personnes en situation de handicap ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a13" role="region">
+          <p>La plateforme est développée en suivant le <strong>Référentiel Général d'Amélioration de l'Accessibilité (RGAA 4.1)</strong>. La <a href="accessibilite.html">déclaration d'accessibilité complète</a> détaille les critères évalués et les éventuels points de non-conformité.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="navigateur compatible mobile tablette responsive">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a14">
+          Sur quels appareils et navigateurs la plateforme fonctionne-t-elle ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a14" role="region">
+          <p>La plateforme est optimisée pour les <strong>navigateurs modernes</strong> : Chrome (v100+), Firefox (v100+), Edge (v100+), Safari (v15+).</p>
+          <p>Elle est <strong>responsive</strong> et s'adapte aux écrans de toutes tailles. Internet Explorer n'est pas supporté.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-keywords="cookies données personnelles RGPD confidentialité">
+        <button class="faq-item__question" aria-expanded="false" aria-controls="faq-a15">
+          La plateforme utilise-t-elle des cookies et collecte-t-elle des données personnelles ?
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </button>
+        <div class="faq-item__answer" id="faq-a15" role="region">
+          <p>La plateforme utilise des <strong>cookies techniques essentiels</strong> (mémorisation des préférences du tableau de bord personnalisé via localStorage) qui ne nécessitent pas de consentement.</p>
+          <p>Pour en savoir plus : <a href="mentions-legales.html#rgpd">Politique de confidentialité &amp; RGPD</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Load more button for FAQ items -->
+    <div class="load-more-wrap" id="faq-load-more-wrap">
+      <button class="load-more-btn" id="faq-load-more-btn" aria-label="Charger plus de questions">
+        <i class="ph ph-plus" aria-hidden="true"></i> Charger plus de questions
+      </button>
+      <p class="load-more-count" id="faq-load-more-count"></p>
+    </div>
+
+    <!-- Contact / feedback CTA -->
+    <div class="faq-contact">
+      <div class="faq-contact__title">Votre question n'est pas listée ?</div>
+      <p class="faq-contact__sub">L'équipe de l'Observatoire de l'Eau Grand Est est là pour vous répondre.</p>
+      <a href="mentions-legales.html#contact" class="faq-contact__btn">
+        <i class="ph ph-envelope" aria-hidden="true"></i> Nous contacter
+      </a>
+    </div>
+
+  </div><!-- /article-content -->
+</div><!-- /article-body-wrap -->
+</main>
+
+<!-- PARTNER LOGO BANNER -->
+<section class="partenaires-bandeau" aria-label="Partenaires">
+  <div class="partenaires-bandeau__inner">
+    <p class="partenaires-bandeau__label">Une plateforme à<br>l'initiative de</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://www.grandest.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-grandest.png" alt="La Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.prefectures-regions.gouv.fr/grand-est" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-prefet-grand-est.png" alt="Préfet de la Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <p class="partenaires-bandeau__label">Et co-financé<br>par</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://european-union.europa.eu/index_fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-union-europeenne.png" alt="Union Européenne" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.lesagencesdeleau.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-agences-eau.png" alt="Les Agences de l'Eau" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+  </div>
+</section>
+<div class="orege-footer-placeholder"></div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/a11y.js"></script>
+<!-- Page-specific JS: accordéon, filtres, recherche, load-more -->
+<script src="js/faq.js"></script>
+</body>
+</html>

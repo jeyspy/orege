@@ -1,0 +1,334 @@
+/* ============================================================
+   css/retex-detail.css
+   Page-specific styles for retex-detail.html
+   (Fiche Retour d'expérience — detail view)
+
+   Depends on:
+     css/style.css   — design tokens (colors, fonts, spacing)
+     css/pages.css   — .page-hero, .page-hero__inner, etc.
+     css/nav.css     — header / megamenu
+
+   Sections:
+     1. HERO IMAGE (right-side panel)
+     2. LAYOUT (sticky TOC + main content grid)
+     3. STICKY TABLE OF CONTENTS
+     4. RETEX SECTIONS
+     5. SYNTHESIS GRID
+     6. NUMERIC DATA GRID
+     7. THEMATIC CHIPS
+     8. FINANCING BLOCK
+     9. DOCUMENTS LIST
+    10. CONTACT ITEMS
+    11. PROFILE TAGS
+    12. BOTTOM NAVIGATION BUTTONS
+    13. RESPONSIVE OVERRIDES
+============================================================ */
+
+/* ── 1. HERO IMAGE — right-side panel ── */
+/* Keeps the page-hero overflow hidden so the image does not bleed */
+.page-hero { overflow: hidden; position: relative; }
+
+/* Absolute right panel — 38% width, full height */
+.obs-hero-img {
+  position: absolute; top: 0; right: 0;
+  width: 38%; height: 100%; overflow: hidden; z-index: 0;
+}
+.obs-hero-img img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center; display: block;
+}
+
+/* Keep text readable over the hero image on the left side */
+.page-hero__inner { position: relative; z-index: 1; }
+.page-hero__inner .page-hero__title,
+.page-hero__inner .page-hero__sub { max-width: 58%; }
+
+/* ── 2. LAYOUT — sticky TOC + content, 2-column grid ── */
+html, body { overflow-x: clip; }
+
+.retex-body-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 32px 80px;
+  display: grid;
+  grid-template-columns: 220px 1fr; /* sidebar | content */
+  gap: 56px;
+  align-items: flex-start;
+}
+
+/* ── 3. STICKY TABLE OF CONTENTS ── */
+.article-toc {
+  position: sticky;
+  top: 120px;           /* offset = header + subnav height */
+  align-self: flex-start;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox: hide scrollbar but keep scroll */
+}
+.article-toc::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+/* TOC heading */
+.article-toc__title {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: #2a347d;
+  border-left: 3px solid #fbd020; /* yellow accent line */
+  padding-left: 10px;
+  margin-bottom: 16px;
+}
+
+/* TOC list reset */
+.article-toc__list { list-style: none; margin: 0; padding: 0; }
+
+/* Each list item has a left-border indicator */
+.article-toc__list li {
+  border-left: 2px solid #e4e8f0;
+  transition: border-color .15s;
+}
+/* Active indicator — highlighted when the linked section is in view */
+.article-toc__list li.is-active { border-left-color: #2a347d; }
+
+/* TOC links */
+.article-toc__list a {
+  display: block;
+  padding: 7px 0 7px 12px;
+  font-size: 12.5px; color: #4a5a78;
+  text-decoration: none; line-height: 1.4;
+  transition: color .15s;
+}
+.article-toc__list li.is-active a { color: #2a347d; font-weight: 700; }
+.article-toc__list a:hover { color: #2a347d; }
+
+/* Horizontal rule separator inside TOC */
+.article-toc__sep { border: none; border-top: 1px solid #e4e8f0; margin: 20px 0; }
+
+/* ── 4. RETEX SECTIONS ── */
+/* Anchor offset so sticky header does not cover section titles */
+.rd-anchor { scroll-margin-top: 120px; }
+
+/* Each content section */
+.rd-section {
+  margin-bottom: 48px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(42,52,125,.12);
+}
+/* Last section has no bottom border */
+.rd-section:last-of-type { border-bottom: none; margin-bottom: 0; }
+
+/* Section header row: icon + tag + title */
+.rd-section__header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 20px; padding-bottom: 14px;
+  border-bottom: 2px solid #7fddf0; /* sky-blue accent */
+}
+
+/* Square icon box */
+.rd-section__icon {
+  width: 44px; height: 44px; background: #2a347d;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: #fff; flex-shrink: 0;
+}
+
+/* Small category label above the title */
+.rd-section__tag {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .6px; color: rgba(42,52,125,.5); margin-bottom: 4px;
+}
+
+/* Section main title */
+.rd-section__title {
+  font-family: 'Cabinet Grotesk', system-ui, sans-serif;
+  font-size: 22px; font-weight: 800; color: #2a347d; margin: 0;
+}
+
+/* Body text within a section */
+.rd-section__body p { font-size: 15px; color: #3a4a6b; line-height: 1.75; margin-bottom: 14px; }
+.rd-section__body p:last-child { margin-bottom: 0; }
+.rd-section__body ul { padding-left: 20px; margin-bottom: 16px; }
+.rd-section__body ul li { font-size: 14.5px; color: #3a4a6b; line-height: 1.65; margin-bottom: 6px; }
+.rd-section__body strong { color: #1a2233; }
+
+/* ── 5. SYNTHESIS GRID — key project metadata ── */
+/* Auto-fill grid with a 1px border grid pattern */
+.rd-synthese {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0;
+  border: 1px solid #dde3f0;
+  margin-bottom: 40px;
+}
+.rd-synthese__item {
+  padding: 14px 18px;
+  border-right: 1px solid #dde3f0;
+  border-bottom: 1px solid #dde3f0;
+}
+.rd-synthese__item:last-child { border-right: none; }
+
+/* Uppercase micro-label */
+.rd-synthese__label {
+  font-size: 9.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .7px;
+  color: #4a5a78; margin-bottom: 5px;
+}
+/* Value text */
+.rd-synthese__value {
+  font-size: 13.5px; font-weight: 700; color: #1a2233; line-height: 1.3;
+}
+/* Highlighted value (e.g. budget) — larger Cabinet Grotesk font */
+.rd-synthese__value--highlight {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 17px; color: #2a347d;
+}
+
+/* ── 6. NUMERIC DATA GRID ── */
+.rd-data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.rd-data-item {
+  background: #f5f7fc;
+  border: 1px solid #e2e8f4;
+  padding: 14px 16px;
+}
+.rd-data-item__label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .6px;
+  color: #4a5a78; margin-bottom: 4px;
+}
+.rd-data-item__value {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 20px; font-weight: 800; color: #2a347d; line-height: 1.2;
+}
+
+/* ── 7. THEMATIC CHIPS ── */
+.rd-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+
+.rd-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px;
+  background: #f0f3fb;
+  border: 1px solid rgba(42,52,125,.2);
+  font-size: 12px; font-weight: 600; color: #2a347d;
+}
+.rd-chip i { font-size: 11px; }
+
+/* Clickable chip variant */
+.rd-chip--link {
+  background: rgba(42,52,125,.08);
+  cursor: pointer; text-decoration: none;
+  transition: background .15s;
+}
+.rd-chip--link:hover { background: #2a347d; color: #fff; }
+
+/* ── 8. FINANCING BLOCK ── */
+.rd-financement {
+  background: #f5f7fc;
+  border: 1px solid #e2e8f4;
+  border-left: 4px solid #2a347d; /* strong left accent */
+  padding: 18px 20px;
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 16px;
+}
+.rd-financement__icon {
+  width: 44px; height: 44px;
+  background: #2a347d; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.rd-financement__label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .6px;
+  color: #4a5a78; margin-bottom: 3px;
+}
+.rd-financement__value { font-size: 15px; font-weight: 700; color: #1a2233; }
+
+/* ── 9. DOCUMENTS LIST ── */
+.rd-doc-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f4;
+  margin-bottom: 8px;
+  transition: border-color .15s;
+  text-decoration: none;
+}
+.rd-doc-item:hover { border-color: #2a347d; }
+.rd-doc-item__icon {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.rd-doc-item__name { font-size: 13px; font-weight: 600; color: #1a2233; }
+.rd-doc-item__meta { font-size: 11px; color: #4a5a78; }
+
+/* ── 10. CONTACT ITEMS ── */
+.rd-contact-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 14px; color: #3a4a6b;
+  padding: 8px 0; border-bottom: 1px solid #f0f3f9;
+}
+.rd-contact-item:last-child { border-bottom: none; }
+.rd-contact-item i { color: #2a347d; width: 16px; margin-top: 3px; flex-shrink: 0; }
+
+/* ── 11. PROFILE TAGS ── */
+.rd-profil-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.rd-profil-tag {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+  padding: 5px 13px; border-radius: 20px;
+}
+/* Color variants per audience */
+.rd-profil-tag--elu   { background: rgba(42,52,125,.12);  color: #2a347d; }
+.rd-profil-tag--tech  { background: rgba(115,30,140,.12); color: #731e8c; }
+.rd-profil-tag--hab   { background: rgba(250,100,10,.12); color: #fa640a; }
+
+/* ── 12. BOTTOM NAVIGATION BUTTONS ── */
+.rd-nav-bottom {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  margin-top: 48px; padding-top: 28px;
+  border-top: 2px solid #eaeff7;
+}
+
+/* Base button style */
+.rd-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .5px;
+  text-decoration: none; cursor: pointer;
+  border-radius: 0; transition: all .15s;
+  font-family: 'Satoshi', system-ui, sans-serif;
+}
+/* Primary — solid dark blue */
+.rd-btn--primary { background: #2a347d; color: #fff; border: 2px solid #2a347d; }
+.rd-btn--primary:hover { background: #1e276b; border-color: #1e276b; color: #fff; }
+/* Outline — white fill + blue border */
+.rd-btn--outline { background: #fff; color: #2a347d; border: 2px solid #2a347d; }
+.rd-btn--outline:hover { background: #2a347d; color: #fff; }
+/* Light — subtle grey */
+.rd-btn--light { background: #f5f7fc; color: #3a4a6b; border: 2px solid #e2e8f4; }
+.rd-btn--light:hover { border-color: #2a347d; color: #2a347d; }
+
+/* ── 13. RESPONSIVE OVERRIDES ── */
+/* Tablet: hide hero image, full-width text */
+@media (max-width: 768px) {
+  .obs-hero-img { display: none; }
+  .page-hero__inner .page-hero__title,
+  .page-hero__inner .page-hero__sub { max-width: 100%; }
+}
+
+/* Mobile: single-column layout */
+@media (max-width: 860px) {
+  .retex-body-wrap {
+    grid-template-columns: 1fr;
+    padding: 32px 20px 60px;
+    gap: 32px;
+  }
+  /* TOC becomes static (no longer sticky) */
+  .article-toc { position: static; max-height: none; }
+}
+
+/* Small mobile: 2-column synthesis grid */
+@media (max-width: 640px) {
+  .rd-synthese { grid-template-columns: 1fr 1fr; }
+  .rd-synthese__item:nth-child(even) { border-right: none; }
+}

@@ -1,0 +1,448 @@
+/**
+ * contact.css — Page Contact
+ * Observatoire de l'Eau Grand Est
+ */
+
+/* ============================================================
+   LAYOUT PRINCIPAL
+   ============================================================ */
+
+.contact-wrap {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* ============================================================
+   COLONNE GAUCHE — ASIDE
+   ============================================================ */
+
+.contact-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: sticky;
+  top: 140px;
+}
+
+/* Carte d'introduction */
+.contact-intro-card {
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8f4fb 100%);
+  border: 1px solid rgba(42,52,125,.12);
+  border-left: 4px solid #2a347d;
+  border-radius: 0;
+  padding: 28px 24px;
+}
+
+.contact-intro-card__icon {
+  width: 52px;
+  height: 52px;
+  background: #2a347d;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: #7fddf0;
+  margin-bottom: 16px;
+}
+
+.contact-intro-card__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #2a347d;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.contact-intro-card__text {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.65;
+  margin-bottom: 10px;
+}
+.contact-intro-card__text:last-child { margin-bottom: 0; }
+
+/* Canaux de contact */
+.contact-channels {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-channel {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid rgba(42,52,125,.1);
+  border-radius: 0;
+  padding: 14px 16px;
+  transition: box-shadow .15s;
+}
+.contact-channel:hover {
+  box-shadow: 0 2px 12px rgba(42,52,125,.1);
+}
+
+.contact-channel__icon {
+  width: 36px;
+  height: 36px;
+  background: #EEF2FF;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #2a347d;
+  flex-shrink: 0;
+}
+
+.contact-channel__label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: rgba(42,52,125,.5);
+  margin-bottom: 2px;
+}
+
+.contact-channel__value {
+  font-size: 13px;
+  color: #1d1d1b;
+  line-height: 1.4;
+}
+
+/* Partenaires */
+.contact-partners {
+  background: #fff;
+  border: 1px solid rgba(42,52,125,.1);
+  border-radius: 0;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.contact-partners__label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: rgba(42,52,125,.5);
+  white-space: nowrap;
+}
+
+.contact-partners__logos img {
+  max-height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ============================================================
+   COLONNE DROITE — FORMULAIRE
+   ============================================================ */
+
+.contact-form-section {
+  background: #fff;
+  border: 1px solid rgba(42,52,125,.1);
+  border-radius: 0;
+  padding: 40px;
+  box-shadow: 0 4px 24px rgba(42,52,125,.07);
+}
+
+.contact-form-section__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2a347d;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contact-form-section__title i {
+  font-size: 22px;
+  color: #2a347d;
+}
+
+.contact-form-section__sub {
+  font-size: 13px;
+  color: rgba(42,52,125,.55);
+  margin-bottom: 28px;
+}
+
+.contact-required-star {
+  color: #e53935;
+  font-weight: 700;
+}
+
+/* ── Groupe de champ ── */
+.contact-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.contact-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.contact-form__group:last-of-type { margin-bottom: 0; }
+.contact-form__row .contact-form__group { margin-bottom: 0; }
+
+/* ── Labels ── */
+.contact-form__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d1d1b;
+  letter-spacing: .1px;
+}
+
+/* ── Inputs ── */
+.contact-form__input,
+.contact-form__select,
+.contact-form__textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid rgba(42,52,125,.2);
+  border-radius: 0;
+  font-family: var(--font-family-base, 'Satoshi', sans-serif);
+  font-size: 14px;
+  color: #1d1d1b;
+  background: #fafbff;
+  transition: border-color .18s, box-shadow .18s;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.contact-form__input:focus,
+.contact-form__select:focus,
+.contact-form__textarea:focus {
+  border-color: #2a347d;
+  box-shadow: 0 0 0 3px rgba(42,52,125,.1);
+  background: #fff;
+}
+
+.contact-form__input.is-error,
+.contact-form__select.is-error,
+.contact-form__textarea.is-error {
+  border-color: #e53935;
+  box-shadow: 0 0 0 3px rgba(229,57,53,.1);
+}
+
+.contact-form__input::placeholder,
+.contact-form__textarea::placeholder { color: rgba(42,52,125,.35); }
+
+/* Select : flèche custom */
+.contact-form__select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%232a347d' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+/* Textarea */
+.contact-form__textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+.contact-form__textarea-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.contact-form__count {
+  font-size: 11px;
+  color: rgba(42,52,125,.4);
+  white-space: nowrap;
+  margin-left: auto;
+}
+.contact-form__count.is-warning { color: #e65100; }
+.contact-form__count.is-danger  { color: #e53935; }
+
+/* ── Erreurs ── */
+.contact-form__error {
+  font-size: 12px;
+  color: #e53935;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.contact-form__error::before {
+  content: '⚠';
+  font-size: 11px;
+}
+
+/* ── Checkbox RGPD ── */
+.contact-form__group--checkbox {
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.contact-form__checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.contact-form__checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.contact-form__checkbox-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(42,52,125,.3);
+  border-radius: 0;
+  background: #fafbff;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: background .15s, border-color .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-form__checkbox:checked + .contact-form__checkbox-custom {
+  background: #2a347d;
+  border-color: #2a347d;
+}
+.contact-form__checkbox:checked + .contact-form__checkbox-custom::after {
+  content: '';
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+  display: block;
+}
+
+.contact-form__checkbox:focus-visible + .contact-form__checkbox-custom {
+  box-shadow: 0 0 0 3px rgba(42,52,125,.2);
+}
+
+.contact-form__rgpd-link {
+  color: #2a347d;
+  text-decoration: underline;
+}
+.contact-form__rgpd-link:hover { color: #1a2260; }
+
+/* ── Actions ── */
+.contact-form__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+.contact-form__submit {
+  flex: 1;
+  justify-content: center;
+  min-width: 200px;
+}
+.contact-form__submit.is-loading {
+  opacity: .7;
+  pointer-events: none;
+}
+.contact-form__submit.is-loading i {
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.contact-form__reset {
+  white-space: nowrap;
+}
+
+/* ── Message de succès ── */
+.contact-success {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.contact-success__icon {
+  font-size: 64px;
+  color: #4CAF50;
+  margin-bottom: 16px;
+  animation: popIn .4s cubic-bezier(.175,.885,.32,1.275);
+}
+@keyframes popIn {
+  from { transform: scale(.5); opacity: 0; }
+  to   { transform: scale(1);  opacity: 1; }
+}
+
+.contact-success__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2a347d;
+  margin-bottom: 10px;
+}
+
+.contact-success__text {
+  font-size: 15px;
+  color: #555;
+  max-width: 460px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 960px) {
+  .contact-wrap {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 32px 20px 60px;
+  }
+  .contact-aside {
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-form-section {
+    padding: 24px 18px;
+    border-radius: 0;
+  }
+  .contact-form__row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .contact-form__row .contact-form__group {
+    margin-bottom: 20px;
+  }
+  .contact-form__actions {
+    flex-direction: column;
+  }
+  .contact-form__submit,
+  .contact-form__reset {
+    width: 100%;
+    justify-content: center;
+  }
+}

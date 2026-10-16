@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>Retours d'expérience – Observatoire de l'Eau Grand Est</title>
+  <meta name="description" content="Consultez les retours d'expérience de projets liés à l'eau en Grand Est : restauration de milieux, gouvernance, gestion quantitative, adaptation climatique.">
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="css/fonts.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/a11y.css">
+  <link rel="stylesheet" href="css/ressources-retex.css">
+</head>
+<body class="nav-loading">
+<a href="#main-content" class="sr-only focusable">Aller au contenu principal</a>
+<header class="orege-header" role="banner">
+  <a href="index.html" class="orege-header__logo">
+    <img src="images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true" width="44" height="44" loading="eager">
+    <span class="orege-header__logo-text">Observatoire de l'Eau<br><span>Grand Est</span></span>
+  </a>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero__inner">
+    <nav class="page-hero__eyebrow" aria-label="Fil d'ariane">
+      <ol>
+        <li><a href="index.html">Accueil</a></li>
+        <li><i class="ph ph-caret-right" aria-hidden="true"></i></li>
+        <li>Ressources</li>
+        <li><i class="ph ph-caret-right" aria-hidden="true"></i></li>
+        <li><span aria-current="page">Retours d'expérience</span></li>
+      </ol>
+    </nav>
+    <h1 class="page-hero__title">M'inspirer &amp; Retours d'expérience</h1>
+    <p class="page-hero__sub">Découvrez des projets inspirants menés sur les territoires du Grand Est, classés par thématique.</p>
+  </div>
+</div>
+
+<main id="main-content">
+<div class="page-content">
+
+  <!-- Search bar for filtering retex cards by keyword -->
+  <div class="retex-search">
+    <input type="search" id="retex-search-input" class="retex-search__input"
+           placeholder="Rechercher un retour d'expérience…"
+           aria-label="Rechercher dans les retours d'expérience"
+           autocomplete="off">
+    <i class="ph ph-magnifying-glass retex-search__icon" aria-hidden="true"></i>
+  </div>
+
+  <!-- Category filter chips + submission CTA button -->
+  <div class="retex-filters-row">
+    <div class="cat-filters" role="group" aria-label="Filtrer par thématique">
+      <button class="cat-btn is-active" data-cat="all" aria-pressed="true">Toutes</button>
+      <button class="cat-btn" data-cat="gouvernance" aria-pressed="false">⚖️ Gouvernance</button>
+      <button class="cat-btn" data-cat="amenagement" aria-pressed="false">🏙️ Aménagement</button>
+      <button class="cat-btn" data-cat="ressources" aria-pressed="false">💧 Ressources &amp; Usages</button>
+      <button class="cat-btn" data-cat="vulnerabilite" aria-pressed="false">🌡️ Vulnérabilité</button>
+    </div>
+    <a href="ressources-depot.html" class="btn-primary" style="white-space:nowrap;">
+      <i class="ph ph-plus"></i> Déposer un retex
+    </a>
+  </div>
+
+  <!-- Empty state: shown when no filter/search match is found (above the grid) -->
+  <div id="retex-no-results" class="retex-no-results">
+    <i class="ph ph-warning-circle" aria-hidden="true"></i>
+    Aucun retour d'expérience ne correspond à votre recherche.
+  </div>
+
+  <!-- Retex cards grid (3 columns desktop, 2 tablet, 1 mobile) -->
+  <div class="retex-grid" id="retex-grid">
+
+    <a href="retex-detail.html?id=2" class="retex-card" data-cat="gouvernance">
+      <div class="retex-card__img">
+        <span class="retex-card__badge">Gouvernance</span>
+        <img src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&q=80&auto=format&fit=crop" alt="Réunion de concertation SAGE" loading="lazy">
+      </div>
+      <div class="retex-card__body">
+        <div class="retex-card__meta">
+          <span>Moselle (57)</span>
+          <span class="retex-card__meta-sep"></span>
+          <span>Mars 2022</span>
+        </div>
+        <h2 class="retex-card__title">Mise en place d'un SAGE sur le bassin de l'Orne Mosellane</h2>
+        <p class="retex-card__desc">Démarche de concertation innovante impliquant 42 communes et une CLE de 68 membres pour l'élaboration du Schéma d'Aménagement et de Gestion des Eaux.</p>
+        <span class="retex-card__link"><i class="ph ph-arrow-right"></i> Lire la fiche</span>
+      </div>
+    </a>
+
+    <a href="retex-detail.html?id=3" class="retex-card" data-cat="amenagement">
+      <div class="retex-card__img">
+        <span class="retex-card__badge">Aménagement</span>
+        <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=80&auto=format&fit=crop" alt="Urbanisme et zones inondables" loading="lazy">
+      </div>
+      <div class="retex-card__body">
+        <div class="retex-card__meta">
+          <span>Marne (51)</span>
+          <span class="retex-card__meta-sep"></span>
+          <span>Janvier 2023</span>
+        </div>
+        <h2 class="retex-card__title">Révision du PLU intégrant les zones d'expansion des crues — Reims Métropole</h2>
+        <p class="retex-card__desc">Intégration des données de l'observatoire dans la révision du PLUi de Reims Métropole, avec cartographie précise des zones inondables sur 143 communes.</p>
+        <span class="retex-card__link"><i class="ph ph-arrow-right"></i> Lire la fiche</span>
+      </div>
+    </a>
+
+    <a href="retex-detail.html?id=4" class="retex-card" data-cat="ressources">
+      <div class="retex-card__img">
+        <span class="retex-card__badge">Ressources &amp; Usages</span>
+        <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80&auto=format&fit=crop" alt="Réseau eau potable" loading="lazy">
+      </div>
+      <div class="retex-card__body">
+        <div class="retex-card__meta">
+          <span>Vosges (88)</span>
+          <span class="retex-card__meta-sep"></span>
+          <span>Juin 2022</span>
+        </div>
+        <h2 class="retex-card__title">Interconnexion de réseaux AEP en situation de sécheresse — Vosges</h2>
+        <p class="retex-card__desc">Mise en place d'une interconnexion d'urgence entre 3 syndicats d'eau potable pour sécuriser l'alimentation en eau de 8 000 habitants lors des étiages.</p>
+        <span class="retex-card__link"><i class="ph ph-arrow-right"></i> Lire la fiche</span>
+      </div>
+    </a>
+
+    <a href="retex-detail.html?id=5" class="retex-card" data-cat="vulnerabilite">
+      <div class="retex-card__img">
+        <span class="retex-card__badge">Vulnérabilité</span>
+        <img src="https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=800&q=80&auto=format&fit=crop" alt="Désimperméabilisation urbaine Strasbourg" loading="lazy">
+      </div>
+      <div class="retex-card__body">
+        <div class="retex-card__meta">
+          <span>Bas-Rhin (67)</span>
+          <span class="retex-card__meta-sep"></span>
+          <span>Septembre 2021</span>
+        </div>
+        <h2 class="retex-card__title">Plan de désimperméabilisation urbaine — Eurométropole de Strasbourg</h2>
+        <p class="retex-card__desc">Programme de 450 actions pour réduire le ruissellement urbain et recharger la nappe rhénane, dans le cadre du Plan Climat de l'Eurométropole.</p>
+        <span class="retex-card__link"><i class="ph ph-arrow-right"></i> Lire la fiche</span>
+      </div>
+    </a>
+
+    <a href="retex-detail.html?id=1" class="retex-card" data-cat="amenagement">
+      <div class="retex-card__img">
+        <span class="retex-card__badge">Aménagement</span>
+        <img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&q=80&auto=format&fit=crop" alt="Zones humides vallée de la Seille" loading="lazy">
+      </div>
+      <div class="retex-card__body">
+        <div class="retex-card__meta">
+          <span>Moselle (57)</span>
+          <span class="retex-card__meta-sep"></span>
+          <span>Janvier 2020</span>
+        </div>
+        <h2 class="retex-card__title">Restauration de zones humides dans la vallée de la Seille — PNR Lorraine</h2>
+        <p class="retex-card__desc">Restauration de 120 ha de zones humides dégradées grâce à un partenariat entre le PNR Lorraine, des agriculteurs et les agences de l'eau.</p>
+        <span class="retex-card__link"><i class="ph ph-arrow-right"></i> Lire la fiche</span>
+      </div>
+    </a>
+
+    <a href="retex-detail.html?id=6" class="retex-card" data-cat="gouvernance">
+      <div class="retex-card__img">
+        <span class="retex-card__badge">Gouvernance</span>
+        <img src="https://images.unsplash.com/photo-1543699568-1fb0ee484c0b?w=800&q=80&auto=format&fit=crop" alt="Rivière Vezouze contrat de rivière" loading="lazy">
+      </div>
+      <div class="retex-card__body">
+        <div class="retex-card__meta">
+          <span>Meurthe-et-Moselle (54)</span>
+          <span class="retex-card__meta-sep"></span>
+          <span>Janvier 2019</span>
+        </div>
+        <h2 class="retex-card__title">Contrat de rivière Vezouze : bilan d'étape 2024</h2>
+        <p class="retex-card__desc">Bilan à mi-parcours du Contrat de rivière Vezouze avec 78 actions réalisées sur 120 programmées, pour un budget de 8,4 M€.</p>
+        <span class="retex-card__link"><i class="ph ph-arrow-right"></i> Lire la fiche</span>
+      </div>
+    </a>
+
+    <a href="retex-detail.html?id=7" class="retex-card" data-cat="ressources">
+      <div class="retex-card__img">
+        <span class="retex-card__badge">Ressources &amp; Usages</span>
+        <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800&q=80&auto=format&fit=crop" alt="Industries agroalimentaires économies eau Alsace" loading="lazy">
+      </div>
+      <div class="retex-card__body">
+        <div class="retex-card__meta">
+          <span>Bas-Rhin (67)</span>
+          <span class="retex-card__meta-sep"></span>
+          <span>Avril 2022</span>
+        </div>
+        <h2 class="retex-card__title">Programme d'économies d'eau dans les industries agroalimentaires — Alsace</h2>
+        <p class="retex-card__desc">Démarche collective impliquant 14 entreprises du secteur agroalimentaire alsacien pour réduire leur prélèvement en eau de 20 %.</p>
+        <span class="retex-card__link"><i class="ph ph-arrow-right"></i> Lire la fiche</span>
+      </div>
+    </a>
+
+    <a href="retex-detail.html?id=8" class="retex-card" data-cat="vulnerabilite">
+      <div class="retex-card__img">
+        <span class="retex-card__badge">Vulnérabilité</span>
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80&auto=format&fit=crop" alt="Sécheresse changement climatique SAGE" loading="lazy">
+      </div>
+      <div class="retex-card__body">
+        <div class="retex-card__meta">
+          <span>Haut-Rhin (68)</span>
+          <span class="retex-card__meta-sep"></span>
+          <span>Janvier 2023</span>
+        </div>
+        <h2 class="retex-card__title">Adaptation au changement climatique du SAGE Ill Nappe Rhin</h2>
+        <p class="retex-card__desc">Intégration de scénarios climatiques RCP 4.5 et 8.5 dans la révision du SAGE pour anticiper les étiages sévères à l'horizon 2050.</p>
+        <span class="retex-card__link"><i class="ph ph-arrow-right"></i> Lire la fiche</span>
+      </div>
+    </a>
+
+    <a href="retex-detail.html?id=9" class="retex-card" data-cat="amenagement">
+      <div class="retex-card__img">
+        <span class="retex-card__badge">Aménagement</span>
+        <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&q=80&auto=format&fit=crop" alt="Berges renaturation Moselle Épinal" loading="lazy">
+      </div>
+      <div class="retex-card__body">
+        <div class="retex-card__meta">
+          <span>Vosges (88)</span>
+          <span class="retex-card__meta-sep"></span>
+          <span>Mars 2021</span>
+        </div>
+        <h2 class="retex-card__title">Renaturation des berges de la Moselle — Épinal</h2>
+        <p class="retex-card__desc">Renaturation de 3,2 km de berges urbaines sur la Moselle : suppression des enrochements, replantation de ripisylve et création d'espaces nature.</p>
+        <span class="retex-card__link"><i class="ph ph-arrow-right"></i> Lire la fiche</span>
+      </div>
+    </a>
+
+    <a href="retex-detail.html?id=10" class="retex-card" data-cat="gouvernance">
+      <div class="retex-card__img">
+        <span class="retex-card__badge">Gouvernance</span>
+        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&auto=format&fit=crop" alt="Tableau de bord données eau" loading="lazy">
+      </div>
+      <div class="retex-card__body">
+        <div class="retex-card__meta">
+          <span>Moselle (57)</span>
+          <span class="retex-card__meta-sep"></span>
+          <span>Septembre 2023</span>
+        </div>
+        <h2 class="retex-card__title">Tableau de bord eau partagé — Communauté de communes Pays de Sarrebourg</h2>
+        <p class="retex-card__desc">Déploiement d'un outil de suivi mutualisé des indicateurs eau entre 5 collectivités, alimenté par les données de l'observatoire régional.</p>
+        <span class="retex-card__link"><i class="ph ph-arrow-right"></i> Lire la fiche</span>
+      </div>
+    </a>
+
+    <a href="retex-detail.html?id=11" class="retex-card" data-cat="ressources">
+      <div class="retex-card__img">
+        <span class="retex-card__badge">Ressources &amp; Usages</span>
+        <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=800&q=80&auto=format&fit=crop" alt="Réutilisation eaux usées irrigation agricole Reims" loading="lazy">
+      </div>
+      <div class="retex-card__body">
+        <div class="retex-card__meta">
+          <span>Marne (51)</span>
+          <span class="retex-card__meta-sep"></span>
+          <span>Avril 2022</span>
+        </div>
+        <h2 class="retex-card__title">Réutilisation des eaux usées traitées pour l'irrigation agricole — Reims</h2>
+        <p class="retex-card__desc">Projet pilote REUT associant la station d'épuration de Reims et 8 exploitations agricoles pour irriguer 450 ha en période d'étiage.</p>
+        <span class="retex-card__link"><i class="ph ph-arrow-right"></i> Lire la fiche</span>
+      </div>
+    </a>
+
+  </div><!-- /.retex-grid -->
+
+  <!-- Empty state: shown when no match found (inside the grid) -->
+  <p id="retex-no-results-p" style="display:none;text-align:center;padding:56px 20px;color:#8fa0b8;grid-column:1/-1;">
+    <i class="ph ph-warning-circle" style="font-size:36px;display:block;margin-bottom:12px;"></i>
+    Aucun retour d'expérience ne correspond à votre recherche.
+  </p>
+
+  <!-- Load more button: reveals PAGE_SIZE more cards per click (js/ressources-retex.js) -->
+  <div class="load-more-wrap" id="retex-load-more-wrap">
+    <button class="load-more-btn" id="retex-load-more-btn" aria-label="Charger plus de retours d'expérience">
+      <i class="ph ph-plus" aria-hidden="true"></i> Charger plus de retex
+    </button>
+    <p class="load-more-count" id="retex-load-more-count"></p>
+  </div>
+
+</div>
+</main>
+
+<!-- PARTNER LOGO BANNER -->
+<section class="partenaires-bandeau" aria-label="Partenaires">
+  <div class="partenaires-bandeau__inner">
+    <p class="partenaires-bandeau__label">Une plateforme à<br>l'initiative de</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://www.grandest.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-grandest.png" alt="La Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.prefectures-regions.gouv.fr/grand-est" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-prefet-grand-est.png" alt="Préfet de la Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <p class="partenaires-bandeau__label">Et co-financé<br>par</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://european-union.europa.eu/index_fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-union-europeenne.png" alt="Union Européenne" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.lesagencesdeleau.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-agences-eau.png" alt="Les Agences de l'Eau" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+  </div>
+</section>
+<div class="orege-footer-placeholder"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/a11y.js"></script>
+<script src="js/ressources-retex.js"></script>
+</body>
+</html>

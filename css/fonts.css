@@ -1,0 +1,24 @@
+/**
+ * fonts.css — Typography: Grand Est design system fonts
+ *
+ * Two typefaces are used site-wide:
+ *   Cabinet Grotesk 800 — display heading (H1 only)
+ *   Satoshi 400 / 700   — all other text (H2–H4, body, captions, labels)
+ *
+ * Both fonts are served by Bunny Fonts (https://fonts.bunny.net), which is
+ * GDPR-compliant and does not track users (unlike Google Fonts).
+ *
+ * Performance note:
+ *   The <link rel="preconnect" href="https://fonts.bunny.net"> and
+ *   <link rel="preload"> tags in each HTML <head> pre-warm the connection
+ *   so the fonts load before the browser encounters these @import rules.
+ *
+ * If a font fails to load, the system-ui / sans-serif stack defined in
+ * style.css (--font-body, --font-h1) is used as a fallback.
+ */
+
+/* Cabinet Grotesk — used exclusively for H1 hero titles */
+@import url('https://fonts.bunny.net/css?family=cabinet-grotesk:800&display=swap');
+
+/* Satoshi — used for all body text, headings H2–H4, labels, links */
+@import url('https://fonts.bunny.net/css?family=satoshi:400,700&display=swap');

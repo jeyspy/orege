@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <title>Mon tableau de bord – Observatoire de l'Eau Grand Est</title>
+
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@9.2.4/ol.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/nav.css">
+  <link rel="stylesheet" href="../css/tableau-de-bord.css">
+  <link rel="stylesheet" href="../css/tdb-v2.css">
+  <link rel="stylesheet" href="../css/a11y.css">
+
+  <style>
+    /* ── Page Mon Tableau de Bord ─────────────────────────────────── */
+
+    /* Toolbar identique à tableau-de-bord.html */
+    .dashboard-toolbar__back {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+      transition: background .2s;
+      flex-shrink: 0;
+    }
+    .dashboard-toolbar__back:hover { background: rgba(255,255,255,.28); color: white; }
+
+    /* ── Grille personnalisable ── */
+    .my-tdb-page {
+      padding: calc(var(--header-height) + var(--toolbar-height) + var(--spacing-lg)) var(--spacing-xl) var(--spacing-xl);
+      min-height: 100vh;
+      background: var(--color-bg);
+    }
+
+    .my-tdb-intro {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .my-tdb-intro__title { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+    .my-tdb-intro__sub   { font-size: 13px; color: var(--color-text-muted); margin: 0; }
+
+    /* Actions en-tête */
+    .my-tdb-actions {
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    }
+
+    /* ── Grille de slots ── */
+    .my-tdb-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    /* ── Slot vide ── */
+    .slot {
+      min-height: 220px;
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-lg);
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: border-color .2s ease, background .2s ease, transform .15s ease;
+      position: relative;
+      color: var(--color-text-muted);
+    }
+    .slot:hover {
+      border-color: var(--color-primary);
+      background: rgba(21,101,192,.03);
+      transform: translateY(-2px);
+      color: var(--color-primary);
+    }
+    .slot__plus {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: rgba(21,101,192,.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      color: var(--color-primary);
+      transition: background .2s, transform .2s;
+    }
+    .slot:hover .slot__plus {
+      background: var(--color-primary);
+      color: white;
+      transform: scale(1.1);
+    }
+    .slot__label { font-size: 13px; font-weight: 500; }
+    .slot__num {
+      position: absolute;
+      top: 10px; left: 14px;
+      font-size: 11px;
+      color: var(--color-border);
+      font-weight: 600;
+    }
+
+    /* ── Slot rempli (widget réel) ── */
+    .slot--filled {
+      border: 1.5px solid var(--color-border);
+      cursor: default;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0;
+      overflow: hidden;
+    }
+    .slot--filled:hover {
+      border-color: var(--color-primary);
+      transform: none;
+      background: white;
+    }
+    .slot__remove-btn {
+      position: absolute;
+      top: 8px; right: 8px;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: rgba(0,0,0,.35);
+      border: none;
+      color: white;
+      font-size: 11px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background .15s;
+    }
+    .slot--filled:hover .slot__remove-btn { display: flex; }
+    .slot__remove-btn:hover { background: #E53935; }
+
+    /* ── Lightbox de sélection d'indicateur ── */
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,20,40,.55);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    .lightbox-overlay.is-open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .lightbox {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 24px 64px rgba(0,0,0,.22);
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateY(16px) scale(.97);
+      transition: transform .25s cubic-bezier(.4,0,.2,1);
+    }
+    .lightbox-overlay.is-open .lightbox {
+      transform: translateY(0) scale(1);
+    }
+
+    /* Header lightbox */
+    .lightbox__header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--color-border-light);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .lightbox__icon {
+      width: 42px; height: 42px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .lightbox__title { font-size: 17px; font-weight: 700; margin: 0 0 2px; }
+    .lightbox__sub   { font-size: 13px; color: var(--color-text-muted); margin: 0; }
+    .lightbox__close {
+      margin-left: auto;
+      background: none; border: none;
+      color: var(--color-text-muted);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: color .15s, background .15s;
+      flex-shrink: 0;
+    }
+    .lightbox__close:hover { color: var(--color-text); background: var(--color-bg); }
+
+    /* Corps lightbox */
+    .lightbox__body {
+      padding: 20px 24px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Champ de recherche dans la lightbox */
+    .lb-search-wrap {
+      position: relative;
+    }
+    .lb-search-wrap .search-icon {
+      position: absolute; left: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-muted); font-size: 14px;
+      pointer-events: none;
+    }
+    .lb-search {
+      width: 100%;
+      padding: 11px 14px 11px 38px;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .lb-search:focus { border-color: var(--color-primary); }
+    .lb-search-count { font-size: 12px; color: var(--color-text-muted); margin-top: 6px; }
+
+    /* Dropdown autocomplétion indicateurs */
+    .lb-autocomplete {
+      position: absolute;
+      top: calc(100% + 4px); left: 0; right: 0;
+      background: white;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+      max-height: 260px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+    }
+    .lb-autocomplete.is-open { display: block; }
+    .lb-ac-item {
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      border-bottom: 1px solid var(--color-border-light);
+      transition: background .15s;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .lb-ac-item:last-child { border-bottom: none; }
+    .lb-ac-item:hover, .lb-ac-item.is-active { background: #EFF6FF; }
+    .lb-ac-item__name { font-weight: 500; color: var(--color-text); }
+    .lb-ac-item__name em { font-style: normal; font-weight: 700; color: var(--color-primary); }
+    .lb-ac-item__meta { font-size: 11px; color: var(--color-text-muted); display: flex; gap: 8px; flex-wrap: wrap; }
+    .lb-ac-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 1px 7px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    /* Résultats en liste */
+    .lb-results { display: flex; flex-direction: column; gap: 6px; max-height: 320px; overflow-y: auto; }
+    .lb-result-item {
+      padding: 12px 14px;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .lb-result-item:hover { border-color: var(--color-primary); background: #EFF6FF; }
+    .lb-result-item.is-selected {
+      border-color: var(--color-primary);
+      background: rgba(21,101,192,.06);
+    }
+    .lb-result-item__color {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+    .lb-result-item__info { flex: 1; min-width: 0; }
+    .lb-result-item__name { font-size: 13px; font-weight: 600; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lb-result-item__sub  { font-size: 11px; color: var(--color-text-muted); }
+    .lb-result-item__unite { font-size: 11px; font-weight: 600; color: var(--color-text-muted); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 6px; padding: 1px 6px; flex-shrink: 0; }
+    .lb-result-item__check { color: var(--color-primary); font-size: 14px; display: none; }
+    .lb-result-item.is-selected .lb-result-item__check { display: block; }
+
+    /* Sélecteur d'année + type de widget */
+    .lb-config {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .lb-config__group label { font-size: 12px; font-weight: 600; color: var(--color-text-muted); margin-bottom: 5px; display: block; }
+    .lb-select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      background: white;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+    .lb-select:focus { border-color: var(--color-primary); }
+
+    /* Footer lightbox */
+    .lightbox__footer {
+      padding: 14px 24px;
+      border-top: 1px solid var(--color-border-light);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .lb-btn {
+      padding: 10px 22px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background .2s, transform .15s;
+    }
+    .lb-btn--cancel { background: var(--color-bg); color: var(--color-text-muted); }
+    .lb-btn--cancel:hover { background: var(--color-border); color: var(--color-text); }
+    .lb-btn--confirm {
+      background: var(--color-primary);
+      color: white;
+    }
+    .lb-btn--confirm:hover { background: var(--color-primary-dark); transform: translateY(-1px); }
+    .lb-btn--confirm:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+    /* Message vide */
+    .lb-empty { text-align: center; padding: 32px 16px; color: var(--color-text-muted); font-size: 13px; }
+    .lb-empty i { font-size: 32px; opacity: .25; display: block; margin-bottom: 10px; }
+
+    /* ── Widget intégré dans un slot rempli ── */
+    .slot--filled .widget {
+      margin: 0;
+      border: none;
+      box-shadow: none;
+      height: 100%;
+      border-radius: 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .my-tdb-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 580px) {
+      .my-tdb-grid { grid-template-columns: 1fr; }
+      .lb-config { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="nav-loading">
+
+  <!-- ── Liens d'évitement RGAA 12.1 ── -->
+  <div class="skip-links">
+    <a class="skip-link" href="#main-content">Aller au contenu principal</a>
+    <a class="skip-link" href="#mytdb-annee-defaut">Aller aux paramètres du tableau de bord</a>
+  </div>
+
+  <!-- ================================================================
+       EN-TÊTE PRINCIPAL (injecté par nav.js)
+  ================================================================ -->
+  <header class="orege-header" id="site-header" role="banner">
+    <a href="../index.html" class="orege-header__logo" aria-label="Accueil – Observatoire de l'Eau Grand Est">
+      <img src="../images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true">
+      <span class="orege-header__logo-text">Observatoire de l'Eau <span>Grand Est</span></span>
+    </a>
+    <!-- Nav injectée par nav.js -->
+  </header>
+
+  <!-- ================================================================
+       TOOLBAR
+  ================================================================ -->
+  <div class="dashboard-toolbar">
+    <a href="tableaux-de-bord.html" class="dashboard-toolbar__back" title="Retour à la liste" aria-label="Retour à la liste des tableaux de bord">
+      <i class="ph ph-arrow-left" aria-hidden="true"></i>
+    </a>
+    <span class="dashboard-toolbar__titre" aria-hidden="true">
+      <i class="ph ph-sliders" aria-hidden="true"></i> Mon tableau de bord
+    </span>
+    <div class="site-subnav__separator"></div>
+    <!-- Sélecteur Année global -->
+    <div class="dashboard-toolbar__groupe">
+      <span class="dashboard-toolbar__label" aria-hidden="true"><i class="ph ph-calendar" aria-hidden="true"></i> Année par défaut</span>
+      <label for="mytdb-annee-defaut" class="sr-only">Année par défaut pour les widgets</label>
+      <select id="mytdb-annee-defaut" class="site-subnav__select" style="min-width:90px;"></select>
+    </div>
+    <div class="site-subnav__actions" style="margin-left:auto;">
+      <button id="btn-reset-tdb" class="btn-observatoire btn-observatoire--outline btn-observatoire--sm" aria-label="Réinitialiser le tableau de bord">
+        <i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i> Réinitialiser
+      </button>
+      <span id="mytdb-autosave-indicator" aria-live="polite" aria-atomic="true" style="font-size:11px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:5px;margin-left:4px;">
+        <i class="ph ph-cloud-arrow-up" aria-hidden="true"></i> Sauvegardé automatiquement
+      </span>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       CONTENU PRINCIPAL
+  ================================================================ -->
+  <main class="my-tdb-page" id="main-content">
+
+    <div class="my-tdb-intro">
+      <div>
+        <h1 class="my-tdb-intro__title">Mon tableau de bord</h1>
+        <p class="my-tdb-intro__sub">Composez votre propre wall d'indicateurs. Cliquez sur <strong>+</strong> pour ajouter un indicateur dans un emplacement vide.</p>
+      </div>
+      <div class="my-tdb-actions">
+        <span id="mytdb-fill-count" style="font-size:13px;color:var(--color-text-muted);"></span>
+      </div>
+    </div>
+
+    <!-- Grille dynamique (max 30 slots, 3 colonnes) -->
+    <div class="my-tdb-grid" id="my-tdb-grid">
+      <!-- Générés par JS -->
+    </div>
+
+    <!-- Bouton ajouter un rang -->
+    <div style="text-align:center;margin-top:20px;">
+      <button id="btn-add-row" class="btn-observatoire btn-observatoire--outline btn-observatoire--sm">
+        <i class="ph ph-plus"></i> Ajouter un rang de widgets (9/30)
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ================================================================
+       LIGHTBOX : Sélection d'un indicateur
+  ================================================================ -->
+  <div class="lightbox-overlay" id="lb-overlay">
+    <div class="lightbox" role="dialog" aria-modal="true" aria-labelledby="lb-title">
+
+      <div class="lightbox__header">
+        <div class="lightbox__icon"><i class="ph ph-chart-line"></i></div>
+        <div>
+          <h2 class="lightbox__title" id="lb-title">Choisir un indicateur</h2>
+          <p class="lightbox__sub">Recherchez parmi les <span id="lb-total-count"></span> indicateurs disponibles</p>
+        </div>
+        <button class="lightbox__close" id="lb-close" aria-label="Fermer"><i class="ph ph-x"></i></button>
+      </div>
+
+      <div class="lightbox__body">
+
+        <!-- Champ de recherche avec autocomplétion -->
+        <div class="lb-search-wrap">
+          <i class="ph ph-magnifying-glass search-icon"></i>
+          <input type="text" id="lb-search" class="lb-search"
+                 placeholder="Nom de l'indicateur, thématique, unité…"
+                 autocomplete="off" spellcheck="false">
+          <div class="lb-autocomplete" id="lb-autocomplete"></div>
+          <div class="lb-search-count" id="lb-search-count"></div>
+        </div>
+
+        <!-- Résultats filtrés -->
+        <div class="lb-results" id="lb-results">
+          <!-- Rempli par JS -->
+        </div>
+
+        <!-- Configuration : Année + type de visualisation -->
+        <div class="lb-config" id="lb-config" style="display:none;">
+          <div class="lb-config__group">
+            <label for="lb-annee"><i class="ph ph-calendar" style="margin-right:4px;"></i>Année des données</label>
+            <select id="lb-annee" class="lb-select"></select>
+          </div>
+          <div class="lb-config__group">
+            <label for="lb-widget-type"><i class="ph ph-chart-pie" style="margin-right:4px;"></i>Type de visualisation</label>
+            <select id="lb-widget-type" class="lb-select">
+              <option value="auto">Automatique (recommandé)</option>
+              <option value="kpi">Chiffre clé (KPI)</option>
+              <option value="bar">Graphique en barres</option>
+              <option value="line">Courbe temporelle</option>
+              <option value="donut">Donut</option>
+              <option value="gauge">Jauge</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="lightbox__footer">
+        <button class="lb-btn lb-btn--cancel" id="lb-cancel">Annuler</button>
+        <button class="lb-btn lb-btn--confirm" id="lb-confirm" disabled>
+          <i class="ph ph-plus" style="margin-right:6px;"></i>Ajouter au tableau de bord
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de confirmation -->
+  <div id="mytdb-toast" role="status" aria-live="polite" aria-atomic="true" style="
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: #1B5E20; color: white; padding: 12px 24px; border-radius: 30px;
+    font-size: 13px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    transition: transform .35s cubic-bezier(.4,0,.2,1); z-index: 2000;
+    display: flex; align-items: center; gap: 8px; white-space: nowrap;
+  ">
+    <i class="ph ph-check-circle" aria-hidden="true"></i> <span id="mytdb-toast-msg">Indicateur ajouté</span>
+  </div>
+
+  <!-- ================================================================
+       SCRIPTS
+  ================================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ol@9.2.4/dist/ol.js"></script>
+  <script src="../js/data-indicateurs.js"></script>
+  <script src="../js/data-tdb-territoires.js"></script>
+  <script src="../js/tableau-de-bord.js"></script>
+
+  <script>
+  /* ================================================================
+     MON TABLEAU DE BORD – logique de personnalisation
+     Indépendant de tableau-de-bord.js (pas de conflit)
+  ================================================================ */
+  (function() {
+
+    var NB_SLOTS    = 9;    // extensible jusqu'à 30
+    var NB_SLOTS_MAX = 30;
+    var slots       = [];        // Array de { slotIndex, indicateur, annee, widgetType } ou null
+    var slotCourant = null;      // Index du slot en cours d'édition
+    var indicateurSelectionne = null;
+
+    // Couleurs par catégorie
+    var CAT_COLORS = {
+      "Connaissance des milieux aquatiques": "#00796B",
+      "Qualité des Eaux":                   "#0288D1",
+      "Gouvernance de l'eau":               "#1B5E20",
+      "Climat / risques climatiques":        "#E65100",
+      "Usages sectoriels de l'eau":          "#1565C0",
+      "Gestion quantitative de l'eau":       "#6A1B9A"
+    };
+
+    // ── Tous les indicateurs (CARTO + DASHBOARD) sans doublon ──────
+    function tousLesIndicateurs() {
+      var all = [];
+      var seen = {};
+      (INDICATEURS_CARTO || []).forEach(function(ind) {
+        if (!seen[ind.id]) { seen[ind.id] = true; all.push(ind); }
+      });
+      (INDICATEURS_DASHBOARD || []).forEach(function(ind) {
+        var id = ind.carto_id || ind.id;
+        if (!seen[id]) { seen[id] = true; all.push(ind); }
+      });
+      return all;
+    }
+
+    var TOUS_INDICATEURS = tousLesIndicateurs();
+
+    // ── Init sélecteur d'année ──────────────────────────────────────
+    function initAnneesSelectors() {
+      // Toolbar
+      var $sel = $('#mytdb-annee-defaut');
+      ANNEES.forEach(function(a) {
+        $sel.append($('<option>').val(a).text(a));
+      });
+      $sel.val(2023);
+
+      // Lightbox
+      var $lb = $('#lb-annee');
+      ANNEES.forEach(function(a) {
+        $lb.append($('<option>').val(a).text(a));
+      });
+      $lb.val(2023);
+
+      // Compteur total lightbox
+      $('#lb-total-count').text(TOUS_INDICATEURS.length);
+    }
+
+    // ── Rendu de la grille ──────────────────────────────────────────
+    function renderGrille() {
+      var $grid = $('#my-tdb-grid');
+      $grid.empty();
+      for (var i = 0; i < NB_SLOTS; i++) {
+        var contenu = slots[i] || null;
+        if (contenu) {
+          $grid.append(renderSlotFilled(i, contenu));
+        } else {
+          $grid.append(renderSlotVide(i));
+        }
+      }
+      updateFillCount();
+    }
+
+    function renderSlotVide(i) {
+      return $('<div>').addClass('slot').attr('data-slot', i)
+        .html(
+          '<span class="slot__num">' + (i + 1) + '</span>' +
+          '<div class="slot__plus"><i class="ph ph-plus"></i></div>' +
+          '<span class="slot__label">Ajouter un indicateur</span>'
+        )
+        .on('click', function() { ouvrirLightbox(i); });
+    }
+
+    function renderSlotFilled(i, contenu) {
+      var ind = contenu.indicateur;
+      var couleur = CAT_COLORS[ind.categorie] || '#1565C0';
+      var $slot = $('<div>').addClass('slot slot--filled').attr('data-slot', i)
+        .css({ '--widget-accent-color': couleur, 'position': 'relative' });
+
+      // Bouton de suppression
+      var $rmBtn = $('<button>').addClass('slot__remove-btn').attr('title', 'Supprimer')
+        .html('<i class="ph ph-x"></i>')
+        .on('click', function(e) {
+          e.stopPropagation();
+          supprimerSlot(i);
+        });
+      $slot.append($rmBtn);
+
+      // Contenu du widget miniaturisé
+      var $inner = $('<div>').css({ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' });
+
+      // Header compact
+      var $header = $('<div>').css({
+        padding: '12px 14px 8px',
+        display: 'flex', alignItems: 'center', gap: '8px',
+        borderBottom: '1px solid #F0F4F8'
+      });
+      $header.append(
+        $('<div>').css({
+          width: '28px', height: '28px', borderRadius: '7px',
+          background: couleur, display: 'flex', alignItems: 'center',
+          justifyContent: 'center', flexShrink: '0', color: 'white', fontSize: '12px'
+        }).html('<i class="fa ' + (ind.icone || 'fa-chart-bar') + '"></i>'),
+        $('<div>').css({ flex: '1', minWidth: '0' }).append(
+          $('<p>').css({ margin: '0', fontSize: '12px', fontWeight: '600',
+                         whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                         color: '#1A2233' }).text(ind.nom),
+          $('<p>').css({ margin: '0', fontSize: '10px', color: '#6B7A99' })
+            .text(ind.categorie + ' · ' + contenu.annee)
+        )
+      );
+      $inner.append($header);
+
+      // Zone de visualisation (canvas ou valeur)
+      var bodyId = 'mytdb-body-' + i;
+      var $body = $('<div>').attr('id', bodyId).css({
+        flex: '1', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '12px 14px', overflow: 'hidden'
+      });
+      $inner.append($body);
+      $slot.append($inner);
+
+      // Initialiser la visu après insertion DOM
+      setTimeout(function() {
+        rendreMiniVisu(bodyId, ind, contenu.annee, contenu.widgetType, couleur);
+      }, 150);
+
+      return $slot;
+    }
+
+    // ── Mini visualisation dans les slots remplis ───────────────────
+    function rendreMiniVisu(bodyId, ind, annee, wType, couleur) {
+      var $body = $('#' + bodyId);
+      if (!$body.length) return;
+
+      // Calculer les données pour Grand Est
+      var data = getDataWidget
+        ? getDataWidget(ind, 'Grand Est', annee, 'Grand Est')
+        : null;
+
+      // Choisir le type auto si besoin
+      var type = wType === 'auto' ? devinerWidgetType(ind) : wType;
+
+      if (type === 'kpi' || !data) {
+        // Affichage chiffre clé simple
+        var valeur = data ? data.valeur : (ind.valeur_base || 0);
+        $body.html(
+          '<div style="text-align:center;">' +
+            '<div style="font-size:32px;font-weight:700;color:' + couleur + ';line-height:1;">' +
+              valeur +
+            '</div>' +
+            '<div style="font-size:11px;color:#6B7A99;margin-top:4px;">' + (ind.unite || '') + '</div>' +
+          '</div>'
+        );
+        return;
+      }
+
+      if ((type === 'bar' || type === 'line' || type === 'donut' || type === 'gauge') && typeof Chart !== 'undefined') {
+        var canvasId = 'canvas-mytdb-' + bodyId;
+        $body.html('<canvas id="' + canvasId + '" style="max-height:130px;"></canvas>');
+        var ctx = document.getElementById(canvasId);
+        if (!ctx || !ctx.getContext) {
+          // Canvas pas encore dans le DOM, fallback KPI
+          $body.html('<div style="text-align:center;font-size:26px;font-weight:700;color:' + couleur + ';">' + (data ? data.valeur : '–') + '<br><span style="font-size:11px;color:#6B7A99;">' + (ind.unite || '') + '</span></div>');
+          return;
+        }
+
+        if (type === 'bar' && data.series) {
+          new Chart(ctx.getContext('2d'), {
+            type: 'bar',
+            data: {
+              labels: Object.keys(data.series),
+              datasets: [{ data: Object.values(data.series), backgroundColor: couleur + 'CC', borderRadius: 3, borderWidth: 0 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false,
+              plugins: { legend: { display: false }, tooltip: { enabled: true } },
+              scales: { x: { ticks: { font: { size: 8 }, maxRotation: 45 }, grid: { display: false } },
+                        y: { ticks: { font: { size: 8 } }, grid: { color: '#F0F4F8' } } } }
+          });
+        } else if (type === 'line' && data.series) {
+          new Chart(ctx.getContext('2d'), {
+            type: 'line',
+            data: {
+              labels: Object.keys(data.series),
+              datasets: [{ data: Object.values(data.series), borderColor: couleur, borderWidth: 2,
+                           pointRadius: 2, fill: true,
+                           backgroundColor: couleur + '22', tension: 0.4 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: { x: { ticks: { font: { size: 8 }, maxRotation: 45 }, grid: { display: false } },
+                        y: { ticks: { font: { size: 8 } }, grid: { color: '#F0F4F8' } } } }
+          });
+        } else if (type === 'donut' && data.series) {
+          new Chart(ctx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+              labels: Object.keys(data.series),
+              datasets: [{ data: Object.values(data.series),
+                           backgroundColor: ["#2E7D32","#66BB6A","#FDD835","#FB8C00","#E53935"],
+                           borderWidth: 2, borderColor: '#fff' }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, cutout: '55%',
+              plugins: { legend: { position: 'right', labels: { font: { size: 9 }, boxWidth: 9, padding: 4 } } } }
+          });
+        } else if (type === 'gauge' && data.valeur !== undefined) {
+          var v = Math.min(100, Math.max(0, data.valeur));
+          new Chart(ctx.getContext('2d'), {
+            type: 'doughnut',
+            data: { datasets: [{ data: [v, 100 - v], backgroundColor: [couleur, '#EEF2F7'],
+                                 borderWidth: 0, circumference: 180, rotation: 270 }] },
+            options: { responsive: true, maintainAspectRatio: false, cutout: '70%',
+              plugins: { legend: { display: false }, tooltip: { enabled: false } } }
+          });
+          // Overlay valeur
+          $body.append(
+            $('<div>').css({ position: 'absolute', bottom: '20%', left: '50%',
+                             transform: 'translateX(-50%)', textAlign: 'center', pointerEvents: 'none' })
+              .html('<div style="font-size:20px;font-weight:700;color:' + couleur + ';">' + v + '</div>' +
+                    '<div style="font-size:10px;color:#6B7A99;">' + (ind.unite || '') + '</div>')
+          );
+          $body.css('position', 'relative');
+        } else {
+          // Fallback KPI
+          $body.html('<div style="text-align:center;"><div style="font-size:28px;font-weight:700;color:' + couleur + ';">' + (data.valeur || '–') + '</div><div style="font-size:11px;color:#6B7A99;">' + (ind.unite || '') + '</div></div>');
+        }
+        return;
+      }
+
+      // Fallback
+      $body.html('<div style="text-align:center;font-size:28px;font-weight:700;color:' + couleur + ';">' + (data ? data.valeur : '–') + '<br><span style="font-size:11px;color:#6B7A99;">' + (ind.unite || '') + '</span></div>');
+    }
+
+    function devinerWidgetType(ind) {
+      if (ind.widget_type) return ind.widget_type;
+      if (ind.unite === '%') return 'gauge';
+      if (ind.valeurs_par_annee) return 'line';
+      if (ind.valeurs_par_territoire) return 'bar';
+      return 'kpi';
+    }
+
+    // ── Compteur d'emplacements remplis ────────────────────────────
+    function updateFillCount() {
+      var filled = slots.filter(function(s){return s!==null&&s!==undefined;}).length;
+      $('#mytdb-fill-count').text(filled+'/'+NB_SLOTS+' widget'+(filled!==1?'s':'')+' rempli'+(filled!==1?'s':''));
+      if (NB_SLOTS >= NB_SLOTS_MAX) {
+        $('#btn-add-row').prop('disabled',true).html('Maximum '+NB_SLOTS_MAX+' widgets').css('opacity','.5');
+      } else {
+        $('#btn-add-row').prop('disabled',false).css('opacity','1')
+          .html('<i class="ph ph-plus"></i> Ajouter un rang ('+NB_SLOTS+'/'+NB_SLOTS_MAX+')');
+      }
+    }
+
+    // ── Supprimer un slot ───────────────────────────────────────────
+    function supprimerSlot(i) {
+      slots[i] = null;
+      renderGrille();
+      sauvegarderAuto();
+      afficherToast('Indicateur retiré', '#E65100');
+    }
+
+    // ── Lightbox ────────────────────────────────────────────────────
+    function ouvrirLightbox(slotIndex) {
+      slotCourant = slotIndex;
+      indicateurSelectionne = null;
+      $('#lb-confirm').prop('disabled', true);
+      $('#lb-config').hide();
+      $('#lb-search').val('');
+      afficherResultats('');
+      $('#lb-overlay').addClass('is-open');
+      setTimeout(function() { $('#lb-search').focus(); }, 200);
+    }
+
+    function fermerLightbox() {
+      $('#lb-overlay').removeClass('is-open');
+      $('#lb-autocomplete').removeClass('is-open');
+      slotCourant = null;
+      indicateurSelectionne = null;
+    }
+
+    // Filtrage des indicateurs
+    function filtrerIndicateurs(q) {
+      if (!q || q.trim() === '') return TOUS_INDICATEURS;
+      q = q.toLowerCase();
+      return TOUS_INDICATEURS.filter(function(ind) {
+        return ind.nom.toLowerCase().indexOf(q) !== -1 ||
+               (ind.categorie && ind.categorie.toLowerCase().indexOf(q) !== -1) ||
+               (ind.thematique && ind.thematique.toLowerCase().indexOf(q) !== -1) ||
+               (ind.unite && ind.unite.toLowerCase().indexOf(q) !== -1);
+      });
+    }
+
+    function mettreEnValeur(texte, q) {
+      if (!q) return texte;
+      var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+      return texte.replace(re, '<em>$1</em>');
+    }
+
+    function afficherResultats(q) {
+      var liste = filtrerIndicateurs(q);
+      var $res  = $('#lb-results');
+      $res.empty();
+
+      $('#lb-search-count').text(liste.length + ' indicateur' + (liste.length !== 1 ? 's' : ''));
+
+      if (liste.length === 0) {
+        $res.html('<div class="lb-empty"><i class="ph ph-magnifying-glass"></i>Aucun indicateur trouvé pour "' + q + '"</div>');
+        return;
+      }
+
+      // On affiche les 40 premiers
+      liste.slice(0, 40).forEach(function(ind) {
+        var couleur = CAT_COLORS[ind.categorie] || '#1565C0';
+        var isSelected = indicateurSelectionne && indicateurSelectionne.id === ind.id;
+        var $item = $('<div>').addClass('lb-result-item' + (isSelected ? ' is-selected' : ''))
+          .attr('data-id', ind.id);
+        $item.append(
+          $('<div>').addClass('lb-result-item__color').css('background', couleur),
+          $('<div>').addClass('lb-result-item__info').append(
+            $('<div>').addClass('lb-result-item__name').html(mettreEnValeur(ind.nom, q)),
+            $('<div>').addClass('lb-result-item__sub')
+              .text((ind.categorie || '') + (ind.sous_thematique ? ' › ' + ind.sous_thematique : ''))
+          ),
+          $('<div>').addClass('lb-result-item__unite').text(ind.unite || '–'),
+          $('<i>').addClass('fa fa-check lb-result-item__check')
+        );
+        $item.on('click', function() {
+          selectionnerIndicateur(ind);
+          $('#lb-results .lb-result-item').removeClass('is-selected');
+          $(this).addClass('is-selected');
+        });
+        $res.append($item);
+      });
+
+      if (liste.length > 40) {
+        $res.append($('<div>').css({ textAlign: 'center', padding: '10px', fontSize: '12px', color: '#6B7A99' })
+          .text('+ ' + (liste.length - 40) + ' autres résultats — affinez votre recherche'));
+      }
+    }
+
+    function afficherAutocomplete(q) {
+      var $drop = $('#lb-autocomplete');
+      if (!q || q.length < 2) { $drop.removeClass('is-open'); return; }
+
+      var suggestions = filtrerIndicateurs(q).slice(0, 6);
+      if (suggestions.length === 0) { $drop.removeClass('is-open'); return; }
+
+      $drop.empty();
+      suggestions.forEach(function(ind) {
+        var couleur = CAT_COLORS[ind.categorie] || '#1565C0';
+        var $item = $('<div>').addClass('lb-ac-item');
+        $item.append(
+          $('<div>').addClass('lb-ac-item__name').html(mettreEnValeur(ind.nom, q)),
+          $('<div>').addClass('lb-ac-item__meta').append(
+            $('<span>').addClass('lb-ac-badge').css({ background: couleur + '20', color: couleur })
+              .html('<i class="ph ph-tag" style="font-size:9px;"></i> ' + (ind.categorie || '')),
+            $('<span>').text(ind.unite || '')
+          )
+        );
+        $item.on('mousedown', function(e) {
+          e.preventDefault();
+          $('#lb-search').val(ind.nom);
+          $drop.removeClass('is-open');
+          selectionnerIndicateur(ind);
+          afficherResultats(ind.nom);
+        });
+        $drop.append($item);
+      });
+      $drop.addClass('is-open');
+    }
+
+    function selectionnerIndicateur(ind) {
+      indicateurSelectionne = ind;
+      $('#lb-confirm').prop('disabled', false);
+      $('#lb-config').show();
+    }
+
+    // ── Ajouter l'indicateur dans le slot ──────────────────────────
+    function confirmerAjout() {
+      if (!indicateurSelectionne || slotCourant === null) return;
+      var annee = parseInt($('#lb-annee').val(), 10);
+      var widgetType = $('#lb-widget-type').val();
+      slots[slotCourant] = { indicateur: indicateurSelectionne, annee: annee, widgetType: widgetType };
+      fermerLightbox();
+      renderGrille();
+      sauvegarderAuto();
+      afficherToast('"'+indicateurSelectionne.nom.slice(0,36)+(indicateurSelectionne.nom.length>36?'…':'')+'" ajouté','#1B5E20');
+    }
+
+    // ── Toast ───────────────────────────────────────────────────────
+    function afficherToast(msg, bg) {
+      var $toast = $('#mytdb-toast');
+      $('#mytdb-toast-msg').text(msg);
+      $toast.css({ background: bg || '#1B5E20', transform: 'translateX(-50%) translateY(0)' });
+      setTimeout(function() {
+        $toast.css({ transform: 'translateX(-50%) translateY(80px)' });
+      }, 2800);
+    }
+
+    // ── Sauvegarde locale (localStorage) ───────────────────────────
+    /* ── Cookies helper ── */
+    var COOKIE_KEY = 'mytdb_v2';
+    function setCookie(n,v,d){var e='';if(d){var dt=new Date();dt.setTime(dt.getTime()+d*864e5);e='; expires='+dt.toUTCString();}document.cookie=n+'='+encodeURIComponent(v)+e+'; path=/';}
+    function getCookie(n){var eq=n+'=',ca=document.cookie.split(';');for(var i=0;i<ca.length;i++){var c=ca[i].trim();if(c.indexOf(eq)===0)return decodeURIComponent(c.substring(eq.length));}return null;}
+    function deleteCookie(n){document.cookie=n+'=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';}
+
+    /* ── Sauvegarde automatique (cookie 365j + localStorage) ── */
+    var autoTimer = null;
+    function sauvegarderAuto() {
+      clearTimeout(autoTimer);
+      autoTimer = setTimeout(function() {
+        try {
+          var payload = JSON.stringify({
+            slots: slots.map(function(s){ return s?{id:s.indicateur.id,annee:s.annee,widgetType:s.widgetType}:null; }),
+            nb_slots: NB_SLOTS
+          });
+          setCookie(COOKIE_KEY, payload, 365);
+          try{localStorage.setItem(COOKIE_KEY,payload);}catch(e2){}
+          var $ind=$('#mytdb-autosave-indicator');
+          $ind.html('<i class="ph ph-check"></i> Sauvegardé');
+          setTimeout(function(){$ind.html('<i class="ph ph-cloud-arrow-up"></i> Sauvegardé automatiquement');},2000);
+        } catch(e){console.warn('[Mon TDB] auto-save',e);}
+      }, 700);
+    }
+
+    function chargerSauvegarde() {
+      try {
+        var raw = getCookie(COOKIE_KEY)||localStorage.getItem(COOKIE_KEY)||localStorage.getItem('mytdb_slots');
+        if (!raw) return;
+        var parsed = JSON.parse(raw);
+        var data, nb;
+        if (Array.isArray(parsed)){data=parsed;nb=9;}else{data=parsed.slots;nb=parsed.nb_slots||9;}
+        NB_SLOTS = Math.min(Math.max(nb,9),NB_SLOTS_MAX);
+        data.forEach(function(s,i){
+          if(!s)return;
+          var ind=TOUS_INDICATEURS.find(function(x){return x.id===s.id;});
+          if(ind) slots[i]={indicateur:ind,annee:s.annee,widgetType:s.widgetType};
+        });
+        renderGrille();
+      } catch(e){/* silencieux */}
+    }
+
+    // ── Réinitialiser ───────────────────────────────────────────────
+    function reinitialiser() {
+      if (!confirm('Vider tous les emplacements ?')) return;
+      slots = [];
+      NB_SLOTS = 9;
+      deleteCookie(COOKIE_KEY);
+      try{localStorage.removeItem(COOKIE_KEY);localStorage.removeItem('mytdb_slots');}catch(e){}
+      renderGrille();
+      afficherToast('Tableau de bord réinitialisé', '#6B7A99');
+    }
+
+    // ── Événements ──────────────────────────────────────────────────
+    $(document).ready(function() {
+      initAnneesSelectors();
+      chargerSauvegarde();
+      renderGrille();
+
+      // Recherche dans la lightbox
+      $('#lb-search').on('input', function() {
+        var q = $(this).val();
+        afficherResultats(q);
+        afficherAutocomplete(q);
+      });
+
+      $('#lb-search').on('focus', function() {
+        if ($(this).val().length >= 2) afficherAutocomplete($(this).val());
+      });
+
+      $('#lb-search').on('blur', function() {
+        setTimeout(function() { $('#lb-autocomplete').removeClass('is-open'); }, 150);
+      });
+
+      // Fermeture lightbox
+      $('#lb-close, #lb-cancel').on('click', fermerLightbox);
+      $('#lb-overlay').on('click', function(e) {
+        if ($(e.target).is('#lb-overlay')) fermerLightbox();
+      });
+      $(document).on('keydown', function(e) {
+        if (e.key === 'Escape') fermerLightbox();
+      });
+
+      // Confirmer ajout
+      $('#lb-confirm').on('click', confirmerAjout);
+
+      // Réinitialiser
+      $('#btn-reset-tdb').on('click', reinitialiser);
+
+      // Ajouter un rang de 3 widgets
+      $('#btn-add-row').on('click', function(){
+        if(NB_SLOTS>=NB_SLOTS_MAX)return;
+        NB_SLOTS=Math.min(NB_SLOTS+3,NB_SLOTS_MAX);
+        renderGrille();
+        sauvegarderAuto();
+      });
+
+      console.log('[Mon TDB] Prêt – ' + TOUS_INDICATEURS.length + ' indicateurs disponibles.');
+    });
+
+  })();
+  </script>
+
+  <!-- Accessibilité RGAA 4.1 -->
+  <script src="../js/a11y.js"></script>
+  <!-- Navigation principale -->
+  <script src="../js/nav.js"></script>
+  <!-- Transition de page (goutte d'eau animée) -->
+  <script src="../js/page-transition.js"></script>
+
+<div class="orege-footer-placeholder"></div>
+</body>
+</html>

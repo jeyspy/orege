@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<title>Générateur data-territoires.js</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+<pre id="out" style="font-size:10px;max-height:400px;overflow:auto;background:#f5f5f5;padding:10px;"></pre>
+<script>
+// Centres par département pour positionner les communes
+const DEPT_CENTERS = {
+  '08': { cx: 4.75, cy: 49.60 },  // Ardennes
+  '10': { cx: 4.10, cy: 48.30 },  // Aube
+  '51': { cx: 4.35, cy: 49.00 },  // Marne
+  '52': { cx: 5.15, cy: 48.10 },  // Haute-Marne
+  '54': { cx: 6.20, cy: 48.70 },  // Meurthe-et-Moselle
+  '55': { cx: 5.35, cy: 49.00 },  // Meuse
+  '57': { cx: 6.65, cy: 49.10 },  // Moselle
+  '67': { cx: 7.55, cy: 48.55 },  // Bas-Rhin
+  '68': { cx: 7.35, cy: 47.85 },  // Haut-Rhin
+  '88': { cx: 6.45, cy: 48.20 }   // Vosges
+};
+
+// Grille de communes par département (pour placement déterministe)
+const DEPT_SPREAD = {
+  '08': { w: 1.0, h: 0.8 },
+  '10': { w: 0.9, h: 0.7 },
+  '51': { w: 1.1, h: 0.9 },
+  '52': { w: 0.9, h: 0.8 },
+  '54': { w: 0.8, h: 0.7 },
+  '55': { w: 0.9, h: 0.8 },
+  '57': { w: 0.9, h: 0.8 },
+  '67': { w: 0.7, h: 1.0 },
+  '68': { w: 0.6, h: 0.9 },
+  '88': { w: 0.7, h: 0.9 }
+};
+
+function getCommuneCoords(nom, seed) {
+  // Extraire le code INSEE entre parenthèses (ex: "REIMS (51454)" -> "51")
+  const match = nom.match(/\((\d{5})\)/);
+  const dept = match ? match[1].substring(0, 2) : '51';
+  const center = DEPT_CENTERS[dept] || { cx: 6.0, cy: 48.5 };
+  const spread = DEPT_SPREAD[dept] || { w: 0.8, h: 0.7 };
+  
+  // Placement quasi-aléatoire déterministe
+  const angle = (seed * 137.508) % 360 * Math.PI / 180;
+  const r = 0.1 + ((seed * 31 + 7) % 90) / 100;
+  const jitter_x = spread.w * 0.48 * r * Math.cos(angle);
+  const jitter_y = spread.h * 0.48 * r * Math.sin(angle);
+  return [
+    Math.round((center.cx + jitter_x) * 10000) / 10000,
+    Math.round((center.cy + jitter_y) * 10000) / 10000
+  ];
+}
+
+(async function() {
+  const out = document.getElementById('out');
+  try {
+    const resp = await fetch('../data/listing_territoires.xlsx');
+    const buf  = await resp.arrayBuffer();
+    const wb   = XLSX.read(buf, { type: 'array' });
+    const ws   = wb.Sheets['Feuil1'];
+    const data = XLSX.utils.sheet_to_json(ws, { defval: '' });
+
+    // Grouper par typologie
+    const groups = {};
+    data.forEach(row => {
+      const typ = row['Typologie territoire'] || '';
+      const nom = row['Nom territoire'] || '';
+      if (!groups[typ]) groups[typ] = [];
+      groups[typ].push(nom);
+    });
+
+    // Afficher stats
+    let stats = '=== STATS ===\n';
+    Object.keys(groups).forEach(t => { stats += t + ': ' + groups[t].length + '\n'; });
+    out.textContent = stats;
+    console.log(stats);
+
+    // Générer les communes
+    const communes = groups['Commune'] || [];
+    console.log('Total communes:', communes.length);
+
+    // Générer JSON compact des communes (par lots de 100 pour le log)
+    const communeEntries = communes.map((nom, i) => {
+      const id = 'com-' + (i + 1);
+      const coords = getCommuneCoords(nom, i + 1);
+      return { id, label: nom, coords };
+    });
+
+    // Afficher les 20 premiers pour vérif
+    communeEntries.slice(0, 20).forEach(c => {
+      console.log('COM: ' + c.id + ' | ' + c.label + ' | [' + c.coords + ']');
+    });
+
+    // Générer le bloc JS des communes (groupé par département)
+    const depts = {};
+    communeEntries.forEach(c => {
+      const match = c.label.match(/\((\d{5})\)/);
+      const dept  = match ? match[1].substring(0, 2) : '00';
+      if (!depts[dept]) depts[dept] = [];
+      depts[dept].push(c);
+    });
+
+    console.log('Départements trouvés:', Object.keys(depts).sort().join(', '));
+    Object.keys(depts).sort().forEach(d => {
+      console.log('Dept ' + d + ': ' + depts[d].length + ' communes');
+    });
+
+    // Générer le JS complet (fragment communes)
+    let js = '/* COMMUNES – ' + communes.length + ' entrées */\n';
+    js += 'const _COMMUNES_DATA = [\n';
+    communeEntries.forEach((c, i) => {
+      js += '  {id:"' + c.id + '",label:' + JSON.stringify(c.label) + ',coords:[' + c.coords[0] + ',' + c.coords[1] + ']}';
+      if (i < communeEntries.length - 1) js += ',\n';
+    });
+    js += '\n];\n';
+
+    // Afficher taille
+    console.log('JS communes size:', js.length, 'chars');
+    console.log('JS communes lines:', js.split('\n').length);
+
+    // Stocker dans window pour récupération
+    window._COMMUNES_JS = js;
+    window._COMMUNES_DATA = communeEntries;
+    window._GROUPS = groups;
+
+    out.textContent = stats + '\n\nPremières communes:\n' +
+      communeEntries.slice(0,10).map(c => c.id + ' | ' + c.label + ' | ' + c.coords).join('\n');
+
+  } catch(e) {
+    console.error('ERREUR:', e.message, e.stack);
+    out.textContent = 'ERREUR: ' + e.message;
+  }
+})();
+</script>
+</body>
+</html>

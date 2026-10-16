@@ -1,0 +1,292 @@
+/* ============================================================
+   css/ressources-outils.css
+   Page-specific styles for ressources-outils.html
+   (Tools & useful links — search, category filters, tool cards,
+    load more)
+
+   Sections:
+     1. TOOL CARDS — .outil-card
+     2. TOOL GRID — .outils-grid
+     3. CATEGORY SECTION HEADERS — .cat-section / .cat-title
+     4. SEARCH BAR — .search-bar
+     5. NO RESULTS — .no-results
+     6. CATEGORY FILTER BUTTONS — .outils-filter-btn
+     7. LOAD MORE — .load-more-wrap / .load-more-btn
+============================================================ */
+
+/* ── 1. TOOL CARDS ── */
+/* Bordered card with rounded corners and hover lift effect */
+.outil-card {
+  background: #fff;
+  border: 1px solid #e8eef7;
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform .2s, box-shadow .2s;
+}
+.outil-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 24px rgba(13,71,161,.1);
+}
+
+/* Card header: icon + tool name */
+.outil-card__header {
+  padding: 20px 20px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid #f0f4f8;
+}
+
+/* Square rounded icon container */
+.outil-card__icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* Tool name alignment wrapper */
+.outil-card__title-area {
+  display: flex;
+  align-items: center;
+}
+
+/* Main tool name */
+.outil-card__name {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #1a2233;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Small type label (e.g. "Portail", "API"…) */
+.outil-card__type {
+  font-size: 11px;
+  font-weight: 600;
+  color: #4a5a78;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+/* Card body — description + tags */
+.outil-card__body {
+  padding: 16px 20px;
+  flex: 1;
+}
+
+/* Description paragraph */
+.outil-card__desc {
+  font-size: 13.5px;
+  color: #4a5a7b;
+  line-height: 1.65;
+}
+
+/* Tag row */
+.outil-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 12px;
+}
+
+/* Individual tag */
+.outil-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 0;
+  color: #546E7A;
+}
+
+/* Card footer — porteur label + "Accéder" button */
+.outil-card__footer {
+  padding: 12px 20px;
+  background: #FAFBFD;
+  border-top: 1px solid #f0f4f8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Porteur / publisher label */
+.outil-card__porteur {
+  font-size: 11.5px;
+  color: #4a5a78;
+}
+
+/* External link button */
+.outil-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2a347d;
+  text-decoration: none;
+  padding: 6px 14px;
+  background: #7fddf0;
+  border: none;
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  transition: background .15s, color .15s;
+}
+.outil-card__link:hover { background: #2a347d; color: #fff; text-decoration: none; }
+
+/* ── 2. TOOL GRID ── */
+/* 3-column grid of tool cards */
+.outils-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 20px;
+}
+@media (max-width: 960px) { .outils-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .outils-grid { grid-template-columns: 1fr; } }
+
+/* ── 3. CATEGORY SECTION HEADERS ── */
+/* Spacing between category sections */
+.cat-section { margin-bottom: 48px; }
+
+/* Section title with sky-blue underline */
+.cat-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a2233;
+  margin-bottom: 6px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #7fddf0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cat-title i { color: #2a347d; font-size: 18px; }
+
+/* Optional subtitle below the section title */
+.cat-subtitle {
+  font-size: 13.5px;
+  color: #4a5a78;
+  margin-bottom: 20px;
+}
+
+/* ── 4. SEARCH BAR ── */
+.search-bar {
+  position: relative;
+  margin-bottom: 32px;
+}
+
+/* Full-width search input */
+.search-bar input {
+  width: 100%;
+  padding: 12px 44px 12px 16px;
+  border: 2px solid #2a347d;
+  border-radius: 0;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  color: #1d1d1b;
+  background: #fff;
+}
+.search-bar input:focus { border-color: #7fddf0; }
+
+/* Magnifying-glass icon inside the search bar */
+.search-bar__icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #2a347d;
+  pointer-events: none;
+  font-size: 14px;
+}
+
+/* ── 5. NO RESULTS ── */
+/* Centered "no results" message shown by JS */
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: #4a5a78;
+  display: none;
+}
+.no-results i { font-size: 32px; display: block; margin-bottom: 12px; }
+
+/* ── 6. CATEGORY FILTER BUTTONS ── */
+/* Row of category filter pills */
+.outils-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+/* Individual filter button */
+.outils-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: 0;
+  border: 1px solid rgba(42,52,125,.22);
+  background: #fff;
+  color: #2a347d;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.outils-filter-btn:hover {
+  border-color: #2a347d;
+  background: rgba(42,52,125,.06);
+}
+/* Active / selected filter */
+.outils-filter-btn.is-active {
+  background: #2a347d;
+  border-color: #2a347d;
+  color: #fff;
+}
+.outils-filter-btn i { font-size: 13px; }
+
+/* ── 7. LOAD MORE ── */
+/* Wrapper centers the button */
+.load-more-wrap {
+  text-align: center;
+  margin: 36px 0 8px;
+}
+
+/* Load-more button */
+.load-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 32px;
+  border-radius: 0;
+  border: 2px solid #2a347d;
+  background: #fff;
+  color: #2a347d;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+.load-more-btn:hover    { background: #2a347d; color: #fff; }
+.load-more-btn:disabled { opacity: .4; cursor: default; }
+
+/* "N outils remaining" count below the button */
+.load-more-count {
+  font-size: 13px;
+  color: #4a5a78;
+  margin-top: 10px;
+}

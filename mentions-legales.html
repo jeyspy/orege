@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>Mentions légales – Observatoire de l'Eau Grand Est</title>
+  <meta name="description" content="Mentions légales, CGU, politique de confidentialité RGPD et contact de l'Observatoire de l'Eau Grand Est.">
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="css/fonts.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/a11y.css">
+  <style>
+    /* ── Layout sommaire sticky + contenu ── */
+    html, body { overflow-x: clip; }
+    .legal-body-wrap {
+      max-width: 1200px; margin: 0 auto;
+      padding: 60px 32px 80px;
+      display: grid; grid-template-columns: 220px 1fr;
+      gap: 56px; align-items: flex-start;
+    }
+
+    /* Sommaire sticky identique article.html */
+    .article-toc { position: sticky; top: 120px; align-self: flex-start; max-height: calc(100vh - 120px); overflow-y: auto; scrollbar-width: none; }
+    .article-toc::-webkit-scrollbar { display: none; }
+    .article-toc__title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #2a347d; border-left: 3px solid #fbd020; padding-left: 10px; margin-bottom: 16px; }
+    .article-toc__list { list-style: none; margin: 0; padding: 0; }
+    .article-toc__list li { border-left: 2px solid #e4e8f0; transition: border-color .15s; }
+    .article-toc__list li.is-active { border-left-color: #2a347d; }
+    .article-toc__list a { display: block; padding: 7px 0 7px 12px; font-size: 12.5px; color: #5a6a88; text-decoration: none; line-height: 1.4; transition: color .15s; }
+    .article-toc__list li.is-active a { color: #2a347d; font-weight: 700; }
+    .article-toc__list a:hover { color: #2a347d; }
+    .article-toc__sep { border: none; border-top: 1px solid #e4e8f0; margin: 20px 0; }
+
+    /* ── Sections ── */
+    .legal-section { margin-bottom: 56px; padding-bottom: 56px; border-bottom: 1px solid rgba(42,52,125,.12); scroll-margin-top: 120px; }
+    .legal-section:last-of-type { border-bottom: none; margin-bottom: 0; }
+
+    .legal-section__header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid #7fddf0;
+    }
+    .legal-section__icon { width: 44px; height: 44px; background: #2a347d; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; }
+    .legal-section__tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: rgba(42,52,125,.5); margin-bottom: 4px; }
+    .legal-section__title { font-family: 'Cabinet Grotesk', system-ui, sans-serif; font-size: 22px; font-weight: 800; color: #2a347d; margin: 0; }
+
+    /* ── Corps de texte ── */
+    .legal-body p { font-size: 14.5px; line-height: 1.75; color: #1d1d1b; margin-bottom: 14px; }
+    .legal-body > p:last-child { margin-bottom: 0; }
+    .legal-body h3 { font-family: 'Cabinet Grotesk', system-ui, sans-serif; font-size: 16px; font-weight: 800; color: #2a347d; margin: 28px 0 10px; }
+    .legal-body h4 { font-size: 14px; font-weight: 700; color: #2a347d; margin: 20px 0 8px; }
+    .legal-body ul { margin: 0 0 20px; padding-left: 20px; }
+    .legal-body ul li { font-size: 14px; line-height: 1.65; color: #1d1d1b; margin-bottom: 8px; }
+    .legal-body ul li::marker { color: #2a347d; }
+    .legal-body a { color: #2a347d; font-weight: 700; }
+    .legal-body strong { color: #2a347d; }
+
+    /* ── Tag RGPD ── */
+    .tag-rgpd { display: inline-block; background: rgba(42,52,125,.1); color: #2a347d; font-size: 10px; font-weight: 700; padding: 2px 8px; letter-spacing: .4px; text-transform: uppercase; margin-left: 8px; vertical-align: middle; }
+
+    /* ── Carte contact ── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+    .contact-item { background: #fff; border: 1px solid rgba(42,52,125,.15); padding: 14px 18px; }
+    .contact-item__label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: rgba(42,52,125,.45); margin-bottom: 6px; }
+    .contact-item__value { font-size: 14px; font-weight: 600; color: #2a347d; }
+    .contact-item__value a { color: #2a347d; text-decoration: none; }
+    .contact-item__value a:hover { text-decoration: underline; }
+
+    /* ── Notice info ── */
+    .legal-notice { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; font-size: 13.5px; line-height: 1.6; background: rgba(42,52,125,.07); border-left: 4px solid #2a347d; color: #1d1d1b; margin-top: 20px; }
+    .legal-notice i { color: #2a347d; margin-top: 2px; flex-shrink: 0; }
+
+    /* ── Pied de page légal ── */
+    .legal-footer-note { font-size: 12px; color: rgba(42,52,125,.4); text-align: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(42,52,125,.1); }
+
+    @media (max-width: 860px) {
+      .legal-body-wrap { grid-template-columns: 1fr; padding: 32px 20px 60px; gap: 32px; }
+      .article-toc { position: static; max-height: none; }
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="nav-loading">
+<a href="#main-content" class="sr-only focusable">Aller au contenu principal</a>
+
+<header class="orege-header" role="banner">
+  <a href="index.html" class="orege-header__logo" aria-label="Observatoire de l'Eau Grand Est – Accueil">
+    <img src="images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true" width="44" height="44" loading="eager">
+    <span class="orege-header__logo-text">Observatoire de l'Eau<br><span>Grand Est</span></span>
+  </a>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero__inner">
+    <h1 class="page-hero__title">Mentions légales</h1>
+    <p class="page-hero__sub">Informations légales, conditions d'utilisation, politique de confidentialité et contact de la plateforme.</p>
+  </div>
+</div>
+
+<main id="main-content">
+<div class="legal-body-wrap">
+
+  <!-- Sommaire sticky -->
+  <aside class="article-toc" aria-label="Sommaire">
+    <div class="article-toc__title">Sommaire</div>
+    <ul class="article-toc__list" id="toc-list">
+      <li class="is-active"><a href="#editeur">Éditeur du site</a></li>
+      <li><a href="#hebergeur">Hébergement</a></li>
+      <li><a href="#cgu">Conditions d'utilisation</a></li>
+      <li><a href="#propriete-intellectuelle">Propriété intellectuelle</a></li>
+      <li><a href="#rgpd">RGPD &amp; Confidentialité</a></li>
+      <li><a href="#cookies">Cookies</a></li>
+      <li><a href="#contact">Nous contacter</a></li>
+    </ul>
+    <hr class="article-toc__sep">
+    <a href="index.html" style="font-size:12px;color:#5a6a88;text-decoration:none;display:flex;align-items:center;gap:6px;">
+      <i class="ph ph-arrow-left" aria-hidden="true"></i> Accueil
+    </a>
+  </aside>
+
+  <!-- Contenu -->
+  <div>
+
+    <!-- 1. Éditeur -->
+    <div class="legal-section" id="editeur">
+      <div class="legal-section__header">
+        <div class="legal-section__icon"><i class="ph ph-building" aria-hidden="true"></i></div>
+        <div>
+          <div class="legal-section__tag">Responsabilité éditoriale</div>
+          <h2 class="legal-section__title">Éditeur du site</h2>
+        </div>
+      </div>
+      <div class="legal-body">
+        <p>Le site <strong>Observatoire de l'Eau Grand Est</strong> est édité par :</p>
+        <ul>
+          <li><strong>Région Grand Est</strong>, collectivité territoriale chargée du pilotage du projet</li>
+          <li>Siège social : 1 place Adrien Zeller, BP 91006, 67070 Strasbourg Cedex</li>
+          <li>SIREN : 200 053 759</li>
+          <li>Téléphone : +33 (0)3 88 15 68 67</li>
+        </ul>
+        <h3>Maîtrise d'œuvre</h3>
+        <p>La conception, le développement et la maintenance technique de la plateforme sont assurés par <strong>Antea Group</strong>, bureau d'études spécialisé en eau et environnement.</p>
+        <ul>
+          <li>Antea Group SAS — 3 avenue Claude-Guillemin, 45086 Orléans Cedex 2</li>
+          <li>SAS au capital de 37 530 000 € — SIRET 450 579 824 000 33</li>
+        </ul>
+        <h3>Responsable de publication</h3>
+        <p>La responsable de publication est la Directrice de l'Eau et de l'Environnement de la Région Grand Est.</p>
+      </div>
+    </div>
+
+    <!-- 2. Hébergement -->
+    <div class="legal-section" id="hebergeur">
+      <div class="legal-section__header">
+        <div class="legal-section__icon"><i class="ph ph-hard-drive" aria-hidden="true"></i></div>
+        <div>
+          <div class="legal-section__tag">Infrastructure technique</div>
+          <h2 class="legal-section__title">Hébergement</h2>
+        </div>
+      </div>
+      <div class="legal-body">
+        <p>Ce site est hébergé sur une infrastructure cloud sécurisée, conforme aux exigences de la Politique Générale de Sécurité des Systèmes d'Information (PGSSI-S) et aux recommandations de l'ANSSI.</p>
+        <p>Les serveurs sont localisés sur le territoire de l'Union Européenne, conformément aux exigences du RGPD.</p>
+      </div>
+    </div>
+
+    <!-- 3. CGU -->
+    <div class="legal-section" id="cgu">
+      <div class="legal-section__header">
+        <div class="legal-section__icon"><i class="ph ph-file-text" aria-hidden="true"></i></div>
+        <div>
+          <div class="legal-section__tag">Règles d'usage</div>
+          <h2 class="legal-section__title">Conditions générales d'utilisation</h2>
+        </div>
+      </div>
+      <div class="legal-body">
+        <h3>Objet et champ d'application</h3>
+        <p>Les présentes Conditions Générales d'Utilisation (CGU) définissent les modalités d'accès et d'utilisation du site Observatoire de l'Eau Grand Est, accessible à l'adresse URL du présent site.</p>
+        <p>L'accès et l'utilisation du site impliquent l'acceptation pleine et entière des présentes CGU. La Région Grand Est se réserve le droit de modifier ces conditions à tout moment, sans préavis.</p>
+        <h3>Nature des informations disponibles</h3>
+        <p>Les informations et indicateurs disponibles sur la plateforme sont fournis <strong>à titre informatif et indicatif</strong>. Dans sa version prototype actuelle, la plateforme affiche des données simulées cohérentes avec les ordres de grandeur réels mais ne constituant pas des données officielles certifiées.</p>
+        <p>La Région Grand Est et ses partenaires déclinent toute responsabilité quant aux décisions prises sur la seule base des informations disponibles sur cette plateforme.</p>
+        <h3>Accès au service</h3>
+        <p>L'accès à la plateforme est libre et gratuit. La Région Grand Est ne peut être tenue responsable de l'indisponibilité du service pour raison de maintenance, de mise à jour, ou d'incident technique indépendant de sa volonté.</p>
+        <h3>Liens hypertextes</h3>
+        <p>Ce site peut contenir des liens vers des sites tiers. La Région Grand Est décline toute responsabilité quant au contenu des sites vers lesquels ces liens pointent. La création de liens hypertextes vers le site est autorisée sous réserve de ne pas porter atteinte à l'image de la Région Grand Est et de ses partenaires.</p>
+        <h3>Loi applicable</h3>
+        <p>Les présentes CGU sont soumises au droit français. Tout litige relatif à leur interprétation ou exécution sera de la compétence exclusive des tribunaux compétents du ressort de Strasbourg.</p>
+      </div>
+    </div>
+
+    <!-- 4. Propriété intellectuelle -->
+    <div class="legal-section" id="propriete-intellectuelle">
+      <div class="legal-section__header">
+        <div class="legal-section__icon"><i class="ph ph-copyright" aria-hidden="true"></i></div>
+        <div>
+          <div class="legal-section__tag">Droits d'auteur</div>
+          <h2 class="legal-section__title">Propriété intellectuelle</h2>
+        </div>
+      </div>
+      <div class="legal-body">
+        <p>L'ensemble des contenus présents sur le site (textes, images, graphiques, pictogrammes, logos, indicateurs, données, code source) est <strong>protégé par le droit de la propriété intellectuelle</strong>.</p>
+        <p>Toute reproduction, représentation, modification, publication ou adaptation, partielle ou totale, des éléments du site est interdite sauf autorisation préalable et écrite de la Région Grand Est et/ou d'Antea Group.</p>
+        <h3>Données publiques et open data</h3>
+        <p>Les indicateurs construits à partir de données publiques (SANDRE, Hub'Eau, etc.) sont réutilisables dans le cadre des licences Etalab (Licence Ouverte 2.0) ou Creative Commons applicables à ces sources. Les conditions de réutilisation propres à chaque source doivent être respectées.</p>
+        <h3>Code source</h3>
+        <p>Le code source de la plateforme est la propriété d'Antea Group. Toute reproduction ou utilisation sans accord préalable est interdite.</p>
+      </div>
+    </div>
+
+    <!-- 5. RGPD -->
+    <div class="legal-section" id="rgpd">
+      <div class="legal-section__header">
+        <div class="legal-section__icon"><i class="ph ph-shield-halved" aria-hidden="true"></i></div>
+        <div>
+          <div class="legal-section__tag">Protection des données</div>
+          <h2 class="legal-section__title">RGPD &amp; Confidentialité <span class="tag-rgpd">RGPD</span></h2>
+        </div>
+      </div>
+      <div class="legal-body">
+        <h3>Responsable de traitement</h3>
+        <p>La <strong>Région Grand Est</strong> est responsable de traitement au sens du Règlement Général sur la Protection des Données (RGPD – Règlement UE 2016/679) pour les données collectées dans le cadre de l'utilisation de cette plateforme.</p>
+        <h3>Données collectées</h3>
+        <p>La plateforme <strong>ne collecte aucune donnée personnelle</strong> identifiable lors de la simple navigation. Les seules informations conservées sont :</p>
+        <ul>
+          <li><strong>Préférences de navigation</strong> : configuration du tableau de bord personnel, stockées uniquement en local sur votre appareil (localStorage — sans transmission à un serveur).</li>
+          <li><strong>Données de contact</strong> : si vous nous contactez via le formulaire ou par email, les informations fournies sont utilisées uniquement pour répondre à votre demande.</li>
+          <li><strong>Données de mesure d'audience</strong> : données anonymisées de navigation collectées via un outil conforme CNIL (Matomo en mode cookieless). Ces données ne permettent pas d'identifier les utilisateurs.</li>
+        </ul>
+        <h3>Base légale</h3>
+        <p>Les traitements reposent sur la <strong>mission d'intérêt public</strong> de la Région Grand Est (article 6.1.e du RGPD) et sur le <strong>consentement</strong> pour les éventuelles données de contact.</p>
+        <h3>Durée de conservation</h3>
+        <ul>
+          <li>Données de contact : 3 ans maximum après le dernier contact.</li>
+          <li>Données de mesure d'audience : 13 mois (recommandations CNIL).</li>
+          <li>Préférences locales (localStorage) : supprimées à la demande ou en vidant le navigateur.</li>
+        </ul>
+        <h3>Vos droits</h3>
+        <p>Conformément au RGPD et à la loi Informatique et Libertés, vous disposez des droits d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité. Pour les exercer : <a href="mailto:dpo@grandest.fr">dpo@grandest.fr</a></p>
+        <p>En cas de litige non résolu, vous pouvez saisir la <strong>CNIL</strong> : <a href="https://www.cnil.fr" target="_blank" rel="noopener">www.cnil.fr</a></p>
+      </div>
+    </div>
+
+    <!-- 6. Cookies -->
+    <div class="legal-section" id="cookies">
+      <div class="legal-section__header">
+        <div class="legal-section__icon"><i class="ph ph-cookie" aria-hidden="true"></i></div>
+        <div>
+          <div class="legal-section__tag">Traceurs &amp; stockage local</div>
+          <h2 class="legal-section__title">Gestion des cookies</h2>
+        </div>
+      </div>
+      <div class="legal-body">
+        <h3>Cookies techniques essentiels</h3>
+        <p>La plateforme utilise des mécanismes de stockage local (<strong>localStorage</strong>) pour mémoriser vos préférences de tableau de bord. Ces mécanismes sont <strong>strictement nécessaires</strong> au fonctionnement de la fonctionnalité et ne nécessitent pas votre consentement.</p>
+        <p>Aucun cookie publicitaire ou de tracking personnel n'est utilisé.</p>
+        <h3>Cookies de mesure d'audience</h3>
+        <p>Un outil de mesure d'audience anonymisé peut être utilisé pour mesurer la fréquentation et améliorer l'ergonomie. Cet outil est configuré pour ne pas collecter d'informations identifiantes et ne recourt pas aux cookies en mode cookieless.</p>
+        <h3>Gestion de vos préférences</h3>
+        <p>Pour supprimer les préférences locales, videz les données de navigation (cache et stockage local) depuis les paramètres de votre navigateur.</p>
+      </div>
+    </div>
+
+    <!-- 7. Contact -->
+    <div class="legal-section" id="contact">
+      <div class="legal-section__header">
+        <div class="legal-section__icon"><i class="ph ph-envelope" aria-hidden="true"></i></div>
+        <div>
+          <div class="legal-section__tag">Échanges &amp; signalements</div>
+          <h2 class="legal-section__title">Nous contacter</h2>
+        </div>
+      </div>
+      <div class="legal-body">
+        <p>Pour toute question relative à la plateforme, à ses données ou à vos droits, vous pouvez nous joindre par les coordonnées ci-dessous :</p>
+        <div class="contact-grid">
+          <div class="contact-item">
+            <div class="contact-item__label"><i class="ph ph-envelope" aria-hidden="true"></i> Email général</div>
+            <div class="contact-item__value"><a href="mailto:observatoire-eau@grandest.fr">observatoire-eau@grandest.fr</a></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item__label"><i class="ph ph-shield-halved" aria-hidden="true"></i> DPO – Données personnelles</div>
+            <div class="contact-item__value"><a href="mailto:dpo@grandest.fr">dpo@grandest.fr</a></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item__label"><i class="ph ph-building" aria-hidden="true"></i> Région Grand Est</div>
+            <div class="contact-item__value">1 place Adrien Zeller<br>67070 Strasbourg Cedex</div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item__label"><i class="ph ph-person" aria-hidden="true"></i> Accessibilité</div>
+            <div class="contact-item__value"><a href="accessibilite.html">Déclaration RGAA 4.1</a></div>
+          </div>
+        </div>
+        <div class="legal-notice">
+          <i class="ph ph-info" aria-hidden="true"></i>
+          <span>Pour toute question sur les données affichées ou les indicateurs, vous pouvez également contacter directement les producteurs de données référencés dans les fiches indicateurs.</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="legal-footer-note">Dernière mise à jour des mentions légales : février 2026 — Version prototype UX</p>
+
+  </div><!-- /.contenu -->
+</div><!-- /.legal-body-wrap -->
+</main>
+
+<div class="orege-footer-placeholder"></div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/a11y.js"></script>
+<script>
+(function () {
+  var tocItems = document.querySelectorAll('.article-toc__list li');
+  var sections = [];
+  tocItems.forEach(function(li) {
+    var a = li.querySelector('a');
+    if (a) { var id = a.getAttribute('href').replace('#',''); var el = document.getElementById(id); if (el) sections.push({ li: li, el: el }); }
+  });
+  function onScroll() {
+    var scrollY = window.scrollY + 120; var current = sections[0];
+    sections.forEach(function(s) { if (s.el.offsetTop <= scrollY) current = s; });
+    tocItems.forEach(function(li) { li.classList.remove('is-active'); });
+    if (current) current.li.classList.add('is-active');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+})();
+</script>
+</body>
+</html>

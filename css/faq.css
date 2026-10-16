@@ -1,0 +1,264 @@
+/**
+ * faq.css — Styles spécifiques à la page FAQ (faq.html)
+ *
+ * Contenu :
+ *  1. Layout général (colonne centrée)
+ *  2. Section FAQ (titre, séparateur)
+ *  3. Barre de recherche
+ *  4. Filtres catégories
+ *  5. Items FAQ (accordéon)
+ *  6. Message "pas de résultats"
+ *  7. Bouton "Charger plus"
+ *  8. CTA Contact
+ *  9. Responsive
+ *
+ * JS companion : js/faq.js (accordéon, filtres, recherche, load-more)
+ */
+
+html, body { overflow-x: clip; }
+
+/* ── 1. Layout centré colonne unique ── */
+.article-body-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+}
+
+/* ── 2. Section FAQ ── */
+.faq-section-wrap {
+  scroll-margin-top: 120px;
+  margin-bottom: 52px;
+  padding-bottom: 52px;
+  border-bottom: 1px solid #eef1f7;
+}
+.faq-section-wrap:last-child { border-bottom: none; margin-bottom: 0; }
+
+/* En-tête de section */
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.section-heading__icon {
+  width: 36px;
+  height: 36px;
+  background: #2a347d;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.section-heading__inner {}
+.section-heading__tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #4a5a78;
+  margin-bottom: 4px;
+}
+.section-heading__title {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a2233;
+  margin: 0;
+  line-height: 1.2;
+  border-bottom: 2.5px solid #7fddf0;
+  padding-bottom: 6px;
+  display: inline-block;
+}
+
+/* ── 3. Barre de recherche ── */
+.faq-search {
+  position: relative;
+  margin-bottom: 20px;
+}
+.faq-search__input {
+  width: 100%;
+  padding: 12px 44px 12px 16px;
+  border: 2px solid #2a347d;
+  border-radius: 0;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  color: #1d1d1b;
+  background: #fff;
+}
+.faq-search__input:focus { border-color: #7fddf0; }
+.faq-search__icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #2a347d;
+  pointer-events: none;
+  font-size: 14px;
+}
+
+/* ── 4. Filtres catégories ── */
+.faq-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+.faq-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: 0;
+  border: 1.5px solid #2a347d;
+  background: #fff;
+  color: #3a4a6b;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .18s;
+  white-space: nowrap;
+}
+.faq-filter-btn:hover {
+  border-color: #2a347d;
+  color: #2a347d;
+  background: rgba(42,52,125,.06);
+}
+.faq-filter-btn.is-active {
+  background: #2a347d;
+  border-color: #2a347d;
+  color: #fff;
+}
+.faq-filter-btn i { font-size: 13px; }
+
+/* ── 5. Items FAQ (accordéon) ── */
+.faq-item {
+  border: 1px solid #e8eef7;
+  border-radius: 0;
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: box-shadow .2s;
+}
+.faq-item:hover { box-shadow: 0 2px 12px rgba(42,52,125,.08); }
+.faq-item__question {
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  border: none;
+  padding: 16px 20px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #1a2233;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  transition: background .15s, color .15s;
+}
+.faq-item__question:hover,
+.faq-item__question[aria-expanded="true"] {
+  background: rgba(42,52,125,.05);
+  color: #2a347d;
+}
+.faq-item__question i.fa-chevron-down {
+  font-size: 11px;
+  flex-shrink: 0;
+  transition: transform .25s;
+}
+.faq-item__question[aria-expanded="true"] i.fa-chevron-down {
+  transform: rotate(180deg);
+}
+.faq-item__answer {
+  display: none;
+  padding: 0 20px 18px;
+  font-size: 14px;
+  color: #3a4a6b;
+  line-height: 1.7;
+  border-top: 1px solid #e8eef7;
+}
+.faq-item__answer.is-open { display: block; }
+.faq-item__answer p { margin-bottom: 10px; }
+.faq-item__answer p:last-child { margin-bottom: 0; }
+.faq-item__answer a { color: #2a347d; font-weight: 600; }
+.faq-item__answer ul {
+  padding-left: 0;
+  list-style: none;
+  margin-bottom: 10px;
+}
+.faq-item__answer ul li {
+  padding-left: 16px;
+  position: relative;
+  margin-bottom: 4px;
+}
+.faq-item__answer ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 5px;
+  height: 5px;
+  background: #2a347d;
+  border-radius: 50%;
+}
+
+/* ── 6. Pas de résultat ── */
+.faq-no-results {
+  text-align: center;
+  padding: 40px 20px;
+  color: #4a5a78;
+  font-size: 14px;
+  display: none;
+}
+.faq-no-results i { font-size: 32px; margin-bottom: 12px; display: block; }
+
+/* ── 7. Charger plus ── */
+.load-more-wrap { text-align: center; margin: 28px 0 8px; }
+.load-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 32px;
+  border: 2px solid #2a347d;
+  background: #fff;
+  color: #2a347d;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+}
+.load-more-btn:hover { background: #2a347d; color: #fff; }
+.load-more-btn:disabled { opacity: .4; cursor: default; }
+.load-more-count { font-size: 13px; color: #4a5a78; margin-top: 10px; }
+
+/* ── 8. CTA Contact ── */
+.faq-contact {
+  background: rgba(42,52,125,.04);
+  border: 1px solid rgba(42,52,125,.12);
+  padding: 32px;
+  text-align: center;
+  margin-top: 40px;
+}
+.faq-contact__title { font-size: 18px; font-weight: 700; color: #1a2233; margin-bottom: 10px; }
+.faq-contact__sub { font-size: 14px; color: #4a5a78; margin-bottom: 20px; }
+.faq-contact__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #2a347d;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 11px 24px;
+  text-decoration: none;
+  transition: background .15s;
+}
+.faq-contact__btn:hover { background: #1e2660; color: #fff; text-decoration: none; }
+
+/* ── 9. Responsive ── */
+@media (max-width: 600px) {
+  .article-body-wrap { padding: 32px 16px 64px; }
+}

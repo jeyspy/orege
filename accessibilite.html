@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>Déclaration d'accessibilité – Observatoire de l'Eau Grand Est</title>
+
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/tdb-v2.css">
+  <link rel="stylesheet" href="css/a11y.css">
+
+  <style>
+    html, body { overflow-x: clip; }
+
+    /* ── Correction hero tronqué : plus de padding pour le titre long ── */
+    .page-hero {
+      padding-bottom: 110px;
+    }
+
+    /* ── Layout grille identique à article.html ── */
+    .article-body-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    /* ── Sommaire sticky ── */
+    .article-toc {
+      position: sticky;
+      top: 120px;
+      align-self: flex-start;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .article-toc::-webkit-scrollbar { display: none; }
+    .article-toc__title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #2a347d;
+      border-left: 3px solid #fbd020;
+      padding-left: 10px;
+      margin-bottom: 16px;
+    }
+    .article-toc__list { list-style: none; margin: 0; padding: 0; }
+    .article-toc__list li { border-left: 2px solid #e4e8f0; transition: border-color .15s; }
+    .article-toc__list li.is-active { border-left-color: #2a347d; }
+    .article-toc__list a {
+      display: block;
+      padding: 7px 0 7px 12px;
+      font-size: 12.5px;
+      color: #5a6a88;
+      text-decoration: none;
+      line-height: 1.4;
+      transition: color .15s;
+    }
+    .article-toc__list li.is-active a { color: #2a347d; font-weight: 700; }
+    .article-toc__list a:hover { color: #2a347d; }
+    .article-toc__sep { border: none; border-top: 1px solid #e4e8f0; margin: 20px 0; }
+
+    /* ── Section contenu ── */
+    .page-section {
+      scroll-margin-top: 120px;
+      margin-bottom: 56px;
+      padding-bottom: 56px;
+      border-bottom: 1px solid #eef1f7;
+    }
+    .page-section:last-child { border-bottom: none; }
+
+    /* En-tête de section */
+    .section-heading {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .section-heading__icon {
+      width: 36px;
+      height: 36px;
+      background: #2a347d;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .section-heading__inner {}
+    .section-heading__tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #8fa0b8;
+      margin-bottom: 4px;
+    }
+    .section-heading__title {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: #1a2233;
+      margin: 0;
+      line-height: 1.2;
+      border-bottom: 2.5px solid #7fddf0;
+      padding-bottom: 6px;
+      display: inline-block;
+    }
+
+    /* Texte courant */
+    .page-section p, .page-section li {
+      font-size: 14.5px;
+      line-height: 1.75;
+      color: #374151;
+    }
+    .page-section h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2a347d;
+      margin-top: 28px;
+      margin-bottom: 10px;
+    }
+    .page-section ul {
+      padding-left: 0;
+      list-style: none;
+      margin-bottom: 16px;
+    }
+    .page-section ul li {
+      padding-left: 18px;
+      position: relative;
+      margin-bottom: 6px;
+    }
+    .page-section ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 6px;
+      height: 6px;
+      background: #2a347d;
+      border-radius: 50%;
+    }
+
+    /* Tableau de conformité */
+    .conformite-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13.5px;
+    }
+    .conformite-table th {
+      background: #2a347d;
+      color: white;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .conformite-table td {
+      border: 1px solid #dde3ef;
+      padding: 10px 14px;
+      vertical-align: top;
+    }
+    .conformite-table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    /* Badges de statut */
+    .badge-conforme {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #dcfce7; color: #166534;
+      font-weight: 700; font-size: 11px;
+      padding: 3px 10px; border-radius: 0;
+    }
+    .badge-partiel {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #fef9c3; color: #854d0e;
+      font-weight: 700; font-size: 11px;
+      padding: 3px 10px; border-radius: 0;
+    }
+    .badge-nonconforme {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #fee2e2; color: #991b1b;
+      font-weight: 700; font-size: 11px;
+      padding: 3px 10px; border-radius: 0;
+    }
+    .badge-na {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #f1f5f9; color: #64748b;
+      font-weight: 700; font-size: 11px;
+      padding: 3px 10px; border-radius: 0;
+    }
+
+    /* Barre de progression conformité */
+    .conformite-score {
+      background: rgba(42,52,125,.05);
+      border: 1px solid rgba(42,52,125,.12);
+      padding: 24px;
+      margin: 24px 0;
+      display: flex; align-items: center; gap: 24px;
+    }
+    .conformite-score__gauge {
+      flex-shrink: 0;
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: conic-gradient(#2a347d 0% 94.5%, #e2e8f0 94.5% 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 800; color: #2a347d;
+      position: relative;
+    }
+    .conformite-score__gauge::before {
+      content: '';
+      position: absolute;
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: rgba(42,52,125,.05);
+    }
+    .conformite-score__gauge span { position: relative; z-index: 1; }
+    .conformite-score__info { flex: 1; }
+    .conformite-score__titre { font-size: 16px; font-weight: 700; color: #1a2233; }
+    .conformite-score__detail { font-size: 14px; color: #4a5568; margin-top: 4px; }
+
+    /* Encadré de dérogation */
+    .derogation-box {
+      background: #fff8e1;
+      border: 1px solid #f59e0b;
+      border-left: 4px solid #fbd020;
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+    .derogation-box__titre {
+      font-weight: 700; font-size: 14px; color: #92400e;
+      margin-bottom: 6px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .derogation-box p { font-size: 13px; color: #78350f; margin: 0; }
+
+    /* Contact */
+    .contact-card {
+      background: rgba(42,52,125,.04);
+      border: 1px solid rgba(42,52,125,.15);
+      padding: 24px;
+      margin-top: 24px;
+    }
+    .contact-card h3 { margin-top: 0; color: #2a347d; font-size: 16px; }
+    .contact-card a { color: #2a347d; font-weight: 600; }
+
+    /* Responsive */
+    @media (max-width: 860px) {
+      .article-body-wrap {
+        grid-template-columns: 1fr;
+        padding-top: 80px;
+        gap: 24px;
+      }
+      .article-toc { position: static; max-height: none; }
+    }
+  </style>
+</head>
+
+<body class="nav-loading">
+
+  <!-- ── Liens d'évitement RGAA 12.1 ── -->
+  <div class="skip-links">
+    <a class="skip-link" href="#main-content">Aller au contenu principal</a>
+  </div>
+
+  <!-- ================================================================
+       EN-TÊTE PRINCIPAL (injecté par nav.js)
+  ================================================================ -->
+  <header class="orege-header" id="site-header" role="banner">
+    <a href="index.html" class="orege-header__logo" aria-label="Accueil – Observatoire de l'Eau Grand Est">
+      <img src="images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true" width="44" height="44" loading="eager">
+      <span class="orege-header__logo-text">Observatoire de l'Eau <span>Grand Est</span></span>
+    </a>
+  </header>
+
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="page-hero__inner">
+      <nav class="page-hero__eyebrow" aria-label="Fil d'ariane">
+        <ol>
+          <li><a href="index.html"><i class="ph ph-house" aria-hidden="true"></i> Accueil</a></li>
+          <li><i class="ph ph-caret-right" aria-hidden="true"></i></li>
+          <li><span aria-current="page">Accessibilité</span></li>
+        </ol>
+      </nav>
+      <h1 class="page-hero__title">Déclaration d'accessibilité</h1>
+      <p class="page-hero__sub">Engagement RGAA 4.1 – Observatoire de l'Eau Grand Est</p>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       CONTENU PRINCIPAL – grille 220 + 1fr
+  ================================================================ -->
+  <main id="main-content">
+  <div class="article-body-wrap">
+
+    <!-- ── Sommaire sticky ── -->
+    <aside class="article-toc" aria-label="Sommaire de la page">
+      <div class="article-toc__title">Sommaire</div>
+      <ul class="article-toc__list" id="toc-list">
+        <li><a href="#conformite">État de conformité</a></li>
+        <li><a href="#audit">Résultats de l'audit</a></li>
+        <li><a href="#derogations">Dérogations</a></li>
+        <li><a href="#nonconformites">Non-conformités</a></li>
+        <li><a href="#technologies">Technologies utilisées</a></li>
+        <li><a href="#tests">Environnement de test</a></li>
+        <li><a href="#recours">Droit à la compensation</a></li>
+        <li><a href="#infos">Informations techniques</a></li>
+      </ul>
+    </aside>
+
+    <!-- ── Corps de page ── -->
+    <div class="article-content">
+
+      <!-- SECTION 1 -->
+      <section class="page-section" id="conformite">
+        <div class="section-heading">
+          <div class="section-heading__icon"><i class="ph ph-shield-halved" aria-hidden="true"></i></div>
+          <div class="section-heading__inner">
+            <div class="section-heading__tag">Accessibilité numérique</div>
+            <h2 class="section-heading__title">État de conformité</h2>
+          </div>
+        </div>
+        <p>
+          Observatoire de l'Eau Grand Est s'engage à rendre son site internet accessible conformément à
+          l'article 47 de la loi n° 2005-102 du 11 février 2005 et au Décret n° 2019-768 du 24 juillet 2019.
+          Cette déclaration d'accessibilité s'applique au site <strong>Observatoire de l'Eau – Grand Est</strong>
+          (prototype UX v2026.02).
+        </p>
+        <div class="conformite-score">
+          <div class="conformite-score__gauge" aria-label="Taux de conformité 94,5 %">
+            <span>94,5&nbsp;%</span>
+          </div>
+          <div class="conformite-score__info">
+            <div class="conformite-score__titre">Partiellement conforme au RGAA 4.1</div>
+            <div class="conformite-score__detail">
+              Ce site est <strong>partiellement conforme</strong> au référentiel général d'amélioration de l'accessibilité
+              (RGAA version 4.1). Sur 73 critères applicables, <strong>69 sont conformes</strong> et 4 restent non conformes sous dérogation légitime
+              (carte OpenLayers, drag-and-drop, canvas Chart.js).
+              Dernière mise à jour de l'audit : <strong>avril 2026</strong>.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section class="page-section" id="audit">
+        <div class="section-heading">
+          <div class="section-heading__icon"><i class="ph ph-table" aria-hidden="true"></i></div>
+          <div class="section-heading__inner">
+            <div class="section-heading__tag">Évaluation RGAA 4.1</div>
+            <h2 class="section-heading__title">Résultats de l'audit par critère</h2>
+          </div>
+        </div>
+        <p>
+          L'audit a été réalisé en auto-évaluation sur la base de l'échantillon de pages représentatives.
+          Le tableau ci-dessous présente le statut de conformité par thématique.
+        </p>
+
+        <table class="conformite-table" aria-label="Résultats d'accessibilité par thématique RGAA 4.1">
+          <caption class="sr-only">Résultats de conformité RGAA 4.1 par thématique</caption>
+          <thead>
+            <tr>
+              <th scope="col">Thématique RGAA 4.1</th>
+              <th scope="col">Critères</th>
+              <th scope="col">Statut</th>
+              <th scope="col">Observations</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Images</strong></td>
+              <td>1.1, 1.2, 1.3</td>
+              <td><span class="badge-conforme"><i class="ph ph-check" aria-hidden="true"></i> Conforme</span></td>
+              <td>Icônes FontAwesome marquées <code>aria-hidden="true"</code>. Images décoratives ignorées. Logos avec <code>alt</code> ou <code>aria-label</code>.</td>
+            </tr>
+            <tr>
+              <td><strong>2. Cadres</strong></td>
+              <td>2.1, 2.2</td>
+              <td><span class="badge-na"><i class="ph ph-minus" aria-hidden="true"></i> N/A</span></td>
+              <td>Aucun <code>&lt;iframe&gt;</code> utilisé.</td>
+            </tr>
+            <tr>
+              <td><strong>3. Couleurs</strong></td>
+              <td>3.1, 3.2</td>
+              <td><span class="badge-conforme"><i class="ph ph-check" aria-hidden="true"></i> Conforme</span></td>
+              <td>Contrastes corrigés via <code>a11y.css</code> : textes mutés passent de ratio 3.8 à ≥ 4.6:1. Navigation sur fond bleu : blanc opaque (ratio &gt; 7:1). La couleur n'est jamais l'unique vecteur d'information.</td>
+            </tr>
+            <tr>
+              <td><strong>4. Multimédia</strong></td>
+              <td>4.1–4.13</td>
+              <td><span class="badge-na"><i class="ph ph-minus" aria-hidden="true"></i> N/A</span></td>
+              <td>Aucune vidéo ni audio présents sur ce prototype.</td>
+            </tr>
+            <tr>
+              <td><strong>5. Tableaux</strong></td>
+              <td>5.1–5.8</td>
+              <td><span class="badge-conforme"><i class="ph ph-check" aria-hidden="true"></i> Conforme</span></td>
+              <td>Chaque <code>&lt;canvas&gt;</code> Chart.js porte <code>role="img"</code> + <code>aria-label</code> décrivant l'indicateur.
+              Un tableau <code>.sr-only</code> (<code>.chart-table-a11y</code>) avec <code>&lt;caption&gt;</code> et <code>&lt;th scope="col"&gt;</code>
+              est généré automatiquement en alternative pour chaque graphique (barres, courbes, donut). Corrigé en avril 2026.</td>
+            </tr>
+            <tr>
+              <td><strong>6. Liens</strong></td>
+              <td>6.1, 6.2</td>
+              <td><span class="badge-conforme"><i class="ph ph-check" aria-hidden="true"></i> Conforme</span></td>
+              <td>Liens <code>href="#"</code> annotés <code>aria-label</code> + <code>aria-disabled</code>. Liens de navigation ont un intitulé explicite.</td>
+            </tr>
+            <tr>
+              <td><strong>7. Scripts</strong></td>
+              <td>7.1, 7.3, 7.4, 7.5</td>
+              <td><span class="badge-conforme"><i class="ph ph-check" aria-hidden="true"></i> Conforme</span></td>
+              <td>Méga-menu : accessible au clavier (Tab, Escape, flèche bas) via <code>a11y.js</code>.
+              Autocomplétion : rôle <code>combobox</code> implémenté, injection de <code>role="option"</code> fiabilisée
+              via <code>requestAnimationFrame</code> + <code>subtree: true</code>.
+              Toast notifications : <code>role="status"</code> + <code>aria-live="polite"</code> + <code>aria-atomic="true"</code>.
+              Carte OpenLayers et drag-and-drop : composants sous dérogation légitime (voir ci-dessous).</td>
+            </tr>
+            <tr>
+              <td><strong>8. Éléments obligatoires</strong></td>
+              <td>8.1–8.9</td>
+              <td><span class="badge-conforme"><i class="ph ph-check" aria-hidden="true"></i> Conforme</span></td>
+              <td>DOCTYPE HTML5 présent. <code>lang="fr"</code> sur toutes les pages. Titre unique et pertinent sur chaque page. Encodage UTF-8.</td>
+            </tr>
+            <tr>
+              <td><strong>9. Structure</strong></td>
+              <td>9.1–9.4</td>
+              <td><span class="badge-conforme"><i class="ph ph-check" aria-hidden="true"></i> Conforme</span></td>
+              <td>Hiérarchie h1→h2→h3 respectée. Landmark <code>&lt;main id="main-content"&gt;</code> présent et unique sur toutes les pages.</td>
+            </tr>
+            <tr>
+              <td><strong>10. Présentation</strong></td>
+              <td>10.1–10.14</td>
+              <td><span class="badge-conforme"><i class="ph ph-check" aria-hidden="true"></i> Conforme</span></td>
+              <td>Focus visible restauré sur tous les éléments interactifs. <code>prefers-reduced-motion</code> respecté.</td>
+            </tr>
+            <tr>
+              <td><strong>11. Formulaires</strong></td>
+              <td>11.1–11.13</td>
+              <td><span class="badge-conforme"><i class="ph ph-check" aria-hidden="true"></i> Conforme</span></td>
+              <td>Labels <code>for/id</code> ou <code>aria-label</code> sur tous les champs.
+              <code>aria-required="true"</code> sur chaque champ obligatoire.
+              <code>aria-describedby</code> lie chaque champ à son message d'erreur.
+              <code>aria-invalid="true"</code> ajouté dynamiquement par le JS de validation.
+              Messages d'erreur avec <code>role="alert"</code> pour annonce immédiate. Corrigé en avril 2026.</td>
+            </tr>
+            <tr>
+              <td><strong>12. Navigation</strong></td>
+              <td>12.1–12.11</td>
+              <td><span class="badge-conforme"><i class="ph ph-check" aria-hidden="true"></i> Conforme</span></td>
+              <td>Liens d'évitement présents sur toutes les pages. <code>aria-current="page"</code> sur le lien actif.</td>
+            </tr>
+            <tr>
+              <td><strong>13. Consultation</strong></td>
+              <td>13.1–13.12</td>
+              <td><span class="badge-conforme"><i class="ph ph-check" aria-hidden="true"></i> Conforme</span></td>
+              <td>Contenus dynamiques annoncés via <code>aria-live="polite"</code>.
+              La carte interactive (OpenLayers) fait l'objet d'une dérogation légitime
+              avec alternative via les panneaux latéraux filtrables. Toast notifications
+              désormais accessibles (<code>role="status"</code>). Corrigé en avril 2026.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section class="page-section" id="derogations">
+        <div class="section-heading">
+          <div class="section-heading__icon"><i class="ph ph-warning" aria-hidden="true"></i></div>
+          <div class="section-heading__inner">
+            <div class="section-heading__tag">Article 11 – Loi du 11 février 2005</div>
+            <h2 class="section-heading__title">Dérogations pour charge disproportionnée</h2>
+          </div>
+        </div>
+        <p>
+          Conformément à l'article 11 de la loi du 11 février 2005, les contenus suivants font l'objet
+          d'une dérogation pour <strong>charge disproportionnée</strong> :
+        </p>
+
+        <div class="derogation-box">
+          <div class="derogation-box__titre">
+            <i class="ph ph-map" aria-hidden="true"></i>
+            Dérogation 1 – Carte SIG interactive (OpenLayers)
+          </div>
+          <p>
+            La carte interactive de la page Cartographie est rendue via une technologie canvas/WebGL (bibliothèque
+            OpenLayers 9). Cette technologie ne permet pas nativement la navigation au clavier ni l'exposition
+            de ses contenus aux technologies d'assistance.<br><br>
+            <strong>Alternative disponible :</strong> les données visualisées sur la carte sont accessibles
+            sous forme de tableaux via les panneaux latéraux (filtrables par territoire et par indicateur).
+            Un export des données (format Excel/CSV) est prévu dans une prochaine version.<br><br>
+            <strong>✅ Levée partielle (avril 2026) :</strong> la réorganisation des couches de la légende,
+            auparavant uniquement accessible par glisser-déposer, dispose désormais de boutons ▲/▼
+            entièrement pilotables au clavier, avec annonce vocale de la position à chaque déplacement
+            (critère RGAA 7.1 – désormais conforme pour ce composant).
+          </p>
+        </div>
+
+        <div class="derogation-box">
+          <div class="derogation-box__titre">
+            <i class="ph ph-grip-vertical" aria-hidden="true"></i>
+            Dérogation 2 – Glisser-déposer dans "Mon tableau de bord"
+          </div>
+          <p>
+            La fonctionnalité de personnalisation du tableau de bord (réorganisation des widgets par
+            glisser-déposer) n'est pas accessible au clavier. La refonte de ce composant en interactions
+            alternatives 100% clavier représente une charge disproportionnée dans le cadre de ce prototype.<br><br>
+            <strong>Alternative disponible :</strong> les widgets peuvent être ajoutés et supprimés
+            individuellement via les boutons accessibles au clavier présents dans chaque cellule.
+          </p>
+        </div>
+
+        <div class="derogation-box">
+          <div class="derogation-box__titre">
+            <i class="ph ph-chart-bar" aria-hidden="true"></i>
+            Dérogation 3 – Graphiques Chart.js (canvas)
+          </div>
+          <p>
+            Les graphiques générés par Chart.js dans les tableaux de bord sont rendus dans des éléments
+            <code>&lt;canvas&gt;</code> non accessibles nativement aux technologies d'assistance.<br><br>
+            <strong>Alternative disponible :</strong> chaque graphique est accompagné d'un tableau de
+            données <code>.sr-only</code> visible aux lecteurs d'écran, contenant l'ensemble des valeurs
+            numériques représentées visuellement.
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 4 -->
+      <section class="page-section" id="nonconformites">
+        <div class="section-heading">
+          <div class="section-heading__icon"><i class="ph ph-circle-xmark" aria-hidden="true"></i></div>
+          <div class="section-heading__inner">
+            <div class="section-heading__tag">Points d'amélioration</div>
+            <h2 class="section-heading__title">Non-conformités identifiées</h2>
+          </div>
+        </div>
+        <p>
+          <strong>✅ Toutes les non-conformités précédemment identifiées ont été corrigées (avril 2026) :</strong>
+        </p>
+        <ul>
+          <li>
+            <strong>Tableaux de bord – titres de graphiques :</strong> <del>les titres dynamiques n'étaient pas
+            exposés comme <code>&lt;caption&gt;</code></del> → chaque canvas Chart.js porte désormais
+            <code>role="img"</code> + <code>aria-label</code> et un tableau <code>.sr-only</code>
+            avec <code>&lt;caption&gt;</code> est généré automatiquement. ✅
+          </li>
+          <li>
+            <strong>Autocomplete – items générés dynamiquement :</strong> <del>le <code>role="option"</code>
+            pouvait ne pas s'appliquer en cas de rendu rapide</del> → injection fiabilisée via
+            <code>requestAnimationFrame</code> + observation <code>subtree: true</code>. ✅
+          </li>
+          <li>
+            <strong>Toast notifications :</strong> <del>non annoncées par les lecteurs d'écran</del> →
+            le conteneur toast porte désormais <code>role="status"</code>, <code>aria-live="polite"</code>
+            et <code>aria-atomic="true"</code>. ✅
+          </li>
+          <li>
+            <strong>Formulaire de dépôt RETEX :</strong> <del><code>aria-describedby</code> non systématique</del> →
+            tous les champs obligatoires portent <code>aria-required="true"</code>,
+            <code>aria-describedby</code> lie chaque champ à son message d'erreur,
+            <code>aria-invalid="true"</code> est ajouté dynamiquement, et les messages d'erreur
+            ont <code>role="alert"</code>. ✅
+          </li>
+        </ul>
+      </section>
+
+      <!-- SECTION 5 -->
+      <section class="page-section" id="technologies">
+        <div class="section-heading">
+          <div class="section-heading__icon"><i class="ph ph-code" aria-hidden="true"></i></div>
+          <div class="section-heading__inner">
+            <div class="section-heading__tag">Stack technique</div>
+            <h2 class="section-heading__title">Technologies utilisées</h2>
+          </div>
+        </div>
+        <ul>
+          <li>HTML5, CSS3, JavaScript ES6</li>
+          <li>Bootstrap 5.3.3</li>
+          <li>Font Awesome 6.5.2</li>
+          <li>Chart.js 4.4.3 (graphiques)</li>
+          <li>OpenLayers 9.2.4 (cartographie)</li>
+          <li>jQuery 3.7.1</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 6 -->
+      <section class="page-section" id="tests">
+        <div class="section-heading">
+          <div class="section-heading__icon"><i class="ph ph-flask" aria-hidden="true"></i></div>
+          <div class="section-heading__inner">
+            <div class="section-heading__tag">Vérification</div>
+            <h2 class="section-heading__title">Environnement de test</h2>
+          </div>
+        </div>
+        <p>Les vérifications d'accessibilité ont été effectuées avec :</p>
+        <ul>
+          <li><strong>NVDA 2023.3</strong> + Firefox 124 (Windows 11)</li>
+          <li><strong>VoiceOver</strong> + Safari 17 (macOS Sonoma)</li>
+          <li><strong>Axe DevTools</strong> (extension Chrome) – analyse automatisée</li>
+          <li>Navigation clavier uniquement (Tab, Shift+Tab, Entrée, Espace, Escape, flèches)</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 7 -->
+      <section class="page-section" id="recours">
+        <div class="section-heading">
+          <div class="section-heading__icon"><i class="ph ph-envelope" aria-hidden="true"></i></div>
+          <div class="section-heading__inner">
+            <div class="section-heading__tag">Voie de recours</div>
+            <h2 class="section-heading__title">Droit à la compensation</h2>
+          </div>
+        </div>
+        <p>
+          Si vous n'arrivez pas à accéder à un contenu ou à un service, vous pouvez contacter
+          le responsable du site pour être orienté vers une alternative accessible ou obtenir
+          le contenu sous une autre forme :
+        </p>
+
+        <div class="contact-card">
+          <h3><i class="ph ph-envelope" aria-hidden="true"></i> Contact accessibilité</h3>
+          <p><strong>Observatoire de l'Eau – Grand Est</strong><br>
+             Mis en œuvre par Antea Group pour la Région Grand Est</p>
+          <p>
+            <strong>Email :</strong> <a href="mailto:observatoire-eau@antea-group.com">observatoire-eau@antea-group.com</a><br>
+            <strong>Objet à préciser :</strong> Demande d'accessibilité – Observatoire de l'Eau Grand Est
+          </p>
+          <p>
+            Nous nous engageons à vous répondre dans un délai de <strong>2 jours ouvrés</strong>
+            et à vous fournir la donnée ou l'information sous un format accessible adapté à votre besoin.
+          </p>
+        </div>
+
+        <h3>Saisir le Défenseur des droits</h3>
+        <p>
+          Si vous avez signalé un défaut d'accessibilité et n'avez pas obtenu de réponse satisfaisante,
+          vous avez le droit de saisir le Défenseur des droits.
+        </p>
+        <ul>
+          <li><a href="https://formulaire.defenseurdesdroits.fr/" target="_blank" rel="noopener">Saisir le Défenseur des droits via le formulaire en ligne</a></li>
+          <li>Contacter le délégué du Défenseur des droits dans votre région</li>
+          <li>Envoyer un courrier par la poste (gratuit, sans timbre) : Le Défenseur des droits – Libre réponse 71120 – 75342 Paris CEDEX 07</li>
+        </ul>
+      </section>
+
+      <!-- SECTION 8 -->
+      <section class="page-section" id="infos">
+        <div class="section-heading">
+          <div class="section-heading__icon"><i class="ph ph-info" aria-hidden="true"></i></div>
+          <div class="section-heading__inner">
+            <div class="section-heading__tag">Mise à jour annuelle</div>
+            <h2 class="section-heading__title">Informations techniques</h2>
+          </div>
+        </div>
+        <p>
+          Cette déclaration d'accessibilité a été établie le <strong>25 février 2026</strong>.
+          Elle sera mise à jour à chaque nouvelle version majeure du site, et au minimum annuellement.
+        </p>
+        <ul>
+          <li><strong>Référentiel appliqué :</strong> RGAA 4.1 (publié le 18 février 2021)</li>
+          <li><strong>Statut de conformité :</strong> Partiellement conforme</li>
+          <li><strong>Version auditée :</strong> v2026.02 (prototype UX)</li>
+          <li><strong>Date de l'audit :</strong> Février 2026</li>
+          <li><strong>Type d'audit :</strong> Auto-évaluation interne</li>
+        </ul>
+      </section>
+
+    </div><!-- /article-content -->
+  </div><!-- /article-body-wrap -->
+  </main>
+
+  <!-- ================================================================
+       SCRIPTS
+  ================================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/a11y.js"></script>
+  <script src="js/page-transition.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    /* ── Scroll-spy TOC ── */
+    var items = [];
+    document.querySelectorAll('.article-toc__list a').forEach(function (a) {
+      var id = a.getAttribute('href').replace('#', '');
+      var el = document.getElementById(id);
+      if (el) items.push({ a: a, el: el });
+    });
+
+    function onScroll() {
+      var scrollY = window.scrollY || window.pageYOffset;
+      var offset  = 140;
+      var active  = null;
+      items.forEach(function (it) {
+        if (it.el.offsetTop - offset <= scrollY) active = it;
+      });
+      items.forEach(function (it) {
+        it.a.parentElement.classList.toggle('is-active', it === active);
+      });
+    }
+
+    if (items.length) {
+      items[0].a.parentElement.classList.add('is-active');
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+  })();
+  </script>
+
+<div class="orege-footer-placeholder"></div>
+</body>
+</html>

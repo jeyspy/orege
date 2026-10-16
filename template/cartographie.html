@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <title>Cartographie SIG – Observatoire de l'Eau Grand Est</title>
+
+  <!-- Bunny Fonts: Cabinet Grotesk + Satoshi — GDPR-compliant -->
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../css/fonts.css">
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+  <!-- Phosphor Icons (deferred) -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+
+  <!-- OpenLayers 9 CSS — required for the full-screen map -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@9.2.4/ol.css">
+
+  <!-- Observatory custom CSS -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/nav.css">
+  <link rel="stylesheet" href="../css/cartographie.css">
+  <link rel="stylesheet" href="../css/a11y.css">
+</head>
+
+<body class="nav-loading">
+
+  <!-- ── Liens d'évitement RGAA 12.1 ── -->
+  <div class="skip-links">
+    <a class="skip-link" href="#main-content">Aller au contenu principal</a>
+    <a class="skip-link" href="#carto-p1-panel">Aller au panneau Données sources</a>
+    <a class="skip-link" href="#carto-p2-panel">Aller au panneau Territoires</a>
+    <a class="skip-link" href="#carto-map">Aller à la carte (non accessible aux technologies d'assistance)</a>
+  </div>
+
+  <!-- ================================================================
+       EN-TÊTE PRINCIPAL (injecté par nav.js)
+  ================================================================ -->
+  <header class="orege-header" id="site-header" role="banner">
+    <a href="../index.html" class="orege-header__logo" aria-label="Accueil – Observatoire de l'Eau Grand Est">
+      <img src="../images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true">
+      <span class="orege-header__logo-text">Observatoire de l'Eau <span>Grand Est</span></span>
+    </a>
+    <!-- Navigation bar injected by nav.js -->
+  </header>
+
+  <!-- ================================================================
+       BARRE D'OUTILS CONTEXTUELLE (toolbar simplifié)
+       Plus de sélecteur Territoire ni Année — gérés dans les sidebars
+  ================================================================ -->
+  <div class="site-subnav">
+
+    <!-- Sidebar toggle buttons (left panel / right panel) -->
+    <button id="btn-toggle-panel1" class="btn-subnav-panel is-active" title="Données sources">
+      <i class="ph ph-layer-group"></i>
+      <span>Données</span>
+    </button>
+    <button id="btn-toggle-panel2" class="btn-subnav-panel" title="Territoires">
+      <i class="ph ph-map-pin"></i>
+      <span>Territoires</span>
+    </button>
+
+    <div class="site-subnav__separator"></div>
+
+    <!-- Active filters counter badge -->
+    <span class="subnav-info" id="subnav-actifs-info">
+      <i class="ph ph-check-circle" style="color:#4CAF50;" aria-hidden="true"></i>
+      <span id="subnav-filtres-count">0</span> couche(s) active(s)
+    </span>
+
+    <!-- Actions à droite -->
+    <div class="site-subnav__actions">
+      <button id="btn-effacer-criteres" class="btn-observatoire btn-observatoire--outline btn-observatoire--sm">
+        <i class="ph ph-arrow-counter-clockwise"></i>
+        <span class="btn-subnav-label">Tout effacer</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ================================================================
+       WRAPPER PRINCIPAL : 2 SIDEBARS + CARTE
+  ================================================================ -->
+  <main id="main-content" class="carto-wrapper">
+
+  <!-- Overlay mobile (fermeture sidebar au clic extérieur) -->
+  <div class="carto-sidebar-overlay" id="carto-sidebar-overlay" aria-hidden="true"></div>
+
+    <!-- ── SIDEBAR 1 : DONNÉES SOURCES ─────────────────────────────── -->
+    <aside class="carto-sidebar carto-sidebar--panel1 is-open" id="panel1-sidebar" aria-label="Données sources" aria-labelledby="p1-sidebar-titre">
+
+      <!-- En-tête -->
+      <div class="carto-sidebar__header">
+        <h2 class="carto-sidebar__titre" id="p1-sidebar-titre">
+          <i class="ph ph-layer-group" style="color:#0288D1;" aria-hidden="true"></i>
+          Données sources
+          <span id="p1-count-badge" class="filtre-badge-count ms-1" style="display:none;">0</span>
+        </h2>
+        <button id="btn-effacer-panel1" class="btn-observatoire btn-observatoire--sm btn-observatoire--danger"
+                title="Désactiver toutes les couches données"
+                aria-label="Désactiver toutes les couches données">
+          <i class="ph ph-x" aria-hidden="true"></i>
+        </button>
+        <button id="btn-close-sidebar1" class="carto-sidebar__close-btn" title="Fermer le panneau" aria-label="Fermer le panneau Données sources">
+          <i class="ph ph-caret-left" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <!-- Moteur de recherche Panel 1 -->
+      <div class="carto-search-wrap" id="p1-search-wrap">
+        <div class="carto-search-field">
+          <i class="ph ph-magnifying-glass carto-search-icon"></i>
+          <input type="text" id="p1-search-input"
+                 placeholder="Rechercher une donnée…"
+                 autocomplete="off"
+                 aria-label="Rechercher une donnée source">
+          <button class="carto-search-clear" id="p1-search-clear" title="Effacer" style="display:none;">
+            <i class="ph ph-x"></i>
+          </button>
+        </div>
+        <div class="carto-search-autocomplete" id="p1-search-ac"></div>
+        <div class="carto-search-results" id="p1-search-results" style="display:none;"></div>
+      </div>
+
+      <!-- Corps accordéon Panel 1 (généré par JS) -->
+      <div class="carto-sidebar__body" id="p1-filtres-corps"></div>
+
+    </aside>
+
+    <!-- ── SIDEBAR 2 : TERRITOIRES ──────────────────────────────────── -->
+    <aside class="carto-sidebar carto-sidebar--panel2" id="panel2-sidebar" aria-label="Territoires" aria-labelledby="p2-sidebar-titre">
+
+      <!-- En-tête -->
+      <div class="carto-sidebar__header">
+        <h2 class="carto-sidebar__titre" id="p2-sidebar-titre">
+          <i class="ph ph-map-pin" style="color:#6A1B9A;" aria-hidden="true"></i>
+          Territoires
+          <span id="p2-count-badge" class="filtre-badge-count ms-1" style="display:none;">0</span>
+        </h2>
+        <button id="btn-effacer-panel2" class="btn-observatoire btn-observatoire--sm btn-observatoire--danger"
+                title="Désactiver toutes les zones territoire"
+                aria-label="Désactiver toutes les zones territoire">
+          <i class="ph ph-x" aria-hidden="true"></i>
+        </button>
+        <button id="btn-close-sidebar2" class="carto-sidebar__close-btn" title="Fermer le panneau" aria-label="Fermer le panneau Territoires">
+          <i class="ph ph-caret-left" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <!-- Moteur de recherche Panel 2 -->
+      <div class="carto-search-wrap" id="p2-search-wrap">
+        <div class="carto-search-field">
+          <i class="ph ph-magnifying-glass carto-search-icon"></i>
+          <input type="text" id="p2-search-input"
+                 placeholder="Rechercher un territoire…"
+                 autocomplete="off"
+                 aria-label="Rechercher un territoire">
+          <button class="carto-search-clear" id="p2-search-clear" title="Effacer" style="display:none;">
+            <i class="ph ph-x"></i>
+          </button>
+        </div>
+        <div class="carto-search-autocomplete" id="p2-search-ac"></div>
+        <div class="carto-search-results" id="p2-search-results" style="display:none;"></div>
+      </div>
+
+      <!-- Corps accordéon Panel 2 (généré par JS) -->
+      <div class="carto-sidebar__body" id="p2-filtres-corps"></div>
+
+    </aside>
+
+    <!-- ── ZONE CARTE ─────────────────────────────────────────────── -->
+    <div class="carto-map" id="carto-map-zone">
+
+      <!-- Tirette mobile unique : rouvrir le dernier panel fermé -->
+      <button class="carto-tirette" id="carto-tirette"
+              title="Ouvrir le panneau"
+              aria-label="Ouvrir le panneau"
+              style="display:none;">
+        <i class="ph ph-layer-group" id="tirette-icon"></i>
+        <i class="ph ph-caret-right carto-tirette__arrow"></i>
+      </button>
+
+      <!-- Conteneur OpenLayers -->
+      <div id="ol-map" style="width:100%; height:100%;"></div>
+
+      <!-- ── Indicateur de niveau de zoom (avec marqueurs de couches) ── -->
+      <div class="zoom-indicator" id="zoom-indicator" role="status" aria-live="polite" aria-label="Niveau de zoom et visibilité des couches">
+
+        <!-- En-tête : valeur courante -->
+        <div class="zoom-indicator__header">
+          <i class="ph ph-magnifying-glass-plus" aria-hidden="true"></i>
+          <span class="zoom-indicator__title">Zoom</span>
+          <span class="zoom-indicator__value" id="zoom-indicator-value">7</span>
+        </div>
+
+        <!-- Barre verticale avec échelle et marqueurs -->
+        <div class="zoom-indicator__track-wrap">
+          <!-- Graduation (ticks + labels) -->
+          <div class="zoom-indicator__scale" id="zoom-indicator-scale" aria-hidden="true">
+            <!-- Ticks générés par JS -->
+          </div>
+
+          <!-- Piste (barre verticale) -->
+          <div class="zoom-indicator__track" id="zoom-indicator-track">
+            <div class="zoom-indicator__fill" id="zoom-indicator-fill"></div>
+            <!-- Curseur position courante -->
+            <div class="zoom-indicator__cursor" id="zoom-indicator-cursor">
+              <span class="zoom-indicator__cursor-label" id="zoom-indicator-cursor-label">7</span>
+            </div>
+            <!-- Marqueurs de couches (injectés par JS) -->
+            <div class="zoom-indicator__markers" id="zoom-indicator-markers"></div>
+          </div>
+        </div>
+
+        <!-- Liste des couches avec restrictions de zoom (sous la barre) -->
+        <div class="zoom-indicator__layers" id="zoom-indicator-layers" style="display:none;">
+          <!-- Injecté par JS : pastilles couleur + label couche + "zoom ≥ X" -->
+        </div>
+
+        <!-- Plage min/max -->
+        <div class="zoom-indicator__range">
+          <span id="zoom-indicator-min">5</span>
+          <span id="zoom-indicator-max">18</span>
+        </div>
+      </div>
+
+      <!-- Sélecteur fond de carte (haut droite, sous zoom) -->
+      <div class="basemap-switcher" role="group" aria-label="Choisir le fond de carte">
+        <!-- Bouton déclencheur -->
+        <button class="basemap-toggle-btn" id="basemap-toggle" title="Changer le fond de carte" aria-expanded="false" aria-controls="basemap-panel">
+          <i class="ph ph-stack" style="font-size:18px;line-height:1;display:block;"></i>
+        </button>
+        <!-- Panneau déroulant -->
+        <div class="basemap-panel" id="basemap-panel" role="radiogroup">
+          <div class="basemap-panel__title"><i class="ph ph-map"></i> Fond de carte</div>
+          <button class="basemap-btn" data-basemap="dataviz" title="MapTiler Dataviz">
+            🗺️ MapTiler Dataviz
+          </button>
+          <button class="basemap-btn" data-basemap="osm" title="OpenStreetMap">
+            🌍 OpenStreetMap
+          </button>
+          <button class="basemap-btn" data-basemap="satellite" title="Vue satellite">
+            🛰️ Satellite
+          </button>
+        </div>
+      </div>
+
+      <!-- Tags des couches actives : remplacés par la légende bas-gauche -->
+      <div class="carto-couches-actives" id="couches-actives" style="display:none!important;"></div>
+
+      <!-- Popup d'information sur un point / polygone / ligne -->
+      <div class="carto-popup" id="carto-popup">
+
+        <!-- Ligne haute : badge "Données" + fermer -->
+        <div class="carto-popup__topbar">
+          <div class="carto-popup__badge" id="popup-badge"></div>
+          <button class="carto-popup__close" id="popup-fermer" title="Fermer">
+            <i class="ph ph-x"></i>
+          </button>
+        </div>
+
+        <!-- Navigation inter-couches (masquée si une seule couche) -->
+        <div class="carto-popup__layer-nav" id="popup-layer-nav" style="display:none;">
+          <button class="carto-popup__layer-btn" id="popup-layer-prev" title="Couche précédente" disabled>
+            <i class="ph ph-caret-left"></i>
+          </button>
+          <span class="carto-popup__layer-counter">
+            <i class="ph ph-stack"></i>
+            <span id="popup-layer-current">1</span>/<span id="popup-layer-total">1</span>
+          </span>
+          <button class="carto-popup__layer-btn" id="popup-layer-next" title="Couche suivante">
+            <i class="ph ph-caret-right"></i>
+          </button>
+        </div>
+
+        <!-- Titre de la donnée source (mis en avant) -->
+        <h4 class="carto-popup__titre" id="popup-titre">Nom</h4>
+
+        <!-- Valeur + unité (taille réduite) -->
+        <div class="carto-popup__valeur-bloc">
+          <span class="carto-popup__valeur" id="popup-valeur">–</span>
+          <span class="carto-popup__unite" id="popup-unite"></span>
+        </div>
+
+        <!-- Navigation temporelle : boutons de dates (injectés dynamiquement par JS) -->
+        <div class="carto-popup__nav" id="popup-nav" style="display:none;"></div>
+
+        <!-- Métadonnées -->
+        <div class="carto-popup__meta">
+          <div class="carto-popup__meta-ligne">
+            <span class="text-muted text-small">Territoire</span>
+            <span id="popup-territoire" class="text-bold text-small">–</span>
+          </div>
+          <div class="carto-popup__meta-ligne">
+            <span class="text-muted text-small">Année mesure</span>
+            <span id="popup-annee" class="text-bold text-small">–</span>
+          </div>
+          <div class="carto-popup__meta-ligne">
+            <span class="text-muted text-small">Catégorie</span>
+            <span id="popup-categorie" class="text-bold text-small">–</span>
+          </div>
+          <div class="carto-popup__meta-ligne">
+            <span class="text-muted text-small">Source</span>
+            <span id="popup-source" class="text-bold text-small">–</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Légende -->
+      <div class="carto-legende" id="carto-legende" style="display:none;">
+        <div class="carto-legende__titre"><i class="ph ph-list-ul"></i> Couches affichées</div>
+        <div id="legende-liste"></div>
+      </div>
+
+      <!-- Message "Aucun filtre sélectionné" -->
+      <div class="carto-etat-message is-visible" id="message-aucun-filtre">
+        <div class="carto-etat-message__icone" aria-hidden="true">
+          <i class="ph ph-layer-group" aria-hidden="true" style="color: var(--color-primary-xlight);"></i>
+        </div>
+        <p class="carto-etat-message__texte">
+          <strong>Sélectionnez une donnée</strong> dans le panneau <em>Données sources</em><br>
+          ou activez un territoire dans le panneau <em>Territoires</em>.
+        </p>
+      </div>
+
+    </div>
+    <!-- /carto-map-zone -->
+
+  </div>
+  <!-- /carto-wrapper -->
+    </div>
+    <!-- /carto-map-zone -->
+
+  </div>
+  <!-- /carto-wrapper -->
+
+  <!-- ================================================================
+       BOUTONS FLOTTANTS : LIENS UTILES + RETEX + ACTUALITÉS
+  ================================================================ -->
+
+  <!-- Bouton flottant Liens utiles -->
+  <button id="btn-open-liens" class="carto-actu-btn carto-actu-btn--liens" title="Liens utiles" aria-expanded="false" aria-controls="carto-liens-drawer">
+    <i class="ph ph-link" aria-hidden="true"></i>
+    <span>Liens utiles</span>
+  </button>
+
+  <!-- Bouton flottant RETEX -->
+  <button id="btn-open-retex" class="carto-actu-btn carto-actu-btn--retex" title="Retours d'expérience" aria-expanded="false" aria-controls="carto-retex-drawer">
+    <i class="ph ph-star" aria-hidden="true"></i>
+    <span>Retex</span>
+    <span class="carto-actu-btn__badge">5</span>
+  </button>
+
+  <!-- Bouton flottant Actualités (inchangé) -->
+  <button id="btn-open-actu" class="carto-actu-btn" title="Actualités liées à la cartographie" aria-expanded="false" aria-controls="carto-actu-drawer">
+    <i class="ph ph-newspaper" aria-hidden="true"></i>
+    <span>Actualités</span>
+    <span class="carto-actu-btn__badge">9</span>
+  </button>
+
+  <!-- ============================================================
+       DRAWER RETEX — M'inspirer & Retours d'expérience
+  ============================================================ -->
+  <div class="carto-actu-drawer carto-retex-drawer" id="carto-retex-drawer" role="region" aria-label="Retours d'expérience" hidden>
+    <div class="carto-actu-drawer__header" style="background: linear-gradient(135deg, #1B5E20, #2E7D32);">
+      <div>
+        <h3 class="carto-actu-drawer__title"><i class="ph ph-star" aria-hidden="true"></i> M'inspirer &amp; Retours d'expérience</h3>
+        <p class="carto-actu-drawer__subtitle">Projets inspirants classés par thème</p>
+      </div>
+      <button class="carto-actu-drawer__close" id="btn-close-retex" title="Fermer" aria-label="Fermer le panneau retours d'expérience">
+        <i class="ph ph-x" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="carto-actu-drawer__body">
+
+      <!-- Article à la une RETEX -->
+      <div class="carto-actu-une" style="background: #F1F8F2;">
+        <div class="carto-actu-une__label" style="color:#2E7D32;"><i class="ph ph-trophy" aria-hidden="true"></i> Projet phare</div>
+        <a href="../retex-detail.html?id=1" class="carto-actu-une__card">
+          <div class="carto-actu-une__img">
+            <div class="carto-actu-une__img-fallback" style="background: linear-gradient(135deg,#C8E6C9,#A5D6A7); color: #2E7D32; font-size:40px; display:flex; align-items:center; justify-content:center;">
+              <i class="ph ph-seedling"></i>
+            </div>
+          </div>
+          <div class="carto-actu-une__body">
+            <span class="carto-actu-cat" style="background:#E8F5E9;color:#2E7D32;">🌿 Zones humides</span>
+            <h4 class="carto-actu-une__title">Restauration des zones humides de la Moselle Aval — Communauté d'agglomération de Metz</h4>
+            <p class="carto-actu-une__excerpt">Renaturation de 45 ha de zones humides dégradées, amélioration de la biodiversité et de la régulation hydraulique.</p>
+            <div class="carto-actu-meta"><i class="ph ph-map-marker-alt" aria-hidden="true"></i> Metz Métropole · 2023 · 2,4 M€</div>
+            <span class="carto-actu-cta" style="color:#2E7D32;"><i class="ph ph-arrow-right" aria-hidden="true"></i> Voir le projet</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Séparateur -->
+      <div class="carto-actu-sep"><span>Autres retours d'expérience</span></div>
+
+      <!-- Liste RETEX -->
+      <div class="carto-actu-list">
+
+        <a href="../retex-detail.html?id=7" class="carto-actu-item">
+          <div class="carto-actu-item__img">
+            <div class="carto-actu-item__fallback" style="background:linear-gradient(135deg,#E3F2FD,#BBDEFB)"><i class="ph ph-tint" style="color:#1565C0"></i></div>
+          </div>
+          <div class="carto-actu-item__body">
+            <span class="carto-actu-cat" style="color:#1565C0">💧 Économies d'eau</span>
+            <h4 class="carto-actu-item__title">Plan d'économies d'eau agricole sur le bassin versant de la Zorn — Alsace</h4>
+            <div class="carto-actu-meta"><i class="ph ph-map-marker-alt" aria-hidden="true"></i> Bas-Rhin · 2022–2024</div>
+          </div>
+        </a>
+
+        <a href="../retex-detail.html?id=5" class="carto-actu-item">
+          <div class="carto-actu-item__img">
+            <div class="carto-actu-item__fallback" style="background:linear-gradient(135deg,#FFF8E1,#FFECB3)"><i class="ph ph-city" style="color:#F57F17"></i></div>
+          </div>
+          <div class="carto-actu-item__body">
+            <span class="carto-actu-cat" style="color:#E65100">🏙️ Gestion urbaine</span>
+            <h4 class="carto-actu-item__title">Désimperméabilisation des cours d'école — Eurométropole de Strasbourg</h4>
+            <div class="carto-actu-meta"><i class="ph ph-map-marker-alt" aria-hidden="true"></i> Strasbourg · 2023</div>
+          </div>
+        </a>
+
+        <a href="../retex-detail.html?id=8" class="carto-actu-item">
+          <div class="carto-actu-item__img">
+            <div class="carto-actu-item__fallback" style="background:linear-gradient(135deg,#F3E5F5,#E1BEE7)"><i class="ph ph-flask" style="color:#7B1FA2"></i></div>
+          </div>
+          <div class="carto-actu-item__body">
+            <span class="carto-actu-cat" style="color:#6A1B9A">🔬 Qualité</span>
+            <h4 class="carto-actu-item__title">Programme de réduction des pesticides en zone viticole — Vignoble alsacien</h4>
+            <div class="carto-actu-meta"><i class="ph ph-map-marker-alt" aria-hidden="true"></i> Haut-Rhin · 2021–2025</div>
+          </div>
+        </a>
+
+        <a href="../retex-detail.html?id=9" class="carto-actu-item">
+          <div class="carto-actu-item__img">
+            <div class="carto-actu-item__fallback" style="background:linear-gradient(135deg,#E0F2F1,#B2DFDB)"><i class="ph ph-water" style="color:#00796B"></i></div>
+          </div>
+          <div class="carto-actu-item__body">
+            <span class="carto-actu-cat" style="color:#00796B">🌊 Inondations</span>
+            <h4 class="carto-actu-item__title">PAPI Meuse — Réduction de la vulnérabilité aux crues en Ardennes</h4>
+            <div class="carto-actu-meta"><i class="ph ph-map-marker-alt" aria-hidden="true"></i> Ardennes · 2020–2026</div>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- Lien vers tous les RETEX -->
+      <a href="../ressources-retex.html" class="carto-actu-all" style="border-color:#2E7D32; color:#2E7D32;">
+        <i class="ph ph-star" aria-hidden="true"></i>
+        Tous les retours d'expérience
+        <i class="ph ph-arrow-right" aria-hidden="true"></i>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       DRAWER LIENS UTILES
+  ============================================================ -->
+  <div class="carto-actu-drawer carto-liens-drawer" id="carto-liens-drawer" role="region" aria-label="Liens utiles" hidden>
+    <div class="carto-actu-drawer__header" style="background: linear-gradient(135deg, #4527A0, #512DA8);">
+      <div>
+        <h3 class="carto-actu-drawer__title"><i class="ph ph-link" aria-hidden="true"></i> Liens utiles</h3>
+        <p class="carto-actu-drawer__subtitle">Portails et références partenaires</p>
+      </div>
+      <button class="carto-actu-drawer__close" id="btn-close-liens" title="Fermer" aria-label="Fermer le panneau liens utiles">
+        <i class="ph ph-x" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="carto-actu-drawer__body">
+
+      <!-- Section liens -->
+      <div style="padding: 16px;">
+        <p style="font-size:12px; color:#6B7A99; margin:0 0 16px;">Ressources en ligne sélectionnées par l'équipe Observatoire pour compléter vos analyses cartographiques.</p>
+      </div>
+
+      <!-- Catégorie Données officielles -->
+      <div class="carto-actu-sep"><span>Données officielles</span></div>
+      <div class="carto-liens-list">
+
+        <a href="https://www.gesteau.fr" target="_blank" rel="noopener" class="carto-lien-item">
+          <div class="carto-lien-item__icon" style="background:#E3F2FD; color:#1565C0;">
+            <i class="ph ph-database"></i>
+          </div>
+          <div class="carto-lien-item__body">
+            <div class="carto-lien-item__title">Gesteau</div>
+            <div class="carto-lien-item__desc">Portail de gestion des eaux — SAGE, SDAGE, contrats de milieux</div>
+          </div>
+          <i class="ph ph-arrow-square-out carto-lien-item__ext" aria-hidden="true"></i>
+        </a>
+
+        <a href="https://www.eaufrance.fr" target="_blank" rel="noopener" class="carto-lien-item">
+          <div class="carto-lien-item__icon" style="background:#E1F5FE; color:#0288D1;">
+            <i class="ph ph-tint"></i>
+          </div>
+          <div class="carto-lien-item__body">
+            <div class="carto-lien-item__title">Eau France</div>
+            <div class="carto-lien-item__desc">Portail national des données sur l'eau et les milieux aquatiques</div>
+          </div>
+          <i class="ph ph-arrow-square-out carto-lien-item__ext" aria-hidden="true"></i>
+        </a>
+
+        <a href="https://www.sandre.eaufrance.fr" target="_blank" rel="noopener" class="carto-lien-item">
+          <div class="carto-lien-item__icon" style="background:#E8F5E9; color:#2E7D32;">
+            <i class="ph ph-table"></i>
+          </div>
+          <div class="carto-lien-item__body">
+            <div class="carto-lien-item__title">SANDRE</div>
+            <div class="carto-lien-item__desc">Référentiel national sur les données et les services de l'eau</div>
+          </div>
+          <i class="ph ph-arrow-square-out carto-lien-item__ext" aria-hidden="true"></i>
+        </a>
+
+      </div>
+
+      <!-- Catégorie Cartographie & SIG -->
+      <div class="carto-actu-sep"><span>Cartographie &amp; SIG</span></div>
+      <div class="carto-liens-list">
+
+        <a href="https://www.ign.fr/geoplateforme" target="_blank" rel="noopener" class="carto-lien-item">
+          <div class="carto-lien-item__icon" style="background:#F3E5F5; color:#7B1FA2;">
+            <i class="ph ph-map"></i>
+          </div>
+          <div class="carto-lien-item__body">
+            <div class="carto-lien-item__title">IGN Géoplateforme</div>
+            <div class="carto-lien-item__desc">Géoportail national — fonds de carte, orthophotos, reliefs</div>
+          </div>
+          <i class="ph ph-arrow-square-out carto-lien-item__ext" aria-hidden="true"></i>
+        </a>
+
+        <a href="https://www.georhena.eu" target="_blank" rel="noopener" class="carto-lien-item">
+          <div class="carto-lien-item__icon" style="background:#FFF8E1; color:#F57F17;">
+            <i class="ph ph-globe-europe"></i>
+          </div>
+          <div class="carto-lien-item__body">
+            <div class="carto-lien-item__title">GéoRhena</div>
+            <div class="carto-lien-item__desc">Infrastructure de données géographiques transfrontalière Rhin supérieur</div>
+          </div>
+          <i class="ph ph-arrow-square-out carto-lien-item__ext" aria-hidden="true"></i>
+        </a>
+
+      </div>
+
+      <!-- Catégorie Agences & établissements -->
+      <div class="carto-actu-sep"><span>Agences &amp; établissements</span></div>
+      <div class="carto-liens-list">
+
+        <a href="https://www.eau-rhin-meuse.fr" target="_blank" rel="noopener" class="carto-lien-item">
+          <div class="carto-lien-item__icon" style="background:#E8EAF6; color:#3949AB;">
+            <i class="ph ph-building"></i>
+          </div>
+          <div class="carto-lien-item__body">
+            <div class="carto-lien-item__title">Agence de l'eau Rhin-Meuse</div>
+            <div class="carto-lien-item__desc">Financements, programmes d'action, données de bassin</div>
+          </div>
+          <i class="ph ph-arrow-square-out carto-lien-item__ext" aria-hidden="true"></i>
+        </a>
+
+        <a href="https://www.ofb.gouv.fr" target="_blank" rel="noopener" class="carto-lien-item">
+          <div class="carto-lien-item__icon" style="background:#E0F2F1; color:#00796B;">
+            <i class="ph ph-leaf"></i>
+          </div>
+          <div class="carto-lien-item__body">
+            <div class="carto-lien-item__title">Office Français de la Biodiversité</div>
+            <div class="carto-lien-item__desc">Protection des espèces, police de l'eau, données biodiversité</div>
+          </div>
+          <i class="ph ph-arrow-square-out carto-lien-item__ext" aria-hidden="true"></i>
+        </a>
+
+        <a href="https://www.brgm.fr" target="_blank" rel="noopener" class="carto-lien-item">
+          <div class="carto-lien-item__icon" style="background:#FCE4EC; color:#C62828;">
+            <i class="ph ph-mountain"></i>
+          </div>
+          <div class="carto-lien-item__body">
+            <div class="carto-lien-item__title">BRGM</div>
+            <div class="carto-lien-item__desc">Bureau de recherches géologiques — eaux souterraines, Infoterre</div>
+          </div>
+          <i class="ph ph-arrow-square-out carto-lien-item__ext" aria-hidden="true"></i>
+        </a>
+
+      </div>
+
+      <!-- Lien vers tous les liens -->
+      <a href="../ressources-outils.html" class="carto-actu-all" style="border-color:#512DA8; color:#512DA8;">
+        <i class="ph ph-link" aria-hidden="true"></i>
+        Tous les outils &amp; liens utiles
+        <i class="ph ph-arrow-right" aria-hidden="true"></i>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- Drawer actualités -->
+  <div class="carto-actu-drawer" id="carto-actu-drawer" role="region" aria-label="Actualités liées à la cartographie" hidden>
+    <div class="carto-actu-drawer__header">
+      <div>
+        <h3 class="carto-actu-drawer__title"><i class="ph ph-newspaper" aria-hidden="true"></i> Actualités &amp; Publications</h3>
+        <p class="carto-actu-drawer__subtitle">Analyses et données illustrant la cartographie</p>
+      </div>
+      <button class="carto-actu-drawer__close" id="btn-close-actu" title="Fermer" aria-label="Fermer le panneau actualités">
+        <i class="ph ph-x" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="carto-actu-drawer__body">
+
+      <!-- Article à la une -->
+      <div class="carto-actu-une">
+        <div class="carto-actu-une__label"><i class="ph ph-star" aria-hidden="true"></i> À la une</div>
+        <a href="../article.html" class="carto-actu-une__card">
+          <div class="carto-actu-une__img">
+            <img
+              src="https://sspark.genspark.ai/cfimages?u1=asdnvMq1ObDpkYobNurc3IjPYnwUA45yge9rGkxbD%2BEHwdnUFpL%2Fo9ZqxcDwzWwMdUKp72KGdiw0UeKlOwwjG62M5K%2F7InbHJLfae0l7gdokau3rtBbOfBGeF0mjEb6C9D6nDspANA%3D%3D&u2=FBy%2Bg5wVC%2B4Gp1a1&width=500"
+              alt="Sol fissuré par la sécheresse"
+              loading="lazy"
+              onerror="this.parentElement.innerHTML='<div class=\'carto-actu-une__img-fallback\'><i class=\'fa fa-cloud-sun-rain\'></i></div>'"
+            >
+          </div>
+          <div class="carto-actu-une__body">
+            <span class="carto-actu-cat" style="background:#FFF3E0;color:#E65100">🌡️ Climat &amp; Sécheresse</span>
+            <h4 class="carto-actu-une__title">Bilan de la sécheresse 2024 en Grand Est : des nappes sous tension continue</h4>
+            <p class="carto-actu-une__excerpt">Les niveaux des nappes ont atteint des seuils d'alerte dans le Bas-Rhin, la Marne et les Ardennes durant l'été 2024.</p>
+            <div class="carto-actu-meta"><i class="ph ph-calendar" aria-hidden="true"></i> 15 fév. 2025 · Équipe Orège · 8 min</div>
+            <span class="carto-actu-cta"><i class="ph ph-arrow-right" aria-hidden="true"></i> Lire l'article</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Séparateur -->
+      <div class="carto-actu-sep"><span>Publications récentes</span></div>
+
+      <!-- Liste articles -->
+      <div class="carto-actu-list">
+
+        <a href="../article.html" class="carto-actu-item">
+          <div class="carto-actu-item__img">
+            <img
+              src="https://sspark.genspark.ai/cfimages?u1=IkRNtX2At%2BgAUInt%2BJlqa6MoQY1K1UGemZAUihgrXlXxHwIU4xHD7UuxPN5zundtFW9bIK3LNxLhcpyE1oih0RSMWwRBcCMDaOSjbOY0RIHyTADOlw%3D%3D&u2=IDW0vv3q1yeb2WSW&width=200"
+              alt="Cours d'eau restauré"
+              loading="lazy"
+              onerror="this.parentElement.innerHTML='<div class=\'carto-actu-item__fallback\' style=\'background:linear-gradient(135deg,#E0F2F1,#B2DFDB)\'><i class=\'fa fa-fish\' style=\'color:#4DB6AC\'></i></div>'"
+            >
+          </div>
+          <div class="carto-actu-item__body">
+            <span class="carto-actu-cat" style="color:#00796B">🐟 Milieux aquatiques</span>
+            <h4 class="carto-actu-item__title">Retour du saumon atlantique dans la Moselle : un signal positif</h4>
+            <div class="carto-actu-meta"><i class="ph ph-calendar" aria-hidden="true"></i> 20 jan. 2025 · DREAL Grand Est</div>
+          </div>
+        </a>
+
+        <a href="../article.html" class="carto-actu-item">
+          <div class="carto-actu-item__img">
+            <img
+              src="https://sspark.genspark.ai/cfimages?u1=2%2F4lMRG5PYCDZSqgQ1t4BuZAwl%2FjDryZjWyUmRaNr%2F1IobRPlvEm9nw60VXKL0NlAJntfjJQkJxvI2HFsycjAylVJX4ZCBbtX%2FhTOcF6i5yA6g6EseA%2FyJh2yX441YN7HOhmbnW1VpIdwM3ZrjnP0u124ZKiHeRxmFJHsKUsNcajLwWMEwFIfJDq1PjSIiLBm2Z1t4MKMkjwQAKyPFEBXtx3Dy3STaQtbZdo5ac3n1T0whGrQkigLg%3D%3D&u2=SFVKPQvPUHx81EDX&width=200"
+              alt="Analyse qualité eau"
+              loading="lazy"
+              onerror="this.parentElement.innerHTML='<div class=\'carto-actu-item__fallback\' style=\'background:linear-gradient(135deg,#E1F5FE,#B3E5FC)\'><i class=\'fa fa-flask\' style=\'color:#4FC3F7\'></i></div>'"
+            >
+          </div>
+          <div class="carto-actu-item__body">
+            <span class="carto-actu-cat" style="color:#0288D1">💧 Qualité des eaux</span>
+            <h4 class="carto-actu-item__title">Nitrates dans les eaux souterraines : tendances 2024 en Grand Est</h4>
+            <div class="carto-actu-meta"><i class="ph ph-calendar" aria-hidden="true"></i> 8 jan. 2025 · Équipe Orège</div>
+          </div>
+        </a>
+
+        <a href="../article.html" class="carto-actu-item">
+          <div class="carto-actu-item__img">
+            <img
+              src="https://sspark.genspark.ai/cfimages?u1=OSbhC6Sn3OTLSdt1beLlB1kYZzpQiLL6MG6a7pkcJ8raUP3ZMJkaoW7kVtOlsRcb3yHuN9gl7e0bIv%2BRsyejaN8u8mNXPDk88P2XSuwmCY%2B3YI6YXQU%2BdA%3D%3D&u2=V0c2V7fSg%2BriLaUx&width=200"
+              alt="Aquifère nappe souterraine"
+              loading="lazy"
+              onerror="this.parentElement.innerHTML='<div class=\'carto-actu-item__fallback\' style=\'background:linear-gradient(135deg,#F3E5F5,#E1BEE7)\'><i class=\'fa fa-gauge\' style=\'color:#CE93D8\'></i></div>'"
+            >
+          </div>
+          <div class="carto-actu-item__body">
+            <span class="carto-actu-cat" style="color:#6A1B9A">📊 Gestion quantitative</span>
+            <h4 class="carto-actu-item__title">Nappe rhénane : bilan 2024 et perspectives face au changement climatique</h4>
+            <div class="carto-actu-meta"><i class="ph ph-calendar" aria-hidden="true"></i> 2 déc. 2024 · BRGM</div>
+          </div>
+        </a>
+
+        <a href="../article.html" class="carto-actu-item">
+          <div class="carto-actu-item__img">
+            <img
+              src="https://sspark.genspark.ai/cfimages?u1=KD3MsTZx0GNfCvQ%2Bgn4VLMbtIFmjv8AxJYPTBvFc%2FwE9LmtYvet7Acr9TQBQIzSWHcJUioCnZu5GanJgnloVqnEKD5YkQFqi3YOH83J96BVIX0LyflU9ZlvlVXqSvi71wZW7LCM8mR4%3D&u2=hFpP5py5a0dU7ZYE&width=200"
+              alt="Inondation risque"
+              loading="lazy"
+              onerror="this.parentElement.innerHTML='<div class=\'carto-actu-item__fallback\' style=\'background:linear-gradient(135deg,#E3F2FD,#BBDEFB)\'><i class=\'fa fa-house-flood-water\' style=\'color:#64B5F6\'></i></div>'"
+            >
+          </div>
+          <div class="carto-actu-item__body">
+            <span class="carto-actu-cat" style="color:#E65100">🌡️ Climat</span>
+            <h4 class="carto-actu-item__title">Inondations hivernales 2025 dans les Ardennes : retour d'expérience</h4>
+            <div class="carto-actu-meta"><i class="ph ph-calendar" aria-hidden="true"></i> 5 nov. 2024 · Équipe Orège</div>
+          </div>
+        </a>
+
+        <a href="../article.html" class="carto-actu-item">
+          <div class="carto-actu-item__img">
+            <img
+              src="https://sspark.genspark.ai/cfimages?u1=gcqKzmLz3HOKmYL0iB0L3EAV%2FihgZsoDM9ZX%2F%2F43Z0s2tpUNh2%2FxVhwrOK9aMlvLppYad16DrpCYRqDeq%2BxLNu3Z3HSypr1NjFhfju7cUr7GS0xcN4boCa%2FX0l0mY3zrsQHqXTgJTSMBhTU%3D&u2=h85qylmTiTodq3G2&width=200"
+              alt="Réseau canalisations eau potable"
+              loading="lazy"
+              onerror="this.parentElement.innerHTML='<div class=\'carto-actu-item__fallback\' style=\'background:linear-gradient(135deg,#E3F2FD,#BBDEFB)\'><i class=\'fa fa-faucet\' style=\'color:#64B5F6\'></i></div>'"
+            >
+          </div>
+          <div class="carto-actu-item__body">
+            <span class="carto-actu-cat" style="color:#1565C0">🚿 Usages</span>
+            <h4 class="carto-actu-item__title">Rendement des réseaux AEP : où en est le Grand Est en 2024 ?</h4>
+            <div class="carto-actu-meta"><i class="ph ph-calendar" aria-hidden="true"></i> 15 déc. 2024 · Antea Group</div>
+          </div>
+        </a>
+
+        <a href="../article.html" class="carto-actu-item">
+          <div class="carto-actu-item__img">
+            <img
+              src="https://sspark.genspark.ai/cfimages?u1=xCEWLbF2K2e16reKbmlQq%2FHoo6mJaeyjnjQs5mbuFrtRIfLNuXgFrSvPuBDZug81PjnLUGkdMXnV6dxznCnLIfMfseN5o101exM1KPyog90owRqLP%2Bghm8jN1HqxvOOClnRN%2BH9UlgBCqEba%2BvDZJw9MC9cjQdbDWevOiJRb2aAh3ENU5kv%2FFPlmgcCgjv%2FCX%2Ft%2BTIM6i1bwJXHIBnQgrzHNN0NpVy2dYiK7eBnE5FxtoKZA8%2B4sb1ea8a0YR1TqBm9oajvjdxtoXEmDdWa8U90l%2F%2BVZAyNOKR8sXvVk5c7Xxmatrl75I6huJRphjD4A0eUDQ%2FcflYOhdA%3D%3D&u2=CMQOqbznhROT4YC%2F&width=200"
+              alt="Rivière verdoyante"
+              loading="lazy"
+              onerror="this.parentElement.innerHTML='<div class=\'carto-actu-item__fallback\' style=\'background:linear-gradient(135deg,#E8F5E9,#C8E6C9)\'><i class=\'fa fa-handshake\' style=\'color:#81C784\'></i></div>'"
+            >
+          </div>
+          <div class="carto-actu-item__body">
+            <span class="carto-actu-cat" style="color:#2E7D32">⚖️ Gouvernance</span>
+            <h4 class="carto-actu-item__title">Révision du SDAGE 2028-2033 : quels enjeux pour la région ?</h4>
+            <div class="carto-actu-meta"><i class="ph ph-calendar" aria-hidden="true"></i> 3 fév. 2025 · Antea Group</div>
+          </div>
+        </a>
+
+        <a href="../article.html" class="carto-actu-item">
+          <div class="carto-actu-item__img">
+            <img
+              src="https://sspark.genspark.ai/cfimages?u1=FNUbXobtJMAsmPXqCz56FIyWuXKFe7L6zg08%2BuCzDpnz%2FTXAGP58JkXep5kKreoSLHccCmo6FBAvDxTv5sQquZWSbl8kUDMcSqOk&u2=SJoXzckO5KBdwJBn&width=200"
+              alt="Paysage rivière nature France"
+              loading="lazy"
+              onerror="this.parentElement.innerHTML='<div class=\'carto-actu-item__fallback\' style=\'background:linear-gradient(135deg,#E8F5E9,#C8E6C9)\'><i class=\'fa fa-leaf\' style=\'color:#66BB6A\'></i></div>'"
+            >
+          </div>
+          <div class="carto-actu-item__body">
+            <span class="carto-actu-cat" style="color:#0288D1">💧 Qualité des eaux</span>
+            <h4 class="carto-actu-item__title">Pesticides dans les cours d'eau : bilan de la surveillance 2024</h4>
+            <div class="carto-actu-meta"><i class="ph ph-calendar" aria-hidden="true"></i> 22 oct. 2024 · OFB Grand Est</div>
+          </div>
+        </a>
+
+        <a href="../article.html" class="carto-actu-item">
+          <div class="carto-actu-item__img">
+            <img
+              src="https://sspark.genspark.ai/cfimages?u1=wzCElx391FB2UfLmK7euWK7zFLodfiyUtd73NBYeElgTn1jZ4eEB9GA0LRBPH%2FF9thZCmrrG6h0rV1KVr4NI01xxuLmSIET0P9gQFfl6DrTQ%2FfLye5iR3GHg%2Fdx8AiXy%2FQUx1fFlvzGRZpCxuKxFz4NC4X5Z4nzl1N2I21xHbI%2BD6kWvDA%3D%3D&u2=%2FOV720LnGexLc%2B2M&width=200"
+              alt="Rivière pittoresque France"
+              loading="lazy"
+              onerror="this.parentElement.innerHTML='<div class=\'carto-actu-item__fallback\' style=\'background:linear-gradient(135deg,#E0F2F1,#B2DFDB)\'><i class=\'fa fa-fish\' style=\'color:#4DB6AC\'></i></div>'"
+            >
+          </div>
+          <div class="carto-actu-item__body">
+            <span class="carto-actu-cat" style="color:#00796B">🐟 Milieux aquatiques</span>
+            <h4 class="carto-actu-item__title">Continuité écologique sur le Rhin : avancées 2024 des passes à poissons</h4>
+            <div class="carto-actu-meta"><i class="ph ph-calendar" aria-hidden="true"></i> 10 oct. 2024 · VNF Strasbourg</div>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- Lien vers toutes les actualités -->
+      <a href="../actualites.html" class="carto-actu-all">
+        <i class="ph ph-newspaper" aria-hidden="true"></i>
+        Voir toutes les actualités
+        <i class="ph ph-arrow-right" aria-hidden="true"></i>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- Overlay semi-transparent pour le drawer -->
+  <div class="carto-actu-overlay" id="carto-actu-overlay"></div>
+
+  <!-- Styles des drawers et boutons flottants déplacés dans css/cartographie.css (section 13) -->
+
+
+  <!-- Gestion des drawers déplacée dans js/cartographie-drawers.js -->
+
+  <!-- ================================================================
+       SCRIPTS
+  ================================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ol@9.2.4/dist/ol.js"></script>
+  <!-- SheetJS pour lecture Excel (communes) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- SortableJS pour le drag & drop de la légende -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
+  <!-- Données indicateurs (pour compatibilité tableaux de bord) -->
+  <script src="../js/data-indicateurs.js"></script>
+
+  <!-- Navigation principale (après les données) -->
+  <script src="../js/nav.js"></script>
+
+  <!-- Données sources Panel 1 -->
+  <script src="../js/data-carto-sources.js"></script>
+
+  <!-- Communes (5 115 – Grand Est, chargement asynchrone depuis Excel) -->
+  <script src="../js/data-communes.js"></script>
+
+  <!-- Données territoires Panel 2 -->
+  <script src="../js/data-territoires.js"></script>
+
+  <!-- Logique cartographie (2 panneaux) -->
+  <script src="../js/cartographie.js"></script>
+
+  <!-- Indicateur de zoom & visibilité conditionnelle des couches (module additionnel) -->
+  <script src="../js/cartographie-zoom-layers.js"></script>
+
+  <!-- Drag popup cartographique (module additionnel) -->
+  <script src="../js/cartographie-popup-drag.js"></script>
+
+  <!-- Masque semi-transparent hors région Grand Est -->
+  <script src="../js/cartographie-masque-region.js"></script>
+
+  <!-- Accessibilité RGAA 4.1 -->
+  <script src="../js/a11y.js"></script>
+
+  <!-- Transition de page (goutte d'eau animée) -->
+  <script src="../js/page-transition.js"></script>
+
+  <!-- Panneaux flottants RETEX + Liens utiles — logique dans js/cartographie-drawers.js -->
+  <script src="../js/cartographie-drawers.js"></script>
+
+</body>
+</html>

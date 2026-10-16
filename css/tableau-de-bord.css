@@ -1,0 +1,873 @@
+/**
+ * tableau-de-bord.css
+ * Styles spécifiques au gabarit "Mon tableau de bord"
+ *
+ * SOMMAIRE
+ * 1. Layout général de la page tableau de bord
+ * 2. Barre de contexte (territoire + année)
+ * 3. Grille de widgets
+ * 4. Widget – structure commune
+ * 5. Widget – KPI (chiffre clé)
+ * 6. Widget – Jauge (gauge)
+ * 7. Widget – Graphiques (canvas Chart.js)
+ * 8. Widget – Mini-carte
+ * 9. Widget – Liste de progression
+ * 10. Widget – Heatmap bar
+ * 11. États vides & chargement
+ * 12. Tooltip widgets
+ */
+
+/* ============================================================
+   1. LAYOUT GÉNÉRAL
+   ============================================================ */
+
+.dashboard-page {
+  padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-xl);
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+/* ============================================================
+   2. EN-TÊTE H1 + CONTRÔLES (barre fusionnée)
+   ============================================================ */
+
+/* Bloc principal : se positionne juste sous l'en-tête fixe du site */
+.tdb-page-header {
+  position: sticky;
+  top: var(--header-height); /* 68px */
+  z-index: 999;
+  background: linear-gradient(135deg, #1a2660 0%, #2a347d 60%, #bab0ed 100%);
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  padding: 0 40px;
+}
+
+.tdb-page-header__inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 60px;
+}
+
+/* --- Côté gauche : bouton retour + H1 --- */
+.tdb-page-header__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.tdb-page-header__back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.3);
+  color: #fff;
+  text-decoration: none;
+  font-size: 12px;
+  flex-shrink: 0;
+  transition: background .2s;
+}
+.tdb-page-header__back:hover {
+  background: rgba(255,255,255,.28);
+  color: #fff;
+  text-decoration: none;
+}
+
+.tdb-page-header__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tdb-page-header__title i {
+  opacity: .8;
+  font-size: 15px;
+}
+
+/* --- Côté droit : sélecteurs + boutons --- */
+.tdb-page-header__controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.tdb-ctrl-groupe {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tdb-ctrl-label {
+  font-size: 11px;
+  color: rgba(255,255,255,.75);
+  white-space: nowrap;
+}
+
+.tdb-ctrl-select {
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,.35);
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: background .2s, border-color .2s;
+}
+.tdb-ctrl-select:hover,
+.tdb-ctrl-select:focus {
+  background: rgba(255,255,255,.22);
+  border-color: rgba(255,255,255,.6);
+}
+.tdb-ctrl-select option {
+  background: #2a347d;
+  color: #fff;
+}
+
+.tdb-ctrl-sep {
+  width: 1px;
+  height: 24px;
+  background: rgba(255,255,255,.25);
+  flex-shrink: 0;
+}
+
+.tdb-ctrl-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(42,52,125,.35);
+  background: #7fddf0;
+  color: #2a347d;
+  font-size: 12px;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s, border-color .2s;
+}
+.tdb-ctrl-btn:hover {
+  background: #fadea2;
+  border-color: rgba(42,52,125,.5);
+}
+
+/* Responsive : sur petits écrans, empiler */
+@media (max-width: 1024px) {
+  .tdb-page-header { padding: 0 20px; }
+  .tdb-page-header__controls { flex-wrap: wrap; gap: 4px; }
+  .tdb-ctrl-select[style*="min-width:200px"] { min-width: 140px !important; }
+}
+@media (max-width: 768px) {
+  .tdb-page-header__inner { flex-direction: column; align-items: flex-start; gap: 8px; padding: 10px 0; }
+  .tdb-page-header__title { font-size: 15px; white-space: normal; }
+  .tdb-page-header__controls { width: 100%; overflow-x: auto; }
+}
+
+/* ============================================================
+   3. GRILLE DE WIDGETS
+   ============================================================ */
+
+.dashboard-intro {
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.dashboard-intro__titre {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.dashboard-intro__territoire {
+  font-size: var(--font-size-lg);
+  color: var(--color-primary);
+  font-weight: 400;
+}
+
+.dashboard-intro__meta {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+/* Grille Bootstrap override pour la trame 3 colonnes */
+.dashboard-grille {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+}
+
+/* Widget pleine largeur (span 3) */
+.dashboard-widget--large {
+  grid-column: span 3;
+}
+
+/* Widget demi-largeur (span 2) */
+.dashboard-widget--medium {
+  grid-column: span 2;
+}
+
+/* ============================================================
+   4. WIDGET – STRUCTURE COMMUNE
+   ============================================================ */
+
+.widget {
+  background: var(--color-bg-panel);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow .25s ease, transform .2s ease;
+  position: relative;
+}
+
+.widget:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.widget__header {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.widget__icone {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.widget__titre {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  flex: 1;
+  line-height: 1.3;
+}
+
+.widget__badge-thematique {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.widget__actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+
+.widget:hover .widget__actions {
+  opacity: 1;
+}
+
+.widget__action-btn {
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s, color .15s;
+}
+
+.widget__action-btn:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.widget__body {
+  flex: 1;
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.widget__footer {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.widget__footer-info {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Barre de couleur en haut du widget selon thématique */
+.widget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--widget-accent-color, var(--color-primary));
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+/* ============================================================
+   5. WIDGET KPI (chiffre clé)
+   ============================================================ */
+
+.widget-kpi__valeur-principale {
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--widget-accent-color, var(--color-primary));
+  letter-spacing: -1px;
+}
+
+.widget-kpi__unite {
+  font-size: var(--font-size-lg);
+  font-weight: 400;
+  color: var(--color-text-muted);
+  margin-left: 3px;
+}
+
+.widget-kpi__evolution {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  margin-top: var(--spacing-xs);
+}
+
+.widget-kpi__evolution--hausse {
+  background: #bff09e;
+  color: var(--color-success);
+}
+
+.widget-kpi__evolution--baisse {
+  background: #FFEBEE;
+  color: var(--color-danger);
+}
+
+.widget-kpi__description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-sm);
+  line-height: 1.45;
+}
+
+/* ============================================================
+   6. WIDGET JAUGE (gauge)
+   ============================================================ */
+
+.widget-gauge__container {
+  position: relative;
+  width: 160px;
+  height: 100px;
+  margin: 0 auto;
+}
+
+.widget-gauge__canvas {
+  width: 160px;
+  height: 100px;
+}
+
+.widget-gauge__valeur-centre {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  line-height: 1;
+}
+
+.widget-gauge__nombre {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--widget-accent-color, var(--color-primary));
+  display: block;
+}
+
+.widget-gauge__label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  display: block;
+}
+
+/* ============================================================
+   7. WIDGET GRAPHIQUES (canvas Chart.js)
+   ============================================================ */
+
+.widget-chart__canvas-wrapper {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+/* On fixe les hauteurs pour Chart.js */
+.widget--bar .widget__body,
+.widget--line .widget__body,
+.widget--donut .widget__body {
+  height: 220px;
+  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
+}
+
+.widget--bar .widget-chart__canvas-wrapper,
+.widget--line .widget-chart__canvas-wrapper,
+.widget--donut .widget-chart__canvas-wrapper {
+  height: 180px;
+}
+
+/* ============================================================
+   8. WIDGET MINI-CARTE
+   ============================================================ */
+
+.widget-minimap__container {
+  height: 200px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #dce8f0;
+  position: relative;
+}
+
+.widget-minimap__container #minimap-ol {
+  width: 100%;
+  height: 100%;
+}
+
+.widget-minimap__legende {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.widget-minimap__legende-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.widget-minimap__legende-couleur {
+  width: 12px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+/* Gradient légende mini-carte */
+.widget-minimap__gradient {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+}
+
+.widget-minimap__gradient-barre {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(to right, #E3F2FD, #0D47A1);
+}
+
+.widget-minimap__gradient-label {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   9. WIDGET LISTE DE PROGRESSION
+   ============================================================ */
+
+.widget-progress__item {
+  margin-bottom: var(--spacing-sm);
+}
+
+.widget-progress__item:last-child {
+  margin-bottom: 0;
+}
+
+.widget-progress__label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.widget-progress__label {
+  font-size: 12px;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.widget-progress__valeur {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--widget-accent-color, var(--color-primary));
+}
+
+.widget-progress__barre-bg {
+  height: 8px;
+  background: var(--color-bg);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.widget-progress__barre-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--widget-accent-color, var(--color-primary));
+  transition: width .8s ease;
+}
+
+/* ============================================================
+   10. WIDGET HEATMAP BAR
+   ============================================================ */
+
+.widget-heatmap__item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: 6px;
+}
+
+.widget-heatmap__territoire {
+  font-size: 11px;
+  color: var(--color-text);
+  width: 130px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.widget-heatmap__barre-bg {
+  flex: 1;
+  height: 16px;
+  background: var(--color-bg);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.widget-heatmap__barre-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width .8s ease;
+}
+
+.widget-heatmap__valeur {
+  font-size: 11px;
+  font-weight: 700;
+  width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Échelle de couleurs stress hydrique */
+.heatmap-faible   { background: #81D4FA; }
+.heatmap-moyen    { background: #FFF176; }
+.heatmap-eleve    { background: #FFB74D; }
+.heatmap-critique { background: #EF5350; }
+
+/* ============================================================
+   11. ÉTATS VIDES & CHARGEMENT
+   ============================================================ */
+
+.widget-vide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  gap: var(--spacing-sm);
+}
+
+.widget-vide__icone {
+  font-size: 28px;
+  opacity: .3;
+}
+
+.widget-chargement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  gap: var(--spacing-sm);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* ============================================================
+   13. ANIMATION MISE À JOUR (flash au changement de données)
+   ============================================================ */
+
+/* Flash subtil quand les données sont mises à jour */
+@keyframes widgetFlash {
+  0%   { box-shadow: 0 0 0 0 rgba(var(--widget-accent-rgb, 21,101,192), 0.45); }
+  40%  { box-shadow: 0 0 0 6px rgba(var(--widget-accent-rgb, 21,101,192), 0.18); }
+  100% { box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+}
+
+.widget--updating {
+  animation: widgetFlash 0.4s ease-out forwards;
+}
+
+/* Transition douce sur les barres de progression */
+.widget-progress__barre-fill {
+  transition: width 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   14. EN-TÊTE H1 + BARRE D'ONGLETS THÉMATIQUES (tableau-de-bord.html)
+   ============================================================ */
+
+/* La barre d'onglets se positionne juste sous le tdb-page-header sticky (60px de haut) */
+#tdb-themes-bar.tdb-themes-bar {
+  position: sticky;
+  top: calc(var(--header-height) + 60px); /* header site (68px) + tdb-page-header (60px) */
+  z-index: 998;
+  background: #fff;
+  border-bottom: 2px solid rgba(42,52,125,.15);
+  box-shadow: 0 2px 8px rgba(42,52,125,.08);
+}
+
+/* Section thématique dans tableau-de-bord.html : fond différent */
+#tdb-themes-content .tdb-theme-section {
+  background: var(--color-bg, #ffffff);
+  padding: 28px 40px 36px;
+}
+#tdb-themes-content .tdb-theme-section__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  #tdb-themes-bar.tdb-themes-bar .tdb-themes-bar__inner { padding: 0 16px; }
+  #tdb-themes-content .tdb-theme-section { padding: 20px 16px 28px; }
+}
+
+.widget-heatmap__barre-fill {
+  transition: width 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Indicateur de changement sur le chiffre KPI */
+.widget-kpi__valeur-principale {
+  transition: color 0.3s ease;
+}
+
+/* Badge année mis en évidence au changement */
+.widget__footer-info {
+  transition: opacity 0.3s ease;
+}
+
+/* ============================================================
+   15. CHAMP DE RECHERCHE TERRITOIRE (autocomplétion)
+   ============================================================ */
+
+/* Groupe Territoire : permet au dropdown de déborder */
+.tdb-territoire-groupe {
+  position: relative;
+  align-items: center !important;
+}
+
+/* Conteneur du champ de recherche */
+.tdb-search-territoire {
+  position: relative;
+}
+
+/* Ligne de saisie */
+.tdb-search-territoire__field {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 30px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 6px;
+  min-width: 220px;
+  transition: background .2s, border-color .2s;
+  overflow: hidden;
+}
+.tdb-search-territoire__field:focus-within {
+  background: rgba(255,255,255,.22);
+  border-color: rgba(255,255,255,.7);
+}
+
+.tdb-search-territoire__icon {
+  color: rgba(255,255,255,.65);
+  font-size: 11px;
+  padding: 0 6px 0 8px;
+  flex-shrink: 0;
+}
+
+.tdb-search-territoire__input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 12px;
+  font-family: inherit;
+  height: 100%;
+  outline: none;
+  min-width: 0;
+  padding: 0;
+}
+.tdb-search-territoire__input::placeholder {
+  color: rgba(255,255,255,.55);
+  font-style: italic;
+}
+
+/* Bouton croix "effacer" */
+.tdb-search-territoire__clear {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-right: 4px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,.2);
+  color: #fff;
+  font-size: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background .15s;
+}
+.tdb-search-territoire__clear:hover { background: rgba(255,255,255,.38); }
+
+/* Liste déroulante des suggestions */
+.tdb-territoire-suggestions {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 100%;
+  max-width: 380px;
+  background: #fff;
+  border: 1px solid rgba(42,52,125,.15);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(42,52,125,.18);
+  z-index: 2000;
+  max-height: 280px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.tdb-territoire-suggestions__item {
+  padding: 7px 14px;
+  font-size: 12.5px;
+  color: #1d1d1b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background .12s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tdb-territoire-suggestions__item:hover,
+.tdb-territoire-suggestions__item.is-active {
+  background: #bab0ed;
+  color: #2a347d;
+}
+.tdb-territoire-suggestions__item.is-selected {
+  font-weight: 700;
+  color: #2a347d;
+}
+.tdb-territoire-suggestions__item mark {
+  background: #f6da73;
+  color: #2a347d;
+  border-radius: 2px;
+  padding: 0 1px;
+  font-weight: 700;
+}
+
+.tdb-territoire-suggestions__empty {
+  padding: 10px 14px;
+  font-size: 12px;
+  color: rgba(42,52,125,.4);
+  font-style: italic;
+}
+.tdb-territoire-suggestions__more {
+  padding: 6px 14px;
+  font-size: 11px;
+  color: rgba(42,52,125,.4);
+  border-top: 1px solid rgba(42,52,125,.08);
+  font-style: italic;
+}
+
+/* Scrollbar fine dans la liste */
+.tdb-territoire-suggestions::-webkit-scrollbar { width: 4px; }
+.tdb-territoire-suggestions::-webkit-scrollbar-track { background: #ffffff; }
+.tdb-territoire-suggestions::-webkit-scrollbar-thumb { background: rgba(42,52,125,.2); border-radius: 2px; }
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .tdb-search-territoire__field { min-width: 160px; }
+}
+@media (max-width: 900px) {
+  .tdb-search-territoire__field { min-width: 130px; }
+}
+

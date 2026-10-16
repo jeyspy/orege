@@ -1,0 +1,2300 @@
+/**
+ * cartographie.css
+ * Styles spécifiques au gabarit Cartographie SIG
+ *
+ * SOMMAIRE
+ * 1. Layout général de la page cartographie
+ * 2. Carte OpenLayers
+ * 3. Contrôles de la carte
+ * 4. Popup / infobulle cartographique
+ * 5. Légende de la carte
+ * 6. Panneau de filtres (surcharge sidebar)
+ * 7. Indicateur de couches actives
+ * 8. Message d'état (aucun résultat, chargement)
+ * 9. Mini-compteur de filtres actifs
+ */
+
+/* ============================================================
+   1. LAYOUT GÉNÉRAL
+   ============================================================ */
+
+/* Hauteurs fixes de la page cartographie — desktop */
+:root {
+  --header-height:  72px;   /* .orege-header desktop */
+  --toolbar-height: 52px;   /* .site-subnav          */
+}
+/* Tablette et mobile : header plus petit */
+@media (max-width: 1100px) {
+  :root { --header-height: 60px; }
+}
+@media (max-width: 480px) {
+  :root { --header-height: 56px; }
+}
+
+/* Le wrapper plein écran sous header + toolbar */
+.carto-wrapper {
+  position: fixed;
+  top: calc(var(--header-height) + var(--toolbar-height));
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ============================================================
+   2. CARTE OPENLAYERS
+   ============================================================ */
+.carto-map {
+  flex: 1;
+  position: relative;
+  background-color: #dce8f0;
+}
+
+/* Le canvas OpenLayers prend toute la place */
+.carto-map #ol-map {
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================================================
+   3. CONTRÔLES DE LA CARTE
+   ============================================================ */
+
+/* Barre de contrôles flottante en haut à droite */
+.carto-controls {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  z-index: 10;
+}
+
+.carto-control-btn {
+  width: 36px;
+  height: 36px;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text);
+  font-size: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.carto-control-btn:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+/* Surcharge des contrôles natifs OpenLayers */
+.ol-control {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.ol-control button {
+  width: 36px !important;
+  height: 36px !important;
+  background: var(--color-white) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--color-text) !important;
+  font-size: 16px !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: background .2s ease !important;
+}
+
+.ol-control button:hover {
+  background: var(--color-primary) !important;
+  color: var(--color-white) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.ol-zoom {
+  top: var(--spacing-md) !important;
+  right: var(--spacing-md) !important;
+  left: auto !important;
+  bottom: auto !important;
+}
+
+.ol-zoom .ol-zoom-in {
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0 !important;
+}
+
+.ol-zoom .ol-zoom-out {
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm) !important;
+  margin-top: -1px !important;
+}
+
+.ol-attribution {
+  bottom: var(--spacing-xs) !important;
+  right: var(--spacing-xs) !important;
+  font-size: 10px !important;
+  background: rgba(255,255,255,.7) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+/* ============================================================
+   4. POPUP / INFOBULLE CARTOGRAPHIQUE
+   ============================================================ */
+.carto-popup {
+  position: fixed;
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 14px var(--spacing-md) var(--spacing-md);
+  min-width: 260px;
+  max-width: 330px;
+  width: max-content;
+  z-index: 1065;
+  pointer-events: none;
+  display: none;
+  border-top: 3px solid var(--color-primary);
+  /* Transition d'apparition douce */
+  animation: popupFadeIn .15s ease;
+}
+
+@keyframes popupFadeIn {
+  from { opacity: 0; transform: translateY(6px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.carto-popup.is-visible {
+  display: block;
+}
+
+/* Sur mobile : toujours centré en bas de l'écran */
+@media (max-width: 768px) {
+  .carto-popup {
+    left: 50% !important;
+    top: auto !important;
+    bottom: 16px !important;
+    transform: translateX(-50%);
+    max-width: calc(100vw - 32px);
+    min-width: 0;
+    width: calc(100vw - 32px);
+  }
+}
+
+/* ── Barre haute : badge "Données" + bouton fermer ── */
+.carto-popup__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  cursor: grab;
+  pointer-events: all;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  margin: -14px calc(-1 * var(--spacing-md)) 10px;
+  padding: 10px var(--spacing-md) 8px;
+  transition: background .15s;
+}
+.carto-popup__topbar:hover {
+  background: rgba(42,52,125,.03);
+}
+.carto-popup__topbar:active {
+  cursor: grabbing;
+}
+
+.carto-popup__close {
+  width: 22px;
+  height: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  pointer-events: all;
+  transition: background .2s;
+  flex-shrink: 0;
+}
+
+.carto-popup__close:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* ── Titre donnée source (mis en avant) ── */
+.carto-popup__titre {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.35;
+  margin: 0 0 10px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e8edf2;
+}
+
+/* ── Valeur + unité (taille réduite) ── */
+.carto-popup__valeur-bloc {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+
+.carto-popup__valeur {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.carto-popup__unite {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+/* ── Navigation temporelle : barre de boutons-dates ── */
+.carto-popup__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 10px;
+  pointer-events: all;
+}
+
+/* ── Navigation inter-couches superposées (flèches gauche/droite) ── */
+.carto-popup__layer-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 5px 8px;
+  background: var(--color-primary-xlight, rgba(42,52,125,.08));
+  border-radius: 8px;
+  pointer-events: all;
+}
+
+.carto-popup__layer-btn {
+  width: 24px;
+  height: 24px;
+  background: white;
+  border: 1.5px solid rgba(42,52,125,.2);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--color-primary, #2a347d);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s, border-color .15s, opacity .15s;
+  flex-shrink: 0;
+  pointer-events: all;
+}
+
+.carto-popup__layer-btn:hover:not(:disabled) {
+  background: var(--color-primary, #2a347d);
+  color: white;
+  border-color: var(--color-primary, #2a347d);
+}
+
+.carto-popup__layer-btn:disabled {
+  opacity: .32;
+  cursor: not-allowed;
+}
+
+.carto-popup__layer-counter {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-primary, #2a347d);
+  white-space: nowrap;
+}
+
+.carto-popup__layer-counter i {
+  font-size: 13px;
+  opacity: .65;
+}
+
+/* Bouton date individuel */
+.carto-popup__nav-date {
+  background: #eef2f8;
+  border: 1.5px solid #d0dae8;
+  color: #4a6080;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  pointer-events: all;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.carto-popup__nav-date:hover {
+  background: #d4e3f5;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.carto-popup__nav-date.is-active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+/* ── Métadonnées ── */
+.carto-popup__meta {
+  margin-top: 6px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.carto-popup__meta-ligne {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--color-bg);
+}
+
+.carto-popup__meta-ligne:last-child {
+  border-bottom: none;
+}
+
+/* ── Badge panneau ── */
+.carto-popup__badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   5. LÉGENDE DE LA CARTE
+   ============================================================ */
+.carto-legende {
+  position: absolute;
+  bottom: var(--spacing-xl);
+  left: var(--spacing-md);
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  z-index: 10;
+  min-width: 200px;
+  max-width: 300px;
+  border-left: 3px solid var(--color-primary);
+  /* Limite la hauteur totale pour éviter le débordement hors écran */
+  max-height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Liste scrollable quand trop de couches actives */
+#legende-liste {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(42,52,125,.25) transparent;
+}
+#legende-liste::-webkit-scrollbar {
+  width: 5px;
+}
+#legende-liste::-webkit-scrollbar-track {
+  background: transparent;
+}
+#legende-liste::-webkit-scrollbar-thumb {
+  background: rgba(42,52,125,.25);
+  border-radius: 4px;
+}
+#legende-liste::-webkit-scrollbar-thumb:hover {
+  background: rgba(42,52,125,.45);
+}
+
+.carto-legende__titre {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-sm);
+}
+
+.carto-legende__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text);
+  margin-bottom: 3px;
+  padding: 3px 4px;
+  border-radius: 5px;
+  transition: background .15s;
+  cursor: default;
+}
+.carto-legende__item:hover {
+  background: #F0F4FF;
+}
+
+/* Poignée drag & drop */
+.carto-legende__handle {
+  cursor: grab;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  opacity: .5;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  transition: opacity .15s;
+}
+.carto-legende__handle:hover {
+  opacity: 1;
+  color: var(--color-primary);
+}
+.carto-legende__handle:active {
+  cursor: grabbing;
+}
+
+/* Label couche */
+.carto-legende__label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badge de rang (priorité) */
+.carto-legende__rang {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: .7;
+}
+
+/* Bouton supprimer la couche */
+.carto-legende__remove {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;                    /* masqué par défaut, visible au survol de l'item */
+  transition: opacity .15s, background .15s, color .15s;
+  padding: 0;
+  pointer-events: all;
+  margin-left: 2px;
+}
+.carto-legende__item:hover .carto-legende__remove {
+  opacity: 1;
+}
+.carto-legende__remove:hover {
+  background: #FEE2E2;
+  color: #DC2626;
+  opacity: 1;
+}
+.carto-legende__remove i {
+  font-size: 11px;
+  line-height: 1;
+  display: block;
+}
+.carto-legende__item--ghost {
+  opacity: .35;
+  background: #DBEAFE !important;
+}
+.carto-legende__item--chosen {
+  background: #EFF6FF;
+  box-shadow: 0 2px 8px rgba(21,101,192,.2);
+}
+
+/* ── Boutons ▲/▼ — alternative clavier RGAA 7.1 ── */
+.carto-legende__reorder {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex-shrink: 0;
+  opacity: 0;                    /* masqués par défaut, visibles au survol ou focus */
+  transition: opacity .15s;
+}
+.carto-legende__item:hover .carto-legende__reorder,
+.carto-legende__item:focus-within .carto-legende__reorder {
+  opacity: 1;
+}
+.carto-legende__reorder-btn {
+  width: 16px;
+  height: 14px;
+  background: none;
+  border: 1px solid rgba(42,52,125,.25);
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--color-primary);
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  transition: background .12s, color .12s;
+}
+.carto-legende__reorder-btn:hover {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+.carto-legende__reorder-btn:focus-visible {
+  outline: 2px solid #F59E0B !important;
+  outline-offset: 1px !important;
+}
+.carto-legende__reorder-btn:disabled {
+  opacity: .3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.carto-legende__couleur {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,.12);
+}
+
+.carto-legende__couleur--point {
+  border-radius: 50%;
+}
+
+/* Échelle de couleurs continue */
+.carto-legende__gradient {
+  height: 10px;
+  border-radius: 5px;
+  margin-bottom: 3px;
+}
+
+.carto-legende__gradient-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+/* ============================================================
+   6. PANNEAUX DE FILTRES – DOUBLE SIDEBAR
+   ============================================================ */
+
+/* ── Conteneur wrapper : les 2 sidebars s'affichent l'une à la fois ── */
+.carto-wrapper {
+  position: fixed;
+  top: calc(var(--header-height) + var(--toolbar-height));
+  left: 0; right: 0; bottom: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+/* Sidebar commune */
+.carto-sidebar {
+  width: var(--sidebar-width, 280px);
+  flex-shrink: 0;
+  display: none;           /* masqué par défaut */
+  flex-direction: column;
+  background: var(--color-bg-panel, #F8FAFC);
+  border-right: 1px solid var(--color-border, #E2E8F0);
+  overflow: hidden;
+  z-index: 50;
+  transition: width .25s ease;
+}
+
+/* Seul le panneau .is-open est visible */
+.carto-sidebar.is-open {
+  display: flex;
+}
+
+/* Bordure colorée selon le panel */
+.carto-sidebar--panel1 { border-top: 3px solid #0288D1; }
+.carto-sidebar--panel2 { border-top: 3px solid #6A1B9A; }
+
+/* Bandeau info Panel 2 */
+.carto-panel2-info {
+  background: #F3E5F5;
+  border-bottom: 1px solid #CE93D8;
+  padding: 8px 14px;
+  font-size: 11px;
+  color: #6A1B9A;
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+.carto-panel2-info i { margin-top: 1px; flex-shrink: 0; }
+
+.carto-sidebar__header {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: var(--spacing-sm);
+}
+
+.carto-sidebar__titre {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.carto-sidebar__body {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: var(--spacing-md);
+}
+
+.carto-sidebar__body::-webkit-scrollbar { width: 4px; }
+.carto-sidebar__body::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+
+/* Pastille de thématique dans le titre du groupe */
+.filtre-groupe__puce {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Catégorie (3ème niveau) */
+.filtre-categorie__titre {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  padding: var(--spacing-xs) var(--spacing-md);
+  margin-top: var(--spacing-xs);
+}
+
+/* ── Boutons toggle panel dans la subnav (sur fond primary bleu) ────── */
+.btn-subnav-panel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border: 1.5px solid rgba(42,52,125,.30);
+  border-radius: 20px;
+  background: #fadea2;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2a347d;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-subnav-panel:hover {
+  border-color: #2a347d;
+  color: #2a347d;
+  background: #7fddf0;
+}
+.btn-subnav-panel.is-active {
+  background: #2a347d;
+  border-color: #2a347d;
+  color: #7fddf0;
+  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+}
+
+/* Info compteur dans la subnav */
+.subnav-info {
+  font-size: 12px;
+  color: rgba(255,255,255,.8);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ── Item filtre dans l'accordéon ───────────────────────────────────── */
+.filtre-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--color-text, #1E2D3D);
+  transition: background .12s;
+  border-radius: 0;
+  user-select: none;
+}
+.filtre-item:hover, .filtre-item.is-hover { background: #EFF6FF; }
+.filtre-item.is-disabled { opacity: .4; pointer-events: none; }
+
+.filtre-item input[type='checkbox'] {
+  width: 14px; height: 14px;
+  accent-color: var(--color-primary, #2a347d);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.filtre-item__label {
+  flex: 1;
+  line-height: 1.3;
+}
+
+.filtre-item__annee {
+  font-size: 10px;
+  color: #A0AABB;
+  background: #F0F4F8;
+  border-radius: 4px;
+  padding: 1px 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Icône géométrie */
+.filtre-geom-badge {
+  width: 16px;
+  text-align: center;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+/* Groupe accordéon */
+.filtre-groupe { border-bottom: 1px solid var(--color-border-light, #EDF2F7); }
+
+.filtre-groupe__entete {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  cursor: pointer;
+  background: white;
+  transition: background .15s;
+  user-select: none;
+  border-bottom: 1px solid transparent;
+}
+.filtre-groupe__entete:hover { background: #F8FAFC; }
+.filtre-groupe.is-open > .filtre-groupe__entete { background: #EFF6FF; border-bottom-color: var(--color-border-light); }
+
+.filtre-groupe__titre {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+  /* Interlignage serré : les titres sur 2 lignes héritaient de 30 px (style global des h4) */
+  line-height: 1.25;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filtre-groupe__chevron {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  margin-left: auto;
+  transition: transform .2s;
+}
+.filtre-groupe.is-open .filtre-groupe__chevron { transform: rotate(180deg); }
+
+/* Sous-groupe repliable dans une catégorie (ex. « Aléa » dans Vulnérabilité) */
+.filtre-groupe--sous { border-bottom: 0; margin: 2px 8px 4px 22px; border-left: 2px solid var(--color-border-light, #EDF2F7); }
+.filtre-groupe--sous > .filtre-groupe__entete { padding: 7px 10px; background: transparent; }
+.filtre-groupe--sous > .filtre-groupe__entete:hover { background: #F1F5F9; }
+.filtre-groupe.is-open > .filtre-groupe__contenu > .filtre-groupe--sous > .filtre-groupe__entete { background: transparent; }
+.filtre-groupe.is-open > .filtre-groupe__contenu > .filtre-groupe--sous.is-open > .filtre-groupe__entete { background: #EFF6FF; }
+/* Titre distinct de la catégorie mère : casse normale, graisse moyenne, sans pastille */
+.filtre-groupe--sous .filtre-groupe__titre {
+  font-size: 12.5px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #3D4A5C;
+}
+.filtre-groupe--sous .filtre-groupe__puce { display: none; }
+.filtre-groupe--sous .filtre-groupe__titre i { font-size: 14px !important; margin-right: 2px !important; }
+/* Compteur en contour (la catégorie mère a un badge plein) */
+.filtre-groupe--sous > .filtre-groupe__entete > .filtre-badge-count {
+  background: #fff;
+  color: #5A6779;
+  box-shadow: inset 0 0 0 1px #CBD5E1;
+}
+.filtre-groupe--sous.is-open { background: #F5F8FC; border-left-color: #CBD5E1; border-radius: 0 6px 6px 0; }
+.filtre-groupe--sous > .filtre-groupe__contenu { padding: 2px 0; background: transparent; }
+/* Le chevron du sous-groupe ne suit que son propre état ouvert/fermé */
+.filtre-groupe.is-open .filtre-groupe--sous .filtre-groupe__chevron { transform: none; }
+.filtre-groupe.is-open .filtre-groupe--sous.is-open .filtre-groupe__chevron { transform: rotate(180deg); }
+
+.filtre-groupe__contenu {
+  padding: 4px 0;
+  background: #FAFBFC;
+}
+
+/* Thème sous-groupe */
+.filtre-theme-block { margin-bottom: 2px; }
+.filtre-sous-groupe__titre {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  padding: 6px 14px 2px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Zone style pour P2 (territoire semi-transparent) */
+.carto-legende__couleur--zone {
+  border-radius: 3px;
+  width: 16px;
+  height: 10px;
+}
+
+/* Tag territoire (P2) dans les couches actives */
+.carto-couche-tag--territoire {
+  border-style: dashed !important;
+  font-style: italic;
+}
+
+/* ============================================================
+   7. INDICATEUR DE COUCHES ACTIVES
+   ============================================================ */
+.carto-couches-actives {
+  position: absolute;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  max-width: calc(100% - 120px);
+}
+
+.carto-couche-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: var(--color-white);
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+}
+
+.carto-couche-tag__remove {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  line-height: 1;
+  transition: background .2s;
+  flex-shrink: 0;
+}
+
+.carto-couche-tag__remove i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-size: 11px;
+}
+
+.carto-couche-tag__remove:hover {
+  background: var(--color-danger);
+}
+
+/* ============================================================
+   8. MESSAGES D'ÉTAT
+   ============================================================ */
+.carto-etat-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-xl);
+  text-align: center;
+  z-index: 50;
+  display: none;
+}
+
+.carto-etat-message.is-visible {
+  display: block;
+}
+
+.carto-etat-message__icone {
+  font-size: 40px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-md);
+}
+
+.carto-etat-message__texte {
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+/* ============================================================
+   9. COMPTEUR DE FILTRES ACTIFS
+   ============================================================ */
+.filtre-badge-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: auto;
+}
+
+/* Badge "couches actives" dans la catégorie — visible uniquement si ≥ 1 couche cochée */
+.filtre-badge-actif {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: #7fddf0;
+  color: var(--color-primary, #2a347d);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  margin-left: auto;
+  box-shadow: 0 0 0 2px rgba(127,221,240,.35);
+  animation: badgeActifPop .2s ease;
+}
+@keyframes badgeActifPop {
+  from { transform: scale(.6); opacity: 0; }
+  to   { transform: scale(1);  opacity: 1; }
+}
+
+/* Entête de groupe avec au moins une couche active : légère teinte + barre gauche colorée */
+.filtre-groupe.has-active > .filtre-groupe__entete {
+  background: linear-gradient(90deg, rgba(127,221,240,.10) 0%, transparent 100%);
+  border-left: 3px solid #7fddf0;
+  padding-left: 11px; /* compense la bordure gauche de 3px */
+}
+
+/* Barre « Tout sélectionner » dans chaque catégorie de territoire */
+.filtre-select-all-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  border-bottom: 1px solid #EDF2F7;
+  background: #f0f4f8;
+}
+.filtre-select-all-btn {
+  background: none;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: all .15s;
+  display: inline-flex;
+  align-items: center;
+}
+.filtre-select-all-btn:hover {
+  opacity: .85;
+  box-shadow: 0 1px 4px rgba(0,0,0,.12);
+}
+
+/* Mode "entre eux" (multi-années actif) */
+.carto-mode-multi-annees {
+  background: #fadea2;
+  border: 1.5px solid #ec947b;
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 11px;
+  color: #2a347d;
+  font-weight: 600;
+  display: none;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin: var(--spacing-sm) var(--spacing-md);
+}
+
+.carto-mode-multi-annees.is-visible {
+  display: flex;
+}
+
+/* ============================================================
+   10. MOTEUR DE RECHERCHE DANS LA SIDEBAR
+   ============================================================ */
+.carto-search-wrap {
+  padding: var(--spacing-sm) var(--spacing-md) 0;
+  position: relative;
+}
+
+.carto-search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.carto-search-icon {
+  position: absolute;
+  left: 11px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Input de recherche – générique pour p1 et p2 */
+.carto-search-field input[type='text'] {
+  width: 100%;
+  padding: 8px 32px 8px 30px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  background: #F8FAFC;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+.carto-search-field input[type='text']:focus {
+  border-color: var(--color-primary);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(21,101,192,.1);
+}
+.carto-search-field input[type='text']::placeholder { color: #A0AABB; }
+
+#carto-search-input {
+  width: 100%;
+  padding: 8px 32px 8px 30px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  background: #F8FAFC;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+#carto-search-input:focus {
+  border-color: var(--color-primary);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(21,101,192,.1);
+}
+#carto-search-input::placeholder { color: #A0AABB; }
+
+.carto-search-clear {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 3px 5px;
+  font-size: 11px;
+  border-radius: 4px;
+  transition: color .15s, background .15s;
+}
+.carto-search-clear:hover { color: #E53935; background: #FEE8E8; }
+
+/* Autocomplete dropdown */
+.carto-search-autocomplete {
+  position: fixed;         /* fixed pour échapper aux overflow:hidden parents */
+  background: white;
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  z-index: 9999;
+  overflow: hidden;
+  display: none;
+  max-height: 220px;
+  overflow-y: auto;
+  width: 248px;            /* largeur fixe = sidebar - padding */
+}
+.carto-search-autocomplete.is-open { display: block; }
+
+.carto-ac-item {
+  padding: 9px 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-bottom: 1px solid #F0F4F8;
+  transition: background .12s;
+}
+.carto-ac-item:last-child { border-bottom: none; }
+.carto-ac-item:hover { background: #EFF6FF; }
+.carto-ac-item__name { font-size: 12px; font-weight: 600; color: var(--color-text); }
+.carto-ac-item__name em { background: #DBEAFE; color: var(--color-primary); font-style: normal; border-radius: 2px; padding: 0 2px; }
+.carto-ac-item__meta { font-size: 10px; color: var(--color-text-muted); display: flex; gap: 6px; align-items: center; }
+.carto-ac-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+/* Zone de résultats filtrés */
+.carto-search-results {
+  margin-top: 6px;
+  background: white;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  max-height: 240px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,.07);
+}
+
+.carto-search-results__header {
+  padding: 7px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: #F8FAFC;
+  border-bottom: 1px solid var(--color-border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.carto-search-result-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #F8FAFC;
+  transition: background .12s;
+  font-size: 12px;
+}
+.carto-search-result-item:last-child { border-bottom: none; }
+.carto-search-result-item:hover { background: #EFF6FF; }
+.carto-search-result-item.is-checked { background: #DBEAFE; }
+.carto-search-result-item__dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.carto-search-result-item__name { flex: 1; font-weight: 500; line-height: 1.3; }
+.carto-search-result-item__name em { background: #DBEAFE; color: var(--color-primary); font-style: normal; border-radius: 2px; padding: 0 2px; }
+.carto-search-result-item__unite {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  background: #F0F4F8;
+  border-radius: 4px;
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+.carto-search-result-item__check {
+  color: var(--color-primary);
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.carto-search-result-item.is-checked .carto-search-result-item__check { opacity: 1; }
+
+.carto-search-empty {
+  padding: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+.carto-search-empty i { display: block; font-size: 22px; margin-bottom: 8px; opacity: .4; }
+
+/* Bouton fermer sidebar (mobile uniquement, caché en desktop) */
+.carto-sidebar__close-btn {
+  display: none;
+  background: none;
+  border: 1px solid rgba(42,52,125,.2);
+  border-radius: 4px;
+  color: #2a347d;
+  font-size: 13px;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+  margin-left: 4px;
+}
+.carto-sidebar__close-btn:hover {
+  background: #2a347d;
+  color: #fff;
+}
+
+/* ============================================================
+   12. TIRETTE MOBILE (réouverture sidebar)
+   ============================================================ */
+
+/* Tirette : mobile uniquement, cachée par défaut sur desktop */
+.carto-tirette {
+  display: none; /* masquée par défaut, JS gère l'affichage sur mobile */
+}
+
+@media (max-width: 768px) {
+  .carto-tirette {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 10px 10px 8px;
+    background: white;
+    border: none;
+    border-left: 3px solid #0288D1;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 2px 2px 10px rgba(0,0,0,.2);
+    cursor: pointer;
+    font-size: 16px;
+    color: #0288D1;
+    transition: padding-left .15s, box-shadow .15s;
+  }
+  .carto-tirette:hover {
+    padding-left: 13px;
+    box-shadow: 3px 3px 16px rgba(0,0,0,.28);
+  }
+  /* Variante couleur quand c'est le panel Territoires qui sera rouvert */
+  .carto-tirette.is-p2 {
+    border-left-color: #6A1B9A;
+    color: #6A1B9A;
+  }
+  .carto-tirette__arrow {
+    font-size: 11px;
+    opacity: .55;
+  }
+}
+
+/* ============================================================
+   13. RESPONSIVE MOBILE
+   ============================================================ */
+@media (max-width: 768px) {
+
+  /* ── Sidebar : overlay par-dessus la carte ── */
+  .carto-sidebar {
+    position: fixed !important;
+    top: calc(var(--header-height) + var(--toolbar-height)) !important; /* header + subnav */
+    bottom: 0 !important;
+    left: 0 !important;
+    width: min(320px, 90vw) !important;
+    z-index: 500 !important;
+    /* Masquée par défaut : sort du flux flex + hors écran */
+    display: none !important;
+    box-shadow: none;
+    transform: translateX(-100%);
+    transition: transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s;
+  }
+
+  .carto-sidebar.is-open {
+    display: flex !important;
+    transform: translateX(0) !important;
+    box-shadow: 4px 0 24px rgba(0,0,0,.22) !important;
+  }
+
+  /* Masque semi-transparent derrière la sidebar ouverte */
+  .carto-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    z-index: 499;
+  }
+  .carto-sidebar-overlay.is-visible { display: block; }
+
+  /* Bouton fermer : affiché sur mobile */
+  .carto-sidebar__close-btn {
+    display: flex;
+  }
+
+  /* La carte prend toute la largeur (les sidebars sont en overlay) */
+  .carto-map {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+
+  /* Message aucun filtre : centré sur toute la carte */
+  .carto-etat-message {
+    width: calc(100% - 32px);
+    max-width: 320px;
+  }
+
+  /* Couches actives : décalées sous la tirette (tirette ~44px + top 12px + gap 8px) */
+  .carto-couches-actives {
+    max-width: calc(100% - 60px);
+    top: 68px;
+  }
+
+  /* Sélecteur fond de carte : repositionné pour mobile */
+  .basemap-switcher {
+    top: 64px;
+    right: 10px;
+  }
+
+  /* Bouton "Tout effacer" : icône seule sur mobile */
+  .btn-subnav-label {
+    display: none;
+  }
+}
+
+/* ============================================================
+   11. PANNEAUX FLOTTANTS BAS-DROITE (RETEX + Liens utiles)
+   ============================================================ */
+
+/* Conteneur global positionné en bas à droite de la zone carte */
+.carto-float-panels {
+  position: absolute;
+  bottom: 24px;
+  right: 16px;
+  width: 320px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  filter: drop-shadow(0 4px 20px rgba(0,0,0,.18));
+}
+
+/* ── Onglets de sélection ── */
+.carto-float-panels__tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 0;
+  padding: 0 4px;
+}
+
+.carto-float-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  background: rgba(255,255,255,.65);
+  backdrop-filter: blur(8px);
+  color: #4a5a7a;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  border-bottom: 2px solid transparent;
+}
+.carto-float-tab:hover {
+  background: rgba(255,255,255,.85);
+  color: #2a347d;
+}
+.carto-float-tab.is-active {
+  background: #fff;
+  color: #2a347d;
+  border-bottom-color: #2a347d;
+}
+.carto-float-tab i { font-size: 13px; }
+
+/* ── Panneau de contenu ── */
+.carto-float-panel {
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+  max-height: 340px;
+  display: flex;
+  flex-direction: column;
+}
+.carto-float-panel[hidden] { display: none; }
+
+/* En-tête du panneau */
+.carto-float-panel__header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px 9px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #2a347d;
+  background: #bab0ed;
+  border-bottom: 1px solid rgba(42,52,125,.18);
+  flex-shrink: 0;
+}
+.carto-float-panel__all {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  color: #2a347d;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  opacity: .8;
+  transition: opacity .15s;
+}
+.carto-float-panel__all:hover { opacity: 1; text-decoration: none; color: #2a347d; }
+
+/* Liste des items */
+.carto-float-panel__list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: #d0daea #f4f7fb;
+}
+.carto-float-panel__list::-webkit-scrollbar { width: 4px; }
+.carto-float-panel__list::-webkit-scrollbar-track { background: #f4f7fb; }
+.carto-float-panel__list::-webkit-scrollbar-thumb { background: #c5d0e4; border-radius: 4px; }
+
+/* Un item */
+.carto-float-panel__item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: background .12s;
+  border-left: 3px solid transparent;
+  border-bottom: 1px solid #f0f4f9;
+}
+.carto-float-panel__list li:last-child .carto-float-panel__item {
+  border-bottom: none;
+}
+.carto-float-panel__item:hover {
+  background: #bab0ed;
+  border-left-color: #2a347d;
+  text-decoration: none;
+}
+
+.carto-float-panel__item-cat {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.carto-float-panel__item-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1d1d1b;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.carto-float-panel__item-meta {
+  font-size: 10.5px;
+  color: rgba(42,52,125,.45);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ============================================================
+   12. SURCHARGES SPÉCIFIQUES À LA PAGE CARTOGRAPHIE
+   (anciennement dans le bloc <style> inline de template/cartographie.html)
+   ============================================================ */
+
+/* Pas de padding-top sur le body : tout est en position fixed sur cette page */
+body { padding-top: 0; overflow: hidden; }
+
+/* La carto-wrapper prend tout l'espace sous header + subnav */
+.carto-wrapper {
+  position: fixed !important;
+  top: calc(var(--header-height) + var(--toolbar-height)) !important;
+  left: 0; right: 0; bottom: 0;
+  z-index: 1 !important;
+}
+
+/* Le subnav se positionne juste sous le header */
+.site-subnav {
+  position: fixed !important;
+  top: var(--header-height) !important;
+  z-index: 1040 !important;
+}
+
+/* Mégamenu passe AU-DESSUS du subnav */
+.orege-megamenu         { z-index: 1090 !important; }
+.orege-megamenu-overlay { z-index: 1089 !important; }
+
+/* Pas de footer sur la page cartographie (plein écran) */
+.orege-footer { display: none !important; }
+
+/* ── Sélecteur fond de carte ── */
+.basemap-switcher {
+  position: absolute;
+  /* top: 16px (zoom) + 36px (zoom-in) + 36px (zoom-out) - 1px overlap = 87px */
+  top: 87px;
+  right: 16px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0;
+}
+
+/* Bouton déclencheur – identique aux boutons OL */
+.basemap-toggle-btn {
+  width: 36px !important;
+  height: 36px !important;
+  background: #FFFFFF !important;
+  border: 1px solid #DDE3EC !important;
+  border-radius: 4px !important;
+  color: #1A2233 !important;
+  font-size: 16px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,.10) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+  margin-top: 8px; /* espace sous le zoom-out */
+}
+.basemap-toggle-btn i {
+  font-size: 18px;
+  line-height: 1;
+  display: block;
+  pointer-events: none;
+}
+.basemap-toggle-btn:hover {
+  background: #1565C0 !important;
+  color: #FFFFFF !important;
+  border-color: #1565C0 !important;
+}
+.basemap-toggle-btn.is-open {
+  background: #1565C0 !important;
+  color: #FFFFFF !important;
+  border-color: #1565C0 !important;
+}
+
+/* Panneau déroulant */
+.basemap-panel {
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  background: #FFFFFF;
+  border: 1px solid #DDE3EC;
+  border-radius: 4px;
+  padding: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.15);
+  min-width: 170px;
+  margin-top: 4px;
+}
+.basemap-panel.is-open { display: flex; }
+.basemap-panel__title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: #6B7A99;
+  padding: 2px 6px 6px;
+  border-bottom: 1px solid #DDE3EC;
+  margin-bottom: 2px;
+}
+.basemap-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1A2233;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+  white-space: nowrap;
+  text-align: left;
+  width: 100%;
+}
+.basemap-btn:hover { background: #E3F2FD; border-color: #90CAF9; }
+.basemap-btn.is-active {
+  background: #1565C0;
+  border-color: #1565C0;
+  color: #FFFFFF;
+}
+
+/* ============================================================
+   12bis. INDICATEUR DE NIVEAU DE ZOOM (barre verticale + marqueurs couches)
+   ============================================================ */
+
+/* ── Conteneur principal ── */
+.zoom-indicator {
+  position: absolute;
+  top: 140px;
+  right: 16px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: #FFFFFF;
+  border: 1px solid #DDE3EC;
+  border-radius: 10px;
+  padding: 12px 14px 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.10);
+  width: 82px;
+  user-select: none;
+  transition: box-shadow .25s ease, border-color .25s ease, width .3s ease;
+  overflow: visible;
+}
+.zoom-indicator:hover {
+  border-color: #90CAF9;
+  box-shadow: 0 4px 20px rgba(21,101,192,.16);
+}
+/* Quand des couches zoom-restreintes sont actives, agrandir pour la liste */
+.zoom-indicator.has-layers {
+  width: 190px;
+}
+
+/* ── En-tête ── */
+.zoom-indicator__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 5px;
+  margin-bottom: 8px;
+}
+.zoom-indicator__header > i {
+  font-size: 13px;
+  color: #6B7A99;
+}
+.zoom-indicator__title {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: #8896AE;
+}
+/* Valeur de zoom — pleine largeur sous le label quand le panneau est étroit */
+.zoom-indicator__value {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1565C0;
+  line-height: 1;
+  font-family: 'Cabinet Grotesk', 'Satoshi', sans-serif;
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+}
+/* Quand le panneau est large (has-layers), la valeur reste sur la même ligne */
+.zoom-indicator.has-layers .zoom-indicator__header {
+  flex-wrap: nowrap;
+}
+.zoom-indicator.has-layers .zoom-indicator__title {
+  flex: 1;
+}
+.zoom-indicator.has-layers .zoom-indicator__value {
+  width: auto;
+  text-align: right;
+  font-size: 20px;
+}
+
+/* ── Zone barre + échelle ── */
+.zoom-indicator__track-wrap {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+  height: 180px;
+  position: relative;
+}
+
+/* ── Échelle (ticks & labels à gauche) ── */
+.zoom-indicator__scale {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.zoom-indicator__tick {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 0;
+}
+.zoom-indicator__tick-label {
+  font-size: 8px;
+  font-weight: 600;
+  color: #A0ABBD;
+  line-height: 1;
+  width: 14px;
+  text-align: right;
+}
+.zoom-indicator__tick-line {
+  width: 4px;
+  height: 1px;
+  background: #D0D7E2;
+}
+
+/* ── Piste verticale (barre) ── */
+.zoom-indicator__track {
+  position: relative;
+  width: 8px;
+  background: #E8ECF2;
+  border-radius: 4px;
+  overflow: visible;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* Remplissage (du bas vers le curseur) */
+.zoom-indicator__fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, #42A5F5, #1565C0);
+  border-radius: 4px;
+  transition: height .3s ease;
+}
+
+/* ── Curseur position actuelle ── */
+.zoom-indicator__cursor {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  bottom: 0; /* positionné par JS */
+  z-index: 10;
+  width: 18px;
+  height: 18px;
+  background: #1565C0;
+  border: 2.5px solid #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(21,101,192,.35);
+  transition: bottom .3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.zoom-indicator__cursor-label {
+  display: none; /* On utilise l'en-tête pour la valeur, mais on le garde pour mobile */
+}
+
+/* ── Marqueurs couches (indicateurs sur la barre) ── */
+.zoom-indicator__markers {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -6px;
+  right: -6px;
+  pointer-events: none;
+}
+
+/* Un marqueur individuel : petite flèche + trait */
+.zoom-marker {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  display: flex;
+  align-items: center;
+  pointer-events: auto;
+  transition: bottom .3s ease;
+  cursor: pointer;
+}
+
+/* Trait horizontal traversant la barre */
+.zoom-marker__line {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  height: 2px;
+  border-radius: 1px;
+  opacity: .7;
+}
+
+/* Triangle flèche à droite du trait */
+.zoom-marker__arrow {
+  position: absolute;
+  right: -12px;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left-width: 5px;
+  border-left-style: solid;
+  opacity: .8;
+}
+
+/* Zone de texte au survol du marqueur */
+.zoom-marker__tooltip {
+  position: absolute;
+  right: calc(100% + 16px);
+  white-space: nowrap;
+  background: #1A2233;
+  color: #FFFFFF;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 5px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+.zoom-marker__tooltip::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 4px solid #1A2233;
+}
+.zoom-marker:hover .zoom-marker__tooltip {
+  opacity: 1;
+}
+
+/* Marqueur clignotant quand le zoom est insuffisant */
+.zoom-marker--warning .zoom-marker__line {
+  animation: markerPulse 1.5s ease-in-out infinite;
+}
+@keyframes markerPulse {
+  0%, 100% { opacity: .5; }
+  50%      { opacity: 1; }
+}
+
+/* ── Liste des couches zoom-restreintes (sous la barre) ── */
+.zoom-indicator__layers {
+  margin-top: 10px;
+  border-top: 1px solid #E8ECF2;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 140px;
+  overflow-y: auto;
+}
+.zoom-indicator__layers::-webkit-scrollbar {
+  width: 3px;
+}
+.zoom-indicator__layers::-webkit-scrollbar-thumb {
+  background: #D0D7E2;
+  border-radius: 2px;
+}
+
+.zoom-layer-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  line-height: 1.3;
+  color: #3D4A5C;
+  padding: 3px 4px;
+  transition: opacity .3s ease, background .15s ease;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.zoom-layer-item:hover {
+  background: rgba(21,101,192,.06);
+}
+.zoom-layer-item.is-hidden {
+  opacity: .45;
+  cursor: pointer;
+}
+.zoom-layer-item.is-visible {
+  opacity: 1;
+  cursor: default;
+}
+
+/* Pastille couleur */
+.zoom-layer-item__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Label tronqué */
+.zoom-layer-item__label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* Badge "zoom ≥ X" */
+.zoom-layer-item__badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.zoom-layer-item__badge--ok {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+.zoom-layer-item__badge--need {
+  background: #FFF3E0;
+  color: #E65100;
+}
+
+/* ── Plage min / max ── */
+.zoom-indicator__range {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 8px;
+  color: #A0ABBD;
+  letter-spacing: .3px;
+}
+
+/* ============================================================
+   12ter. ZOOM INDICATOR – RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .zoom-indicator {
+    top: 110px;
+    right: 10px;
+    width: 58px;
+    padding: 8px 10px 8px;
+    border-radius: 8px;
+  }
+  .zoom-indicator.has-layers {
+    width: 58px; /* pas d'agrandissement mobile */
+  }
+  .zoom-indicator__track-wrap {
+    height: 130px;
+  }
+  .zoom-indicator__value {
+    font-size: 16px;
+  }
+  .zoom-indicator__layers {
+    display: none !important; /* trop petit sur mobile */
+  }
+  .zoom-indicator__range {
+    display: none;
+  }
+  .zoom-indicator__scale {
+    display: none;
+  }
+  .zoom-indicator__track-wrap {
+    justify-content: center;
+  }
+}
+
+/* ============================================================
+   12quater. ZOOM SIDEBAR BADGE (petite pastille "≥ 10" sur les filtres)
+   ============================================================ */
+
+.zoom-sidebar-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #E65100;
+  background: #FFF3E0;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: auto;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+.zoom-sidebar-badge i {
+  font-size: 9px;
+}
+
+/* ============================================================
+   13. BOUTONS FLOTTANTS & DRAWERS LATÉRAUX
+   (Actualités · Retex · Liens utiles)
+   Anciennement dans le bloc <style> inline de template/cartographie.html
+   ============================================================ */
+
+/* ── Bouton flottant Actualités ── */
+.carto-actu-btn {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 1035;
+  display: flex; align-items: center; gap: 8px;
+  background: #0D47A1; color: #fff;
+  border: none; border-radius: 50px;
+  padding: 12px 20px;
+  font-size: 13.5px; font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(13,71,161,.4);
+  transition: all .2s;
+}
+.carto-actu-btn:hover { background: #1565C0; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(13,71,161,.5); }
+
+/* Bouton RETEX — au-dessus d'Actualités */
+.carto-actu-btn--retex {
+  bottom: 92px;
+  background: #1B5E20;
+  box-shadow: 0 4px 20px rgba(27,94,32,.4);
+}
+.carto-actu-btn--retex:hover { background: #2E7D32; box-shadow: 0 6px 24px rgba(27,94,32,.5); }
+
+/* Bouton Liens utiles — au-dessus de RETEX */
+.carto-actu-btn--liens {
+  bottom: 160px;
+  background: #4527A0;
+  box-shadow: 0 4px 20px rgba(69,39,160,.4);
+}
+.carto-actu-btn--liens:hover { background: #512DA8; box-shadow: 0 6px 24px rgba(69,39,160,.5); }
+
+.carto-actu-btn__badge {
+  background: #F44336; color: #fff;
+  font-size: 10px; font-weight: 700;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Drawer actualités / retex / liens ── */
+.carto-actu-drawer {
+  position: fixed;
+  top: 154px; right: 0; bottom: 0;   /* 102px header + 52px subnav */
+  width: 420px; max-width: 90vw;
+  z-index: 1060;                      /* au-dessus du subnav (1040) */
+  background: #fff;
+  box-shadow: -4px 0 32px rgba(0,0,0,.18);
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
+}
+.carto-actu-drawer:not([hidden]) { transform: translateX(0); }
+.carto-actu-drawer[hidden] { display: flex !important; }
+
+.carto-actu-drawer__header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid #E8EEF7;
+  background: linear-gradient(135deg, #0D47A1, #1565C0);
+  color: #fff;
+  flex-shrink: 0;
+}
+.carto-actu-drawer__title {
+  font-size: 16px; font-weight: 700; margin: 0 0 4px; color: #fff;
+  display: flex; align-items: center; gap: 8px;
+}
+.carto-actu-drawer__subtitle { font-size: 12px; opacity: .75; margin: 0; }
+.carto-actu-drawer__close {
+  background: rgba(255,255,255,.2); border: none; border-radius: 8px;
+  color: #fff; width: 32px; height: 32px;
+  cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  transition: background .15s;
+}
+.carto-actu-drawer__close:hover { background: rgba(255,255,255,.35); }
+
+.carto-actu-drawer__body {
+  overflow-y: auto; flex: 1;
+  padding: 0;
+}
+
+/* ── Article à la une (dans drawer) ── */
+.carto-actu-une {
+  padding: 16px 16px 12px;
+  background: #F8FAFB;
+  border-bottom: 1px solid #E8EEF7;
+}
+.carto-actu-une__label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px;
+  color: #1565C0; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.carto-actu-une__card {
+  display: flex; flex-direction: column;
+  text-decoration: none; color: inherit;
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid #E8EEF7;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(13,71,161,.07);
+  transition: box-shadow .2s;
+}
+.carto-actu-une__card:hover { box-shadow: 0 4px 16px rgba(13,71,161,.14); }
+.carto-actu-une__img {
+  width: 100%; height: 150px; overflow: hidden;
+}
+.carto-actu-une__img img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform .4s;
+}
+.carto-actu-une__card:hover .carto-actu-une__img img { transform: scale(1.04); }
+.carto-actu-une__img-fallback {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; background: linear-gradient(135deg,#1565C0,#0288D1);
+  color: rgba(255,255,255,.4); width: 100%; height: 100%;
+}
+.carto-actu-une__body { padding: 14px 14px 16px; }
+.carto-actu-une__title {
+  font-size: 14px; font-weight: 700; color: #1A2233; line-height: 1.4;
+  margin: 8px 0 8px;
+}
+.carto-actu-une__excerpt {
+  font-size: 12.5px; color: #6B7A99; line-height: 1.6; margin-bottom: 10px;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.carto-actu-cat {
+  display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .4px;
+}
+.carto-actu-meta {
+  font-size: 11px; color: #A0AABF; margin-top: 6px;
+}
+.carto-actu-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 700; color: #1565C0;
+  margin-top: 10px;
+}
+
+/* ── Séparateur ── */
+.carto-actu-sep {
+  padding: 10px 16px;
+  text-align: center; position: relative;
+}
+.carto-actu-sep::before {
+  content: ''; position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 1px; background: #E8EEF7;
+}
+.carto-actu-sep span {
+  position: relative; background: #fff;
+  padding: 0 12px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .7px; color: #6B7A99;
+}
+
+/* ── Liste articles ── */
+.carto-actu-list {
+  padding: 8px 0;
+}
+.carto-actu-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 16px;
+  text-decoration: none; color: inherit;
+  border-bottom: 1px solid #F0F4FA;
+  transition: background .15s;
+}
+.carto-actu-item:last-child { border-bottom: none; }
+.carto-actu-item:hover { background: #F5F8FF; }
+.carto-actu-item__img {
+  width: 72px; height: 56px; flex-shrink: 0;
+  border-radius: 8px; overflow: hidden;
+}
+.carto-actu-item__img img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .4s;
+}
+.carto-actu-item:hover .carto-actu-item__img img { transform: scale(1.06); }
+.carto-actu-item__fallback {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; width: 100%; height: 100%; border-radius: 8px;
+}
+.carto-actu-item__body { flex: 1; min-width: 0; }
+.carto-actu-item__title {
+  font-size: 13px; font-weight: 600; color: #1A2233; line-height: 1.4;
+  margin: 4px 0 4px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+/* ── Lien vers toutes les actualités ── */
+.carto-actu-all {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin: 12px 16px 20px;
+  padding: 12px 20px; border-radius: 12px;
+  border: 1.5px solid #1565C0;
+  color: #1565C0; font-size: 13px; font-weight: 700;
+  text-decoration: none;
+  transition: all .15s;
+}
+.carto-actu-all:hover { background: #1565C0; color: #fff; }
+
+/* ── Overlay ── */
+.carto-actu-overlay {
+  display: none;
+  position: fixed;
+  top: 154px; left: 0; right: 0; bottom: 0;  /* commence sous header+subnav */
+  background: rgba(0,0,0,.3);
+  z-index: 1055;                               /* entre subnav et drawer */
+}
+.carto-actu-overlay.is-open { display: block; }
+
+/* ── Items liens utiles ── */
+.carto-liens-list { padding: 4px 0 8px; }
+.carto-lien-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px;
+  text-decoration: none; color: inherit;
+  border-bottom: 1px solid #F0F4FA;
+  transition: background .15s;
+}
+.carto-lien-item:last-child { border-bottom: none; }
+.carto-lien-item:hover { background: #F5F8FF; }
+.carto-lien-item__icon {
+  width: 40px; height: 40px; flex-shrink: 0;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.carto-lien-item__body { flex: 1; min-width: 0; }
+.carto-lien-item__title {
+  font-size: 13px; font-weight: 700; color: #1A2233; line-height: 1.3; margin-bottom: 2px;
+}
+.carto-lien-item__desc {
+  font-size: 11.5px; color: #6B7A99; line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.carto-lien-item__ext {
+  font-size: 10px; color: #B0BAD0; flex-shrink: 0;
+}
+.carto-lien-item:hover .carto-lien-item__ext { color: #1565C0; }

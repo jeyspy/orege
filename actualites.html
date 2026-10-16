@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>Actualités – Observatoire de l'Eau Grand Est</title>
+  <meta name="description" content="Actualités, analyses et publications sur l'eau en Grand Est.">
+  <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.bunny.net/css?family=cabinet-grotesk:800|satoshi:400,700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="css/fonts.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/a11y.css">
+  <style>
+    /* ══════════════════════════════════════════
+       ACTUALITÉS — Style Grand Est
+       Carte = image + angle + date + titre
+       3 colonnes · 0 arrondi · palette charte
+    ══════════════════════════════════════════ */
+
+    .actu-page { background: #fff; }
+
+    /* ── Filtres ── */
+    .cat-filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .cat-btn {
+      padding: 7px 18px;
+      border-radius: 0;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      cursor: pointer;
+      border: 2px solid #2a347d;
+      background: #fff;
+      color: #2a347d;
+      transition: all .15s;
+      font-family: inherit;
+    }
+    .cat-btn.is-active {
+      background: #2a347d;
+      color: #fff;
+    }
+    .cat-btn:hover:not(.is-active) {
+      background: #7fddf0;
+      border-color: #7fddf0;
+      color: #2a347d;
+    }
+
+    /* ── Recherche ── */
+    .actu-search {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .actu-search__input {
+      width: 100%;
+      padding: 12px 44px 12px 16px;
+      border: 2px solid #2a347d;
+      border-radius: 0;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      color: #1a2233;
+      background: #fff;
+    }
+    .actu-search__input:focus { border-color: #7fddf0; }
+    .actu-search__icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #2a347d;
+      pointer-events: none;
+      font-size: 14px;
+    }
+
+    /* ── Grille 3 colonnes ── */
+    .actu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px 28px;
+    }
+
+    /* ── Carte actualité ── */
+    .actu-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: #fff;
+    }
+    .actu-card:hover .actu-card__img img { transform: scale(1.04); }
+    .actu-card:hover .actu-card__title { color: #2a347d; }
+
+    /* Zone image avec angle en bas */
+    .actu-card__img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      position: relative;
+      /* Angle bas-droite vers bas-gauche : effet "coin coupé" */
+      clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+    }
+    .actu-card__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .4s ease;
+    }
+    .actu-card__img-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+    }
+
+    /* Badge catégorie sur l'image */
+    .actu-card__badge {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: #fbd020;
+      color: #2a347d;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      padding: 4px 10px;
+      z-index: 2;
+    }
+
+    /* Corps carte */
+    .actu-card__body {
+      padding: 14px 0 0 0;
+    }
+
+    /* Date avec tiret */
+    .actu-card__date {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: #4d5d73; /* RGAA 3.2 : ratio ≥ 4.5:1 sur blanc (#4d5d73 → 5.1:1) */
+      margin-bottom: 10px;
+    }
+    .actu-card__date::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: #2a347d;
+      flex-shrink: 0;
+    }
+
+    /* Titre */
+    .actu-card__title {
+      font-size: 19px;
+      font-weight: 800;
+      color: #1a2233;
+      line-height: 1.25;
+      margin: 0;
+      font-family: 'Cabinet Grotesk', sans-serif;
+      transition: color .15s;
+    }
+
+    /* ── Aucun résultat ── */
+    .actu-no-results {
+      text-align: center;
+      padding: 56px 20px;
+      color: #8fa0b8;
+      display: none;
+      grid-column: 1 / -1;
+    }
+    .actu-no-results i { font-size: 36px; display: block; margin-bottom: 12px; }
+
+    /* ── Charger plus ── */
+    .load-more-wrap { text-align: center; margin: 48px 0 8px; }
+    .load-more-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 13px 36px;
+      border: 2px solid #2a347d;
+      background: #fff;
+      color: #2a347d;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: inherit;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .load-more-btn:hover { background: #7fddf0; border-color: #7fddf0; }
+    .load-more-btn:disabled { opacity: .4; cursor: default; }
+    .load-more-count { font-size: 12px; color: #8fa0b8; margin-top: 8px; }
+
+    /* ── Séparateur section ── */
+    .actu-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #2a347d;
+      border-left: 4px solid #fbd020;
+      padding-left: 12px;
+      margin-bottom: 28px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .actu-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; }
+    }
+    @media (max-width: 600px) {
+      .actu-grid { grid-template-columns: 1fr; gap: 32px; }
+      .actu-card__title { font-size: 17px; }
+    }
+  </style>
+</head>
+<body class="nav-loading actu-page">
+<a href="#main-content" class="sr-only focusable">Aller au contenu principal</a>
+<header class="orege-header" role="banner">
+  <a href="index.html" class="orege-header__logo" aria-label="Observatoire de l'Eau Grand Est – Accueil">
+    <img src="images/logo-observatoire-grandest.png" alt="" class="orege-header__logo-img" aria-hidden="true" width="44" height="44" loading="eager">
+    <span class="orege-header__logo-text">Observatoire de l'Eau<br><span>Grand Est</span></span>
+  </a>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero__inner">
+    <nav class="page-hero__eyebrow" aria-label="Fil d'ariane">
+      <ol>
+        <li><a href="index.html">Accueil</a></li>
+        <li><i class="ph ph-caret-right" aria-hidden="true"></i></li>
+        <li><span aria-current="page">Actualités</span></li>
+      </ol>
+    </nav>
+    <h1 class="page-hero__title">Actualités &amp; Publications</h1>
+    <p class="page-hero__sub">Analyses, bilans et événements sur la ressource en eau du Grand Est.</p>
+  </div>
+</div>
+
+<main id="main-content">
+<div class="page-content">
+
+  <!-- Recherche + Filtres -->
+  <div class="actu-search">
+    <input type="search" id="actu-search-input" class="actu-search__input"
+           placeholder="Rechercher un article, une thématique, un auteur…"
+           aria-label="Rechercher dans les publications"
+           autocomplete="off">
+    <i class="ph ph-magnifying-glass actu-search__icon" aria-hidden="true"></i>
+  </div>
+
+  <div class="cat-filters" role="group" aria-label="Filtrer par catégorie">
+    <button class="cat-btn is-active" data-cat="all" aria-pressed="true">Tout</button>
+    <button class="cat-btn" data-cat="climat" aria-pressed="false">Climat</button>
+    <button class="cat-btn" data-cat="qualite" aria-pressed="false">Qualité des eaux</button>
+    <button class="cat-btn" data-cat="milieux" aria-pressed="false">Milieux aquatiques</button>
+    <button class="cat-btn" data-cat="gouvernance" aria-pressed="false">Gouvernance</button>
+    <button class="cat-btn" data-cat="usages" aria-pressed="false">Usages</button>
+    <button class="cat-btn" data-cat="quantitatif" aria-pressed="false">Gestion quantitative</button>
+  </div>
+
+  <!-- Grille actualités -->
+  <div class="actu-grid" id="actu-grid">
+
+    <div class="actu-no-results" id="actu-no-results">
+      <i class="ph ph-warning-circle"></i>
+      Aucun article ne correspond à votre recherche.
+    </div>
+
+    <!-- Actu 1 -->
+    <a href="article.html" class="actu-card" data-cat="climat">
+      <div class="actu-card__img">
+        <span class="actu-card__badge">Climat</span>
+        <img src="https://sspark.genspark.ai/cfimages?u1=asdnvMq1ObDpkYobNurc3IjPYnwUA45yge9rGkxbD%2BEHwdnUFpL%2Fo9ZqxcDwzWwMdUKp72KGdiw0UeKlOwwjG62M5K%2F7InbHJLfae0l7gdokau3rtBbOfBGeF0mjEb6C9D6nDspANA%3D%3D&u2=FBy%2Bg5wVC%2B4Gp1a1&width=800"
+             alt="Sol fissuré par la sécheresse"
+             onerror="this.parentElement.innerHTML='<span class=\'actu-card__badge\'>Climat</span><div class=\'actu-card__img-fallback\' style=\'background:linear-gradient(135deg,#fa640a,#2a347d)\'><i class=\'fa fa-cloud-sun-rain\' style=\'color:#fff\'></i></div>'">
+      </div>
+      <div class="actu-card__body">
+        <div class="actu-card__date">15 Février 2025</div>
+        <h2 class="actu-card__title">Bilan de la sécheresse 2024 en Grand Est : des nappes sous tension continue</h2>
+      </div>
+    </a>
+
+    <!-- Actu 2 -->
+    <a href="article.html" class="actu-card" data-cat="gouvernance">
+      <div class="actu-card__img">
+        <span class="actu-card__badge">Gouvernance</span>
+        <img src="https://sspark.genspark.ai/cfimages?u1=xCEWLbF2K2e16reKbmlQq%2FHoo6mJaeyjnjQs5mbuFrtRIfLNuXgFrSvPuBDZug81PjnLUGkdMXnV6dxznCnLIfMfseN5o101exM1KPyog90owRqLP%2Bghm8jN1HqxvOOClnRN%2BH9UlgBCqEba%2BvDZJw9MC9cjQdbDWevOiJRb2aAh3ENU5kv%2FFPlmgcCgjv%2FCX%2Ft%2BTIM6i1bwJXHIBnQgrzHNN0NpVy2dYiK7eBnE5FxtoKZA8%2B4sb1ea8a0YR1TqBm9oajvjdxtoXEmDdWa8U90l%2F%2BVZAyNOKR8sXvVk5c7Xxmatrl75I6huJRphjD4A0eUDQ%2FcflYOhdA%3D%3D&u2=CMQOqbznhROT4YC%2F&width=600"
+             alt="Rivière en vallée verdoyante"
+             onerror="this.parentElement.innerHTML='<span class=\'actu-card__badge\'>Gouvernance</span><div class=\'actu-card__img-fallback\' style=\'background:linear-gradient(135deg,#b9e100,#2a347d)\'><i class=\'fa fa-gavel\' style=\'color:#fff\'></i></div>'">
+      </div>
+      <div class="actu-card__body">
+        <div class="actu-card__date">3 Février 2025</div>
+        <h2 class="actu-card__title">Révision du SDAGE 2028-2033 : quels enjeux pour la région ?</h2>
+      </div>
+    </a>
+
+    <!-- Actu 3 -->
+    <a href="article.html" class="actu-card" data-cat="milieux">
+      <div class="actu-card__img">
+        <span class="actu-card__badge">Milieux aquatiques</span>
+        <img src="https://sspark.genspark.ai/cfimages?u1=IkRNtX2At%2BgAUInt%2BJlqa6MoQY1K1UGemZAUihgrXlXxHwIU4xHD7UuxPN5zundtFW9bIK3LNxLhcpyE1oih0RSMWwRBcCMDaOSjbOY0RIHyTADOlw%3D%3D&u2=IDW0vv3q1yeb2WSW&width=600"
+             alt="Cours d'eau avec végétation aquatique"
+             onerror="this.parentElement.innerHTML='<span class=\'actu-card__badge\'>Milieux</span><div class=\'actu-card__img-fallback\' style=\'background:linear-gradient(135deg,#b9e100,#2a347d)\'><i class=\'fa fa-fish\' style=\'color:#fff\'></i></div>'">
+      </div>
+      <div class="actu-card__body">
+        <div class="actu-card__date">20 Janvier 2025</div>
+        <h2 class="actu-card__title">Retour du saumon atlantique dans la Moselle : un signal positif</h2>
+      </div>
+    </a>
+
+    <!-- Actu 4 -->
+    <a href="article.html" class="actu-card" data-cat="qualite">
+      <div class="actu-card__img">
+        <span class="actu-card__badge">Qualité des eaux</span>
+        <img src="https://sspark.genspark.ai/cfimages?u1=2%2F4lMRG5PYCDZSqgQ1t4BuZAwl%2FjDryZjWyUmRaNr%2F1IobRPlvEm9nw60VXKL0NlAJntfjJQkJxvI2HFsycjAylVJX4ZCBbtX%2FhTOcF6i5yA6g6EseA%2FyJh2yX441YN7HOhmbnW1VpIdwM3ZrjnP0u124ZKiHeRxmFJHsKUsNcajLwWMEwFIfJDq1PjSIiLBm2Z1t4MKMkjwQAKyPFEBXtx3Dy3STaQtbZdo5ac3n1T0whGrQkigLg%3D%3D&u2=SFVKPQvPUHx81EDX&width=600"
+             alt="Analyse qualité eaux"
+             onerror="this.parentElement.innerHTML='<span class=\'actu-card__badge\'>Qualité</span><div class=\'actu-card__img-fallback\' style=\'background:linear-gradient(135deg,#7fddf0,#2a347d)\'><i class=\'fa fa-flask\' style=\'color:#fff\'></i></div>'">
+      </div>
+      <div class="actu-card__body">
+        <div class="actu-card__date">8 Janvier 2025</div>
+        <h2 class="actu-card__title">Nitrates dans les eaux souterraines : tendances 2024 en Grand Est</h2>
+      </div>
+    </a>
+
+    <!-- Actu 5 -->
+    <a href="article.html" class="actu-card" data-cat="usages">
+      <div class="actu-card__img">
+        <span class="actu-card__badge">Usages</span>
+        <img src="https://sspark.genspark.ai/cfimages?u1=gcqKzmLz3HOKmYL0iB0L3EAV%2FihgZsoDM9ZX%2F%2F43Z0s2tpUNh2%2FxVhwrOK9aMlvLppYad16DrpCYRqDeq%2BxLNu3Z3HSypr1NjFhfju7cUr7GS0xcN4boCa%2FX0l0mY3zrsQHqXTgJTSMBhTU%3D&u2=h85qylmTiTodq3G2&width=600"
+             alt="Réseau canalisations eau potable"
+             onerror="this.parentElement.innerHTML='<span class=\'actu-card__badge\'>Usages</span><div class=\'actu-card__img-fallback\' style=\'background:linear-gradient(135deg,#fbd020,#2a347d)\'><i class=\'fa fa-faucet\' style=\'color:#fff\'></i></div>'">
+      </div>
+      <div class="actu-card__body">
+        <div class="actu-card__date">15 Décembre 2024</div>
+        <h2 class="actu-card__title">Rendement des réseaux AEP : où en est le Grand Est en 2024 ?</h2>
+      </div>
+    </a>
+
+    <!-- Actu 6 -->
+    <a href="article.html" class="actu-card" data-cat="quantitatif">
+      <div class="actu-card__img">
+        <span class="actu-card__badge">Gestion quantitative</span>
+        <img src="https://sspark.genspark.ai/cfimages?u1=OSbhC6Sn3OTLSdt1beLlB1kYZzpQiLL6MG6a7pkcJ8raUP3ZMJkaoW7kVtOlsRcb3yHuN9gl7e0bIv%2BRsyejaN8u8mNXPDk88P2XSuwmCY%2B3YI6YXQU%2BdA%3D%3D&u2=V0c2V7fSg%2BriLaUx&width=600"
+             alt="Nappe phréatique schéma"
+             onerror="this.parentElement.innerHTML='<span class=\'actu-card__badge\'>Quantitatif</span><div class=\'actu-card__img-fallback\' style=\'background:linear-gradient(135deg,#731e8c,#2a347d)\'><i class=\'fa fa-gauge\' style=\'color:#fff\'></i></div>'">
+      </div>
+      <div class="actu-card__body">
+        <div class="actu-card__date">2 Décembre 2024</div>
+        <h2 class="actu-card__title">Nappe rhénane : bilan 2024 et perspectives face au changement climatique</h2>
+      </div>
+    </a>
+
+    <!-- Actu 7 -->
+    <a href="article.html" class="actu-card" data-cat="gouvernance">
+      <div class="actu-card__img">
+        <span class="actu-card__badge">Gouvernance</span>
+        <img src="https://sspark.genspark.ai/cfimages?u1=h%2B2fKXGSpz%2FU%2FiqoZDTGewjLDW5nAvQEJogDEDHQzY5FkpBMkDk70278SHO6d2QrkwF%2FC5H7%2B01AT5I6xevN7%2B3Dn4%2BeTGZYnZfo&u2=q9P9N%2Fyrc6LyK9Dg&width=600"
+             alt="Cours d'eau Meuse"
+             onerror="this.parentElement.innerHTML='<span class=\'actu-card__badge\'>Gouvernance</span><div class=\'actu-card__img-fallback\' style=\'background:linear-gradient(135deg,#b9e100,#2a347d)\'><i class=\'fa fa-handshake\' style=\'color:#fff\'></i></div>'">
+      </div>
+      <div class="actu-card__body">
+        <div class="actu-card__date">18 Novembre 2024</div>
+        <h2 class="actu-card__title">Contrat de rivière Meuse : bilan à mi-parcours 2024</h2>
+      </div>
+    </a>
+
+    <!-- Actu 8 -->
+    <a href="article.html" class="actu-card" data-cat="climat">
+      <div class="actu-card__img">
+        <span class="actu-card__badge">Climat</span>
+        <img src="https://sspark.genspark.ai/cfimages?u1=KD3MsTZx0GNfCvQ%2Bgn4VLMbtIFmjv8AxJYPTBvFc%2FwE9LmtYvet7Acr9TQBQIzSWHcJUioCnZu5GanJgnloVqnEKD5YkQFqi3YOH83J96BVIX0LyflU9ZlvlVXqSvi71wZW7LCM8mR4%3D&u2=hFpP5py5a0dU7ZYE&width=600"
+             alt="Inondation Ardennes"
+             onerror="this.parentElement.innerHTML='<span class=\'actu-card__badge\'>Climat</span><div class=\'actu-card__img-fallback\' style=\'background:linear-gradient(135deg,#fa640a,#2a347d)\'><i class=\'fa fa-house-flood-water\' style=\'color:#fff\'></i></div>'">
+      </div>
+      <div class="actu-card__body">
+        <div class="actu-card__date">5 Novembre 2024</div>
+        <h2 class="actu-card__title">Inondations hivernales 2025 dans les Ardennes : retour d'expérience</h2>
+      </div>
+    </a>
+
+    <!-- Actu 9 -->
+    <a href="article.html" class="actu-card" data-cat="qualite">
+      <div class="actu-card__img">
+        <span class="actu-card__badge">Qualité des eaux</span>
+        <img src="https://sspark.genspark.ai/cfimages?u1=FNUbXobtJMAsmPXqCz56FIyWuXKFe7L6zg08%2BuCzDpnz%2FTXAGP58JkXep5kKreoSLHccCmo6FBAvDxTv5sQquZWSbl8kUDMcSqOk&u2=SJoXzckO5KBdwJBn&width=600"
+             alt="Cours d'eau pesticides"
+             onerror="this.parentElement.innerHTML='<span class=\'actu-card__badge\'>Qualité</span><div class=\'actu-card__img-fallback\' style=\'background:linear-gradient(135deg,#7fddf0,#2a347d)\'><i class=\'fa fa-leaf\' style=\'color:#fff\'></i></div>'">
+      </div>
+      <div class="actu-card__body">
+        <div class="actu-card__date">22 Octobre 2024</div>
+        <h2 class="actu-card__title">Pesticides dans les cours d'eau : bilan de la surveillance 2024</h2>
+      </div>
+    </a>
+
+  </div><!-- /actu-grid -->
+
+  <!-- Charger plus -->
+  <div class="load-more-wrap" id="actu-load-more-wrap">
+    <button class="load-more-btn" id="actu-load-more-btn">
+      <i class="ph ph-plus" aria-hidden="true"></i> Charger plus d'articles
+    </button>
+    <p class="load-more-count" id="actu-load-more-count"></p>
+  </div>
+
+</div>
+</main>
+
+<!-- BANDEAU PARTENAIRES -->
+<section class="partenaires-bandeau" aria-label="Partenaires">
+  <div class="partenaires-bandeau__inner">
+    <p class="partenaires-bandeau__label">Une plateforme à<br>l'initiative de</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://www.grandest.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-grandest.png" alt="La Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.prefectures-regions.gouv.fr/grand-est" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-prefet-grand-est.png" alt="Préfet de la Région Grand Est" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <p class="partenaires-bandeau__label">Et co-financé<br>par</p>
+    <div class="partenaires-bandeau__separator" aria-hidden="true"></div>
+    <ul class="partenaires-bandeau__logos" role="list">
+      <li><a href="https://european-union.europa.eu/index_fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-union-europeenne.png" alt="Union Européenne" width="120" height="48" loading="lazy"></a></li>
+      <li><a href="https://www.lesagencesdeleau.fr" target="_blank" rel="noopener noreferrer"><img src="images/partners/logo-agences-eau.png" alt="Les Agences de l'Eau" width="120" height="48" loading="lazy"></a></li>
+    </ul>
+  </div>
+</section>
+<div class="orege-footer-placeholder"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/a11y.js"></script>
+<script>
+(function () {
+  'use strict';
+  var PAGE_SIZE  = 6;
+  var shown      = PAGE_SIZE;
+  var currentCat = 'all';
+
+  var searchInput   = document.getElementById('actu-search-input');
+  var noResults     = document.getElementById('actu-no-results');
+  var loadMoreBtn   = document.getElementById('actu-load-more-btn');
+  var loadMoreWrap  = document.getElementById('actu-load-more-wrap');
+  var loadMoreCount = document.getElementById('actu-load-more-count');
+
+  function getCards() {
+    var q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+    return Array.from(document.querySelectorAll('.actu-card')).filter(function (c) {
+      var catOk = currentCat === 'all' || c.dataset.cat === currentCat;
+      if (!catOk) return false;
+      if (!q) return true;
+      var title = (c.querySelector('.actu-card__title') || {}).textContent || '';
+      return title.toLowerCase().indexOf(q) !== -1;
+    });
+  }
+
+  function render() {
+    var matching = getCards();
+    document.querySelectorAll('.actu-card').forEach(function (c) { c.style.display = 'none'; });
+    matching.slice(0, shown).forEach(function (c) { c.style.display = ''; });
+    if (noResults) noResults.style.display = matching.length === 0 ? 'block' : 'none';
+    var rem = matching.length - shown;
+    if (rem > 0) {
+      loadMoreWrap.style.display = 'block';
+      loadMoreBtn.disabled = false;
+      loadMoreBtn.innerHTML = '<i class="ph ph-plus" aria-hidden="true"></i> Charger plus d\'articles';
+      loadMoreCount.textContent = rem + ' article' + (rem > 1 ? 's' : '') + ' supplémentaire' + (rem > 1 ? 's' : '') + ' à afficher';
+    } else {
+      loadMoreWrap.style.display = matching.length > PAGE_SIZE ? 'block' : 'none';
+      loadMoreBtn.disabled = true;
+      loadMoreBtn.innerHTML = '<i class="ph ph-check" aria-hidden="true"></i> Tous les articles sont affichés';
+      loadMoreCount.textContent = '';
+    }
+  }
+
+  $(document).on('click', '.cat-btn', function () {
+    currentCat = $(this).data('cat');
+    $('.cat-btn').removeClass('is-active');
+    $(this).addClass('is-active');
+    if (searchInput) searchInput.value = '';
+    shown = PAGE_SIZE;
+    render();
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      currentCat = 'all';
+      $('.cat-btn').removeClass('is-active');
+      $('[data-cat="all"]').addClass('is-active');
+      shown = PAGE_SIZE;
+      render();
+    });
+  }
+
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', function () {
+      shown += PAGE_SIZE;
+      render();
+    });
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
